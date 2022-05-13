@@ -22,7 +22,28 @@ const material = new THREE.MeshBasicMaterial({
 	wireframe: true,
 });
 const cube = new THREE.Mesh(geometry, material);
+cube.castShadow = true;
+cube.position.set(0,1,0);
 scene.add(cube);
+
+const plane = new THREE.Mesh(
+	new THREE.PlaneGeometry(2048,1024,10,10),
+	new THREE.MeshStandardMaterial({
+		color: 0xffffff
+	})
+);
+plane.castShadow = false;
+plane.receiveShadow = true;
+plane.rotation.x = -Math.PI / 2;
+scene.add(plane);
+
+const ambientLight = new THREE.AmbientLight(0xffffff,0.25);
+const light = new THREE.DirectionalLight(0xffffff,0.5);
+light.position.set(-100,100,100);
+light.target.position.set(0,0,0);
+light.castShadow = true;
+scene.add(ambientLight);
+scene.add(light);
 
 window.addEventListener("resize", onWindowResize, false);
 function onWindowResize() {
