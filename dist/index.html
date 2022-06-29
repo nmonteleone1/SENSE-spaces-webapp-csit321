@@ -6,13 +6,87 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>SENSE Spaces Planning Tool</title>
 		<style>
+			:root {
+				--panel-width: 200px;
+				--panel-padding: 16px;
+			}
+
 			body {
 				overflow: hidden;
 				margin: 0px;
 			}
+
+			#panel {
+				position: fixed;
+				z-index: 100;
+				width: var(--panel-width);
+				height: 100%;
+				overflow: auto;
+				border-right: var(--border-style);
+				display: flex;
+				flex-direction: column;
+				transition: 0s 0s height;
+				background-color: white;
+				gap: 30px;
+				text-align: center;
+			}
+
+			.panelButton {
+				width: var(--panel-width);
+				border: none;
+				color: darkslategrey;
+				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+			}
+
+			#halfButton {
+				width: 0.5*var(--panel-width);
+			}
+
+			#noBullets {
+				list-style-type: none;
+				padding: 0;
+			}
+
+			#gui {
+				position:absolute;
+				top: 0px;
+				right: 200px;
+			}
 		</style>
 	</head>
 	<body>
+		<div id="ui">
+			<div id="panel" style="left:0px">
+				<div><h2>Menu</h2></div>
+				<div><button class="panelButton">New Room</button></div>
+				<div><button class="panelButton">Import Room</button></div>
+				<div><button class="panelButton">Export Room</button></div>
+				<div><button class="panelButton">User Settings</button></div>
+			</div>
+			<div id="panel" style="right:0px">
+				<div><input type="text"></div>
+				<div>
+					<h2>My Objects</h2>
+					<ul id="noBullets">
+						<li><button class="panelButton">Taste</button></li>
+						<li><button class="panelButton">Touch</button></li>
+						<li><button class="panelButton">Sight</button></li>
+						<li><button class="panelButton">Sound</button></li>
+						<li><button class="panelButton">Smell</button></li>
+					</ul>
+				</div>
+				<div><button class="panelButton">Regenerate Room</button></div>
+				<div>
+					<button class="panelButton" id="halfButton">rotate left</button>
+					<button class="panelButton" id="halfButton">rotate left</button>
+				</div>
+			</div>
+			<div id="gui"></div>
+		</div>
 		<script
 			async
 			src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"
@@ -21,10 +95,12 @@
 			{
 				"imports": {
 					"three": "https://unpkg.com/three@0.140.2/build/three.module.js",
-					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js"
+					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js",
+					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
 				}
 			}
 		</script>
 		<script type="module" src="main.js"></script>
+		
 	</body>
 </html>
