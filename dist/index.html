@@ -17,62 +17,7 @@
 		<script type="module" src="main.js"></script>
 
 		<title>SENSE Spaces Planning Tool</title>
-		<style>
-			:root {
-				--panel-width: 200px;
-				--panel-padding: 16px;
-			}
-
-			body {
-				overflow: hidden;
-				margin: 0px;
-			}
-
-			#panel {
-				position: fixed;
-				z-index: 100;
-				width: var(--panel-width);
-				height: 100%;
-				overflow: auto;
-				border-right: var(--border-style);
-				display: flex;
-				flex-direction: column;
-				transition: 0s 0s height;
-				background-color: white;
-				gap: 30px;
-				text-align: center;
-			}
-
-			.panelButton {
-				width: var(--panel-width);
-				border: none;
-				color: darkslategrey;
-				padding: 15px 32px;
-				text-align: center;
-				text-decoration: none;
-				display: inline-block;
-				font-size: 16px;
-			}
-
-			.panelButton:active{
-				background-color: darkgrey;
-			}
-
-			#halfButton {
-				width: 0.5*var(--panel-width);
-			}
-
-			#noBullets {
-				list-style-type: none;
-				padding: 0;
-			}
-
-			#gui {
-				position:absolute;
-				top: 0px;
-				right: 200px;
-			}
-		</style>
+		<link rel="stylesheet" href="styles.css">
 	</head>
 	<body>
 		<div id="ui">
