@@ -4,6 +4,18 @@
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://unpkg.com/three@0.140.2/build/three.module.js",
+					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js",
+					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
+				}
+			}
+		</script>
+		<script type="module" src="main.js"></script>
+
 		<title>SENSE Spaces Planning Tool</title>
 		<style>
 			:root {
@@ -40,6 +52,10 @@
 				text-decoration: none;
 				display: inline-block;
 				font-size: 16px;
+			}
+
+			.panelButton:active{
+				background-color: darkgrey;
 			}
 
 			#halfButton {
@@ -79,28 +95,27 @@
 						<li><button class="panelButton">Smell</button></li>
 					</ul>
 				</div>
-				<div><button class="panelButton">Regenerate Room</button></div>
+				<div><button class="panelButton" id="roomRegen">Regenerate Room</button></div>
 				<div>
-					<button class="panelButton" id="halfButton">rotate left</button>
-					<button class="panelButton" id="halfButton">rotate left</button>
+					<button class="panelButton" id="zoomIn">zoom in</button>
+					<button class="panelButton" id="zoomOut">zoom out</button>
+				</div>
+				<div>
+					<button class="panelButton" id="rotateUp">rotate up</button>
+					<button class="panelButton" id="rotateDown">rotate down</button>
+					<button class="panelButton" id="rotateLeft">rotate left</button>
+					<button class="panelButton" id="rotateRight">rotate right</button>
+				</div>
+				<div>
+					<button class="panelButton" id="moveUp">move up</button>
+					<button class="panelButton" id="moveDown">move down</button>
+					<button class="panelButton" id="moveLeft">move left</button>
+					<button class="panelButton" id="moveRight">move right</button>
 				</div>
 			</div>
 			<div id="gui"></div>
 		</div>
-		<script
-			async
-			src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"
-		></script>
-		<script type="importmap">
-			{
-				"imports": {
-					"three": "https://unpkg.com/three@0.140.2/build/three.module.js",
-					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js",
-					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
-				}
-			}
-		</script>
-		<script type="module" src="main.js"></script>
+		
 		
 	</body>
 </html>
