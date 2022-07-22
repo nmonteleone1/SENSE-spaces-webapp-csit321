@@ -91,6 +91,46 @@ h2 {
     padding: 0;
 }
 
+#noBullets .panelButton{
+    padding: 14px;
+}
+
+.zoomControls{
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.zoomControls .panelButton{
+    color: green;
+    width: auto;
+}
+
+.movementControls{
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.movementControls .panelButton{
+    color: green;
+    width: auto;
+}
+
+.rotationControls{
+    position: fixed;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rotationControls .panelButton{
+    color: green;
+    width: auto;
+}
+
 #gui {
     position: absolute;
     top: 0px;
