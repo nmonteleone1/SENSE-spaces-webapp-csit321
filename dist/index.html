@@ -33,10 +33,11 @@
 			<div><button class="panelButton">User Settings</button></div>
 		</div>
 		<div id="panel" style="right:0px">
-			<div><input type="text"></div>
+			<div><input type="text"><button>Search</button></div>
+			<!-- <button></button> -->
 			<div>
 				<h2>My Objects</h2>
-				<ul id="noBullets">
+				<ul id="myObjects">
 					<li><button class="panelButton">Taste</button></li>
 					<li><button class="panelButton">Touch</button></li>
 					<li><button class="panelButton">Sight</button></li>
@@ -45,6 +46,8 @@
 				</ul>
 			</div>
 			<div><button class="panelButton" id="roomRegen">Regenerate Room</button></div>
+		</div>
+		<div id="camControl" style="left:0px; bottom:0px">
 			<div class="zoomControls">
 				<button class="panelButton" id="zoomIn">+</button>
 				<button class="panelButton" id="zoomOut">-</button>
@@ -61,9 +64,8 @@
 				<button class="panelButton" id="moveLeft">←</button>
 				<button class="panelButton" id="moveRight">→</button>
 			</div>
+			<div id="gui"></div>
 		</div>
-		<div id="gui"></div>
-	</div>
 
 
 </body>
