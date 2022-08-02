@@ -45,17 +45,17 @@ h2 {
     font-family: 'Filson Pro', sans-serif;
 }
 
-#searchBox{
+#searchBox {
     margin: 10px 10px 10px 10px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    background-color:#A1A1A1;
+    background-color: #A1A1A1;
     padding: 2% 3%;
     border-radius: 10px;
 }
 
-#searchBox input{
+#searchBox input {
     flex-grow: 2;
     background-color: inherit;
     border: none;
@@ -90,8 +90,7 @@ h2 {
     background-color: #D9D9D9;
 }
 
-.panelButton:active
-{
+.panelButton:active {
     background-color: #A1A1A1;
 }
 
