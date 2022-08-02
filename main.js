@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import {OrbitControls} from "OrbitControls";
-import {GUI} from 'dat-gui';
+import { Box3, Group, Vector3 } from "three";
 
 const scene = new THREE.Scene();
 
@@ -88,6 +88,7 @@ var room = {
 	wallMaterial: new THREE.MeshPhongMaterial({
 		color: 0xffffff
 	}),
+	walls: new THREE.Group(),
 	leftWall: new THREE.Mesh(),
 	backWall: new THREE.Mesh(),
 	rightWall: new THREE.Mesh(),
@@ -102,7 +103,11 @@ room.backWall.receiveShadow = true;
 room.rightWall.receiveShadow = true;
 room.frontWall.receiveShadow = true;
 regenerateRoom();
-scene.add(room.leftWall, room.backWall, room.rightWall, room.frontWall);
+room.walls.add(room.leftWall);
+room.walls.add(room.backWall);
+room.walls.add(room.rightWall);
+room.walls.add(room.frontWall);
+scene.add(room.walls);
 scene.background = new THREE.Color(0x000000);
 
 document.getElementById("rotateUp").addEventListener("click", function() {rotateCamera('up')});
@@ -253,28 +258,59 @@ function onMouseClick(event) {
 }
 window.addEventListener('click', onMouseClick, false);
 
-function hideToggle() {
-	raycaster.setFromCamera(mouse, camera);
-	const intersects = raycaster.intersectObjects(items.children);
+function wallHiderToggle() {
+	var dir = new THREE.Vector3();
+	dir.subVectors(new Vector3(room.Width/2,0,room.Depth/2), camera.position).normalize();
+	raycaster.set(camera.position, dir);
+	const intersects = raycaster.intersectObjects(room.walls.children);
 	if(!intersects.length) {
 		return;
 	}
-	const newMaterial = intersects[0].object.material.clone();
-	if(intersects[0].object.material.transparent) {
-		newMaterial.transparent = false;
-		newMaterial.opacity = 0;
-	}
-	else {
-		newMaterial.transparent = true;
-		newMaterial.opacity = 0.5;
-		intersects[0].object.material = newMaterial;
-	}
-	intersects[0].object.material = newMaterial;
+	
+	
+	room.walls.traverse(function(obj) {
+		const newMaterial = intersects[0].object.material.clone();
+		if(obj.position == intersects[0].object.position) {
+			newMaterial.transparent = true;
+			newMaterial.opacity = 0.25;
+			obj.material = newMaterial;
+		}
+		else {
+			newMaterial.transparent = false;
+			newMaterial.opacity = 1;
+			obj.material = newMaterial;
+		}
+	})
+	// if(intersects[0].object.material.transparent) {
+	// 	newMaterial.transparent = false;
+	// 	newMaterial.opacity = 0;
+	// }
+	// else {
+	// 	newMaterial.transparent = true;
+	// 	newMaterial.opacity = 0.5;
+	// }
+	
 }
 // window.addEventListener('mousedown', hideToggle, false);
 
 function dragObject() {
 	if(heldObject) {
+		var collision = false;
+		// scene.traverse(function(obj) {
+		// 	var tempBB = new THREE.Box3().setFromObject(obj);
+		// 	if(tempBB.equals(cubeBB) || tempBB.equals(cubeBBoxBox)) {
+		// 		collision = false;
+		// 	}
+		// 	else if(tempBB.intersectsBox(cubeBB)) {
+		// 		collision = true;
+		// 		console.log('collision');
+		// 		return;
+		// 	}
+		// 	else {
+		// 		collision = false;
+		// 	}
+		// })
+		if(collision) {return;}
 		moveRaycaster.setFromCamera(mouse, camera);
 		const moveGrid = moveRaycaster.intersectObjects(grid.children);
 		if(moveGrid.length) {
@@ -297,11 +333,26 @@ function findGridPos() {
 	}
 }
 
+var cubeBB = new Box3().setFromObject(cube);
+const geometryBB = new THREE.BoxGeometry(cubeBB.min.x,cubeBB.max.y,cubeBB.min.z);
+const materialBB = new THREE.MeshPhongMaterial({
+	color: 0xff0000,
+	wireframe: true,
+});
+const cubeBBox = new THREE.Mesh(geometryBB, materialBB);
+var cubeBBoxBox = new Box3().setFromObject(cubeBBox);
+cubeBBox.position.set(2,1,2);
+
+var cubeBBHelper = new THREE.Box3Helper(cubeBB, 0xff0000)
+scene.add(cubeBBox);
+
 function animate() {
 	requestAnimationFrame(animate);
 
 	cube.rotation.x += 0.01;
 	cube.rotation.y += 0.01;
+	wallHiderToggle();
+	cubeBBox.position.set(cube.position.x,cube.position.y,cube.position.z);
 
 	render();
 }

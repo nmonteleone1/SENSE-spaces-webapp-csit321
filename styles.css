@@ -1,0 +1,143 @@
+:root {
+    --panel-width: 220px;
+    --panel-padding: 16px;
+}
+
+body {
+    overflow: hidden;
+    margin: 0px;
+}
+
+#panel {
+    position: fixed;
+    z-index: 100;
+    width: var(--panel-width);
+    height: 100%;
+    overflow: auto;
+    border-right: var(--border-style);
+    display: flex;
+    flex-direction: column;
+    transition: 0s 0s height;
+    background-color: white;
+    gap: 30px;
+    text-align: center;
+}
+
+h2 {
+    width: var(--panel-width);
+    border: none;
+    color: darkslategrey;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 30px;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+
+    background: white;
+
+    font-family: 'Filson Pro', sans-serif;
+}
+
+#searchBox {
+    margin: 10px 10px 10px 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background-color: #A1A1A1;
+    padding: 2% 3%;
+    border-radius: 10px;
+}
+
+#searchBox input {
+    flex-grow: 2;
+    background-color: inherit;
+    border: none;
+    outline: none;
+}
+
+.panelButton {
+    width: var(--panel-width);
+    border: none;
+    color: darkslategrey;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+
+
+    justify-content: center;
+    align-items: center;
+    /* TODO: change this to percentage of view height / width */
+    padding: 10px 10px 10px 10px;
+
+    background: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin: 0.1rem 0.1rem 0.1rem 0.1rem;
+
+    font-family: 'Filson Pro', sans-serif;
+}
+
+.panelButton:hover {
+    background-color: #D9D9D9;
+}
+
+.panelButton:active {
+    background-color: #A1A1A1;
+}
+
+#myObjects {
+    list-style-type: none;
+    padding: 0;
+}
+
+#myObjects .panelButton {
+    padding: 14px;
+}
+
+.zoomControls {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.zoomControls .panelButton {
+    width: auto;
+}
+
+.movementControls {
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.movementControls .panelButton {
+    width: auto;
+}
+
+.rotationControls {
+    position: fixed;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rotationControls .panelButton {
+    width: auto;
+}
+
+#gui {
+    position: absolute;
+    top: 0px;
+    right: var(--panel-width);
+}
