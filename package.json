@@ -12,9 +12,5 @@
   "dependencies": {
     "gh-pages": "^4.0.0",
     "three": "^0.140.2"
-  },
-  "devDependencies": {
-    "@types/dat.gui": "^0.7.7",
-    "dat.gui": "^0.7.9"
   }
 }
