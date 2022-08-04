@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import {OrbitControls} from "OrbitControls";
 import { Box3, Group, Vector3 } from "three";
+import { GUI } from 'dat.gui';
 
 const scene = new THREE.Scene();
 
@@ -121,6 +122,43 @@ document.getElementById("moveUp").addEventListener("click", function() {moveCame
 document.getElementById("moveDown").addEventListener("click", function() {moveCamera('down')});
 document.getElementById("moveLeft").addEventListener("click", function() {moveCamera('left')});
 document.getElementById("moveRight").addEventListener("click", function() {moveCamera('right')});
+
+document.getElementById("searchButton").addEventListener("click", searchObject);
+
+function searchObject(){
+	console.log("SEARCH")
+	var text = document.getElementById("searchBox").innerHTML;
+	console.log(text)
+}
+
+document.getElementById("newRoom").addEventListener("click", newRoom);
+
+function newRoom() {
+	console.log("new room UI");
+
+	var popup = document.getElementById("popup");
+	console.log(popup)
+	var popupStyle = popup.style;
+	var isVisible = popupStyle.visibility;
+	console.log("isVisible: " + isVisible);
+
+	console.log("OLD " + popupStyle.visibility);
+
+	switch (popupStyle.visibility) {
+		case 'visible':
+			popupStyle.visibility = 'hidden';
+			break;
+		case 'hidden':
+			popupStyle.visibility = 'visible';
+			break;
+		default:
+			popupStyle.visibility = 'visible';
+			break;
+	}
+
+	console.log("NEW " + popupStyle.visibility);
+}
+
 
 function moveCamera(direction) {
 	switch(direction) {
@@ -362,3 +400,15 @@ function render() {
 }
 
 animate();
+
+const gui = new GUI();
+
+console.log(scene.background)
+
+const backgroundFolder = gui.addFolder('Background')
+
+backgroundFolder.add(scene.background, 'r', 0, 1)
+backgroundFolder.add(scene.background, 'g', 0, 1)
+backgroundFolder.add(scene.background, 'b', 0, 1)
+
+// scene.background = new THREE.Color(0x000000);

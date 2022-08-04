@@ -11,7 +11,7 @@
 				"imports": {
 					"three": "https://unpkg.com/three@0.140.2/build/three.module.js",
 					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js",
-					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
+					"dat.gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
 				}
 			}
 		</script>
@@ -27,13 +27,13 @@
 			<div>
 				<h2>Menu</h2>
 			</div>
-			<div><button class="panelButton">New Room</button></div>
+			<div><button class="panelButton" id="newRoom">New Room</button></div>
 			<div><button class="panelButton">Import Room</button></div>
 			<div><button class="panelButton">Export Room</button></div>
 			<div><button class="panelButton">User Settings</button></div>
 		</div>
 		<div id="panel" style="right:0px">
-			<div id="searchBox"><input type="text"><button>Q</button></div>
+			<div id="searchBox"><input type="text"><button id="searchButton">Q</button></div>
 			<!-- Q is temporary until I add a proper magnifying glass search icon-->
 			<div>
 				<h2>My Objects</h2>
@@ -46,6 +46,12 @@
 				</ul>
 			</div>
 			<div><button class="panelButton" id="roomRegen">Regenerate Room</button></div>
+		</div>
+		<div id="popup">
+			<h2>popup heading</h2>
+			<p>SOMETEXT</p>
+			<input type="text">
+			<button>OK</button>
 		</div>
 		<div id="camControl" style="left:0px; bottom:0px">
 			<div class="zoomControls">
