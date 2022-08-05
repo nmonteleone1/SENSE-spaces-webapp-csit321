@@ -99,7 +99,7 @@ room.walls.add(room.frontWall);
 const grid = new THREE.Group();
 const textureLoader = new THREE.TextureLoader();
 var floorTexture;
-floorTexture = textureLoader.load('../textures/Wood_Floor_007_COLOR.jpg', function(tex) {
+floorTexture = textureLoader.load('textures/Wood_Floor_007_COLOR.jpg', function(tex) {
 	tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
 });
 const plane = new THREE.Mesh(
@@ -168,13 +168,13 @@ window.addEventListener('drag', dragObject, false);
 //////FUNCTIONS//////
 function loadJSON(sense) {
 	var data;
-	let path = '../models/json/'+sense+'.json';
+	let path = 'models/json/'+sense+'.json';
 	fetch(path).then((response) => response.json()).then((json) => data = json);
 	return data;
 }
 
 function loadObject(sense) {
-	loader.load('../models/json/'+sense+'.json', function(obj) {
+	loader.load('models/json/'+sense+'.json', function(obj) {
 		obj.position.set(room.Width/2,0.5,room.Depth/2);
 		items.add(obj);
 		scene.add(items);
