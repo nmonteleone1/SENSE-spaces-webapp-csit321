@@ -1,17 +1,12 @@
+//////MODULES//////
 import * as THREE from "three";
 import {OrbitControls} from "OrbitControls";
-import { Box3, Group, Vector3 } from "three";
+import { Box3, Group, RedIntegerFormat, Vector3 } from "three";
 
+
+
+//////THREE.JS CANVAS//////
 const scene = new THREE.Scene();
-
-var mouse, clickMouse, raycaster, moveRaycaster;
-mouse = new THREE.Vector2();
-clickMouse = new THREE.Vector2();
-raycaster = new THREE.Raycaster();
-moveRaycaster = new THREE.Raycaster();
-
-var heldObject;
-
 const camera = new THREE.PerspectiveCamera(
 	75,
 	window.innerWidth / window.innerHeight,
@@ -19,57 +14,10 @@ const camera = new THREE.PerspectiveCamera(
 	100
 );
 camera.position.set(5, 5, 5);
-const zoomFactor = 0.25; // factor must be <1
-const rotateFactor = Math.PI*0.5; // factor of 1 is a full rotation
-const moveFactor = 0.25;
-
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.minPolarAngle = Math.PI/12;
-controls.maxPolarAngle = 5*Math.PI/12;
-
-const geometry = new THREE.BoxGeometry(1,1);
-const material = new THREE.MeshPhongMaterial({
-	color: 0x00ff00,
-	// wireframe: true,
-});
-const cube = new THREE.Mesh(geometry, material);
-cube.castShadow = true;
-cube.receiveShadow = true;
-cube.position.set(2,1,2);
-
-const items = new THREE.Group();
-items.add(cube);
-scene.add(items);
-
-const plane = new THREE.Mesh(
-	new THREE.PlaneGeometry(),
-	new THREE.MeshStandardMaterial({
-		color: 0xffffff
-	})
-);
-plane.castShadow = false;
-plane.receiveShadow = true;
-plane.rotation.x = -Math.PI / 2;
-
-const grid = new THREE.Group();
-grid.add(plane);
-scene.add(grid);
-
-const ambientLight = new THREE.AmbientLight(0xffffff,0.75);
-const light = new THREE.DirectionalLight(0xffffff,0.75);
-light.position.set(-10,50,-10);
-light.target.position.set(0,0,0);
-light.castShadow = true;
-light.shadow.bias = -0.0001;
-light.shadow.mapSize.width = 1024*4;
-light.shadow.mapSize.height = 1024*4;
-scene.add(ambientLight);
-scene.add(light);
 
 window.addEventListener("resize", onWindowResize, false);
 function onWindowResize() {
@@ -79,6 +27,46 @@ function onWindowResize() {
 	render();
 }
 
+//light the 3d space
+scene.background = new THREE.Color(0x000000);
+const ambientLight = new THREE.AmbientLight(0xffffff,0.75);
+const light = new THREE.PointLight(0xffffff,1,6,2);
+light.position.set(1,3,1);
+light.castShadow = true;
+light.shadow.bias = -0.0001;
+light.shadow.mapSize.width = 1024*4;
+light.shadow.mapSize.height = 1024*4;
+scene.add(ambientLight);
+scene.add(light);
+
+//mouse camera controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.minPolarAngle = Math.PI/12;
+controls.maxPolarAngle = 5*Math.PI/12;
+
+
+
+//////GLOBALS//////
+var mouse, clickMouse, raycaster, moveRaycaster;
+const zoomFactor = 0.25; // factor must be <1
+const rotateFactor = Math.PI*0.5; // factor of 1 is a full rotation
+const moveFactor = 0.25;
+var heldObject, heldObjectBB;
+const items = new THREE.Group();
+const loader = new THREE.ObjectLoader();
+
+//mouse tracking within canvas
+mouse = new THREE.Vector2();
+clickMouse = new THREE.Vector2();
+
+//
+raycaster = new THREE.Raycaster();
+moveRaycaster = new THREE.Raycaster();
+
+
+
+//////3D SPACE GENERATION//////
+//create blank room
 var room = {
 	Width: 4,
 	Depth: 4,
@@ -102,14 +90,55 @@ room.leftWall.receiveShadow = true;
 room.backWall.receiveShadow = true;
 room.rightWall.receiveShadow = true;
 room.frontWall.receiveShadow = true;
-regenerateRoom();
 room.walls.add(room.leftWall);
 room.walls.add(room.backWall);
 room.walls.add(room.rightWall);
 room.walls.add(room.frontWall);
-scene.add(room.walls);
-scene.background = new THREE.Color(0x000000);
 
+//plane for object location tracking
+const grid = new THREE.Group();
+const textureLoader = new THREE.TextureLoader();
+var floorTexture;
+floorTexture = textureLoader.load('../textures/Wood_Floor_007_COLOR.jpg', function(tex) {
+	tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+});
+const plane = new THREE.Mesh(
+	new THREE.PlaneGeometry(),
+	new THREE.MeshStandardMaterial({
+		color: 0xffffff,
+		map: floorTexture
+	})
+);
+plane.castShadow = false;
+plane.receiveShadow = true;
+plane.rotation.x = -Math.PI / 2;
+grid.add(plane);
+
+//populate scene
+scene.add(room.walls);
+scene.add(grid);
+
+// //bounding box testing
+// var cubeBB = new Box3().setFromObject(cube);
+// const geometryBB = new THREE.BoxGeometry(cubeBB.min.x,cubeBB.max.y,cubeBB.min.z);
+// const materialBB = new THREE.MeshPhongMaterial({
+// 	color: 0xff0000,
+// 	wireframe: true,
+// });
+// const cubeBBox = new THREE.Mesh(geometryBB, materialBB);
+// var cubeBBoxBox = new Box3().setFromObject(cubeBBox);
+// cubeBBox.position.set(2,1,2);
+
+// var cubeBBHelper = new THREE.Box3Helper(cubeBB, 0xff0000)
+// scene.add(cubeBBHelper);
+
+//start application
+regenerateRoom();
+animate();
+
+
+
+//////UI INTEGRATION//////
 document.getElementById("rotateUp").addEventListener("click", function() {rotateCamera('up')});
 document.getElementById("rotateDown").addEventListener("click", function() {rotateCamera('down')});
 document.getElementById("rotateLeft").addEventListener("click", function() {rotateCamera('left')});
@@ -121,6 +150,40 @@ document.getElementById("moveUp").addEventListener("click", function() {moveCame
 document.getElementById("moveDown").addEventListener("click", function() {moveCamera('down')});
 document.getElementById("moveLeft").addEventListener("click", function() {moveCamera('left')});
 document.getElementById("moveRight").addEventListener("click", function() {moveCamera('right')});
+document.getElementById("taste").addEventListener("click", function() {loadObject('taste')});
+document.getElementById("touch").addEventListener("click", function() {loadObject('touch')});
+document.getElementById("sight").addEventListener("click", function() {loadObject('sight')});
+document.getElementById("sound").addEventListener("click", function() {loadObject('sound')});
+document.getElementById("smell").addEventListener("click", function() {loadObject('smell')});
+
+
+//track mouse position
+window.addEventListener('mousemove', onMouseMove, false);
+//object grab
+window.addEventListener('click', onMouseClick, false);
+window.addEventListener('drag', dragObject, false);
+
+
+
+//////FUNCTIONS//////
+function loadJSON(sense) {
+	var data;
+	let path = '../models/json/'+sense+'.json';
+	fetch(path).then((response) => response.json()).then((json) => data = json);
+	return data;
+}
+
+function loadObject(sense) {
+	loader.load('../models/json/'+sense+'.json', function(obj) {
+		obj.position.set(room.Width/2,0.5,room.Depth/2);
+		items.add(obj);
+		scene.add(items);
+	});
+	// var data = loadJSON(sense);
+	// var object = loader.parse(data);
+	// var mesh = new THREE.Mesh(object.geometry, object.materials[0]);
+	// scene.add(mesh);
+}
 
 function moveCamera(direction) {
 	switch(direction) {
@@ -142,15 +205,15 @@ function moveCamera(direction) {
 function rotateCamera(direction) {
 	if(direction == 'up') {
 		camera.translateY(1);
-		console.log(camera.position.y);
-		console.log(camera.position.z);
-		console.log(camera.position.x);
+		// console.log(camera.position.y);
+		// console.log(camera.position.z);
+		// console.log(camera.position.x);
 	}
 	else if(direction == 'down') {
 		camera.translateY(-1);
-		console.log(camera.position.y);
-		console.log(camera.position.z);
-		console.log(camera.position.x);
+		// console.log(camera.position.y);
+		// console.log(camera.position.z);
+		// console.log(camera.position.x);
 	}
 	else if(direction == 'left') {
 		camera.translateX(-1*rotateFactor);
@@ -168,11 +231,16 @@ function rotateCamera(direction) {
 
 function zoomCamera(zoom) {
 	if(zoom == 1) {
-		if(camera.zoom >= 2) {console.log(camera.zoom); return;}
+		if(camera.zoom >= 2) {
+			// console.log(camera.zoom); 
+			return;
+		}
 		camera.zoom += 0.25;
 	}
 	else if(zoom == 0) {
-		if(camera.zoom <= zoomFactor) {return;}
+		if(camera.zoom <= zoomFactor) {
+			return;
+		}
 		camera.zoom -= 0.25;
 	}
 	else {
@@ -204,12 +272,28 @@ function zoomCamera(zoom) {
 // }
 
 function regenerateRoom() {
-	const xCenter = room.Width/2;
-	const yCenter = room.Depth/2;
+	var width = parseFloat(document.getElementById('roomWidth').value);
+	var depth = parseFloat(document.getElementById('roomDepth').value);
+
+	if(isNaN(width)) {
+		width = room.Width;
+	}
+	else {
+		room.Width = width;
+	}
+	if(isNaN(depth)) {
+		depth = room.Depth;
+	}
+	else {
+		room.Depth = depth;
+	}
+
+	const xCenter = width/2;
+	const yCenter = depth/2;
 	const wallThickness = 0.1;
 
-	let newSideWallGeometry = new THREE.BoxGeometry(room.Depth+wallThickness, room.Height, wallThickness);
-	let newBackWallGeometry = new THREE.BoxGeometry(room.Width+wallThickness, room.Height, wallThickness);
+	let newSideWallGeometry = new THREE.BoxGeometry(depth+wallThickness, room.Height, wallThickness);
+	let newBackWallGeometry = new THREE.BoxGeometry(width+wallThickness, room.Height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
 	room.rightWall.geometry = newSideWallGeometry;
 	room.backWall.geometry = newBackWallGeometry;
@@ -220,13 +304,17 @@ function regenerateRoom() {
 
 	room.backWall.position.set(xCenter,room.Height/2,0);
 
-	room.rightWall.position.set(room.Width, room.Height/2, yCenter);
+	room.rightWall.position.set(width, room.Height/2, yCenter);
 	room.rightWall.rotation.set(0,Math.PI/2,0);
 
-	room.frontWall.position.set(xCenter, room.Height/2, room.Depth);
+	room.frontWall.position.set(xCenter, room.Height/2, depth);
 
-	plane.geometry = new THREE.PlaneGeometry(room.Width,room.Depth,10,10);
+	plane.geometry = new THREE.PlaneGeometry(width,room.Depth,10,10);
 	plane.position.set(xCenter,0,yCenter);
+	plane.material.map.repeat.set(width/2,depth/2);
+
+	light.position.set(xCenter, 2.7, yCenter);
+	light.distance = Math.max(width,depth)*1.5
 
 	camera.lookAt(xCenter,0,yCenter);
 	controls.target.set(xCenter,0,yCenter);
@@ -238,12 +326,13 @@ function onMouseMove(event) {
 	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
-window.addEventListener('mousemove', onMouseMove, false);
 
 function onMouseClick(event) {
 	if(heldObject) {
-		console.log('unsetting object');
+		// console.log('unsetting object');
+		scene.remove(heldObjectBB);
 		heldObject = undefined;
+		heldObjectBB = undefined;
 		return;
 	}
 
@@ -252,11 +341,12 @@ function onMouseClick(event) {
 	raycaster.setFromCamera(clickMouse, camera);
 	const intersects = raycaster.intersectObjects(items.children);
 	if(intersects.length) {
-		console.log('setting object');
+		// console.log('setting object');
 		heldObject = intersects[0].object;
+		heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
+		scene.add(heldObjectBB);
 	}
 }
-window.addEventListener('click', onMouseClick, false);
 
 function wallHiderToggle() {
 	var dir = new THREE.Vector3();
@@ -266,8 +356,7 @@ function wallHiderToggle() {
 	if(!intersects.length) {
 		return;
 	}
-	
-	
+		
 	room.walls.traverse(function(obj) {
 		const newMaterial = intersects[0].object.material.clone();
 		if(obj.position == intersects[0].object.position) {
@@ -289,9 +378,7 @@ function wallHiderToggle() {
 	// 	newMaterial.transparent = true;
 	// 	newMaterial.opacity = 0.5;
 	// }
-	
 }
-// window.addEventListener('mousedown', hideToggle, false);
 
 function dragObject() {
 	if(heldObject) {
@@ -315,15 +402,15 @@ function dragObject() {
 		const moveGrid = moveRaycaster.intersectObjects(grid.children);
 		if(moveGrid.length) {
 			for(let obj of moveGrid) {
-				console.log(obj.point.x);
+				// console.log(obj.point.x);
 				heldObject.position.x = obj.point.x;
 				heldObject.position.z = obj.point.z;
+				// heldObjectBB.update();
 				break;
 			}
 		}		
 	}
 }
-window.addEventListener('drag', dragObject, false);
 
 function findGridPos() {
 	raycaster.setFromCamera(mouse, camera);
@@ -333,26 +420,13 @@ function findGridPos() {
 	}
 }
 
-var cubeBB = new Box3().setFromObject(cube);
-const geometryBB = new THREE.BoxGeometry(cubeBB.min.x,cubeBB.max.y,cubeBB.min.z);
-const materialBB = new THREE.MeshPhongMaterial({
-	color: 0xff0000,
-	wireframe: true,
-});
-const cubeBBox = new THREE.Mesh(geometryBB, materialBB);
-var cubeBBoxBox = new Box3().setFromObject(cubeBBox);
-cubeBBox.position.set(2,1,2);
-
-var cubeBBHelper = new THREE.Box3Helper(cubeBB, 0xff0000)
-scene.add(cubeBBox);
-
 function animate() {
 	requestAnimationFrame(animate);
 
-	cube.rotation.x += 0.01;
-	cube.rotation.y += 0.01;
 	wallHiderToggle();
-	cubeBBox.position.set(cube.position.x,cube.position.y,cube.position.z);
+	if(heldObjectBB) {
+		heldObjectBB.update();
+	}
 
 	render();
 }
@@ -361,4 +435,3 @@ function render() {
 	renderer.render(scene, camera);
 }
 
-animate();

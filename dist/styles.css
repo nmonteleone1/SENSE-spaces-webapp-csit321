@@ -6,6 +6,8 @@
 body {
     overflow: hidden;
     margin: 0px;
+    font-family: 'Filson Pro', sans-serif;
+    color: darkslategrey;
 }
 
 #panel {
