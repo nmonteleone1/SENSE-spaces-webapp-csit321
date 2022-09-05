@@ -1,6 +1,7 @@
 //////MODULES//////
 import * as THREE from "three";
 import {OrbitControls} from "OrbitControls";
+import {OBJLoader} from "OBJLoader";
 import { Box3, Group, RedIntegerFormat, Vector3 } from "three";
 
 
@@ -54,6 +55,7 @@ const moveFactor = 0.25;
 var heldObject, heldObjectBB;
 const items = new THREE.Group();
 const loader = new THREE.ObjectLoader();
+const objloader = new OBJLoader();
 
 //mouse tracking within canvas
 mouse = new THREE.Vector2();
@@ -155,6 +157,7 @@ document.getElementById("touch").addEventListener("click", function() {loadObjec
 document.getElementById("sight").addEventListener("click", function() {loadObject('sight')});
 document.getElementById("sound").addEventListener("click", function() {loadObject('sound')});
 document.getElementById("smell").addEventListener("click", function() {loadObject('smell')});
+document.getElementById("loadObject").addEventListener("change", function() {loadObj(event)})
 
 
 //track mouse position
@@ -163,7 +166,43 @@ window.addEventListener('mousemove', onMouseMove, false);
 window.addEventListener('click', onMouseClick, false);
 window.addEventListener('drag', dragObject, false);
 
+//load objects from file
+const fileInput = document.getElementById("loadObject");
+fileInput.addEventListener('change', function() {
+	const reader = new FileReader();
+	
+	var url = URL.createObjectURL(fileInput.files[0])
+	var fileName = fileInput.files[0].name
+	
+	reader.addEventListener('load', async function(event) {
+		const contents = event.target.result;
+		const object = new OBJLoader().parse(contents);
+		object.name = fileName;
 
+		items.add(object);
+
+	}, false);
+	reader.readAsText(fileInput.files[0]);
+
+	url = url.replace(/^(\.?\/)/, '');
+	console.log(url);
+
+	// const[file] = evt.target.files
+	// if(file) {
+	// 	objloader.load(URL.createObjectURL(file), function(obkect) {
+	// 		scene.add(object);
+	// 	},
+	// 	function (xhr) {
+	// 		console.log((xhr.loaded/xhr.total*100) + '% loaded');
+	// 	},
+	// 	function(error) {
+	// 		console.log('Error loading the object');
+	// 	})
+	// }
+})
+function loadObj(evt) {
+	
+}
 
 //////FUNCTIONS//////
 function loadJSON(sense) {
@@ -349,6 +388,7 @@ function onMouseClick(event) {
 }
 
 function wallHiderToggle() {
+	//note: add raycasts to each corner of the room to hide two walls when looking through a corner
 	var dir = new THREE.Vector3();
 	dir.subVectors(new Vector3(room.Width/2,0,room.Depth/2), camera.position).normalize();
 	raycaster.set(camera.position, dir);

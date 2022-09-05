@@ -11,6 +11,7 @@
 				"imports": {
 					"three": "https://unpkg.com/three@0.140.2/build/three.module.js",
 					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js",
+					"OBJLoader": "https://unpkg.com/three@0.140.2/examples/jsm/loaders/OBJLoader.js",
 					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
 				}
 			}
@@ -38,6 +39,7 @@
 			<div>
 				<h2>My Objects</h2>
 				<ul id="myObjects">
+					<li><input type="file" id="loadObject" class="panelButton"></li>
 					<li><button class="panelButton" id="taste">Taste</button></li>
 					<li><button class="panelButton" id="touch">Touch</button></li>
 					<li><button class="panelButton" id="sight">Sight</button></li>
