@@ -14,45 +14,235 @@
 					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
 				}
 			}
-		</script>
+	</script>
 	<script type="module" src="main.js"></script>
 
 	<title>SENSE Spaces Planning Tool</title>
 	<link rel="stylesheet" href="styles.css">
+
+	<!-- <script>
+		function getCookie(cname) {
+			let name = cname + "=";
+			let decodedCookie = decodeURIComponent(document.cookie);
+			let ca = decodedCookie.split(';');
+			for (let i = 0; i < ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+	</script> -->
 </head>
 
 <body>
 	<div id="ui">
-		<div id="panel" style="left:0px">
-			<div>
-				<h2>Menu</h2>
-			</div>
-			<div><button class="panelButton">New Room</button></div>
-			<div><button class="panelButton">Import Room</button></div>
-			<div><button class="panelButton">Export Room</button></div>
-			<div><button class="panelButton">User Settings</button></div>
+		<!-- top bar which contains the buttons for displaying each of the side menus -->
+		<div id="menuBar">
+			<button class="openMenuBtn" onclick="openLeftMenu()">☰</button>
+			<button class="openMenuBtn" onclick="openRightMenu()">☰</button>
 		</div>
-		<div id="panel" style="right:0px">
-			<div id="searchBox"><input type="text"><button>Q</button></div>
+
+		<!-- left menu ---- user menu -->
+		<div id="leftMenu" class="leftMenu">
+			<a href="javascript:void(0)" class="closeMenuBtn" onclick="closeLeftMenu()">×</a>
+
+			<div><button class="panelButton" onclick="openNewRoomMenu()">New Room</button></div>
+			<div><button class="panelButton" onclick="openImportRoomMenu()">Import Room</button></div>
+			<div><button class="panelButton" onclick="openExportMenu()">Export</button></div>
+			<div><button class="panelButton" onclick="openUserSettingsMenu()">User Settings</button></div>
+		</div>
+
+
+		<!-- new room ---- user menu -->
+		<div id="newRoom" class="leftMenu">
+			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeNewRoomMenu()">×</a> -->
+
+			<form id="newroom">
+				<table style="padding:8px;">
+					<tr>
+						<td><label>Room name:</label></td>
+					</tr>
+					<tr>
+						<td><input type="text" id="name" /></td>
+					</tr>
+					<tr>
+						<td>&nbsp;<small id="nameInvalid" class="errorMessage"></small></td>
+					</tr>
+					<tr>
+						<td><label>Width (m):</label></td>
+					</tr>
+					<tr>
+						<td><input type="number" id="width" min="0" /></td>
+					</tr>
+					<tr>
+						<td>&nbsp;<small id="widthInvalid" class="errorMessage"></small></td>
+					</tr>
+					<tr>
+						<td><label>Depth (m):</label></td>
+					</tr>
+					<tr>
+						<td><input type="number" id="depth" min="0" /></td>
+					</tr>
+					<tr>
+						<td>&nbsp;<small id="depthInvalid" class="errorMessage"></small></td>
+					</tr>
+					<tr>
+						<td><label>Height (m):</label></td>
+					</tr>
+					<tr>
+						<td><input type="number" id="height" min="0" /></td>
+					</tr>
+					<tr>
+						<td>&nbsp;<small id="heightInvalid" class="errorMessage"></small></td>
+					</tr>
+				</table>
+				<br /><br />
+				<div><button class="panelButton" type="submit">Create Room</button></div>
+				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeNewRoomMenu()">Cancel</span></div>
+			</form>
+		</div>
+
+
+		<!-- import room ---- user menu -->
+		<div id="importRoom" class="leftMenu">
+			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeImportRoomMenu()">×</a> -->
+
+			<form id="importroom">
+				<div class="alert" style="background-color: rgb(252, 177, 34);">
+					<span class="closeAlertBtn" onclick="this.parentElement.style.display='none';">&times;</span>
+					<strong>Note:</strong> Files must be in a valid JSON format to upload successfully
+				</div>
+				<input type="file" id="file" accept=".json" />
+				<small id="errorMessage" class="errorMessage"></small>
+				<br /><br />
+				<div><button class="panelButton" type="submit">Import Room</button></div>
+				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeImportRoomMenu()">Cancel</span></div>
+			</form>
+		</div>
+
+
+		<!-- export ---- user menu -->
+		<div id="export" class="leftMenu">
+			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeExportMenu()">×</a> -->
+
+			<form id="exportitem">
+				<div style="width:100%;">
+					<select id="type">
+						<option value="json">Room (.json)</option>
+						<option value="jpeg">Room (.jpeg)</option>
+						<option value="txt">Object List (.txt)</option>
+					</select>
+				</div>
+				<br />
+				<div><button class="panelButton" type="submit">Export</button></div>
+				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeExportMenu()">Cancel</span></div>
+			</form>
+		</div>
+
+
+		<!-- user settings ---- user menu -->
+		<div id="userSettings" class="leftMenu">
+			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeUserSettingsMenu()">×</a> -->
+
+			<form id="userSettingsForm">
+				<table style="padding:8px;">
+					<tr>
+						<td colspan="2"><label>Font size:</label></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<select id="fontsize">
+								<option value="">Normal</option>
+								<option value="125">125%</option>
+								<option value="150">150%</option>
+								<option value="200">200%</option>
+								<option value="250">250%</option>
+								<option value="300">300%</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><label>Text spacing:</label></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<select id="textspacing">
+								<option value="">Normal</option>
+								<option value="1">1px</option>
+								<option value="2">2px</option>
+								<option value="3">3px</option>
+								<option value="4">4px</option>
+								<option value="5">5px</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><label>Highlight</label></td>
+					</tr>
+					<tr>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+							<label>&emsp;&emsp;Headings:</label>
+						</td>
+						<td>
+							<label class="switch">
+								<input type="checkbox" id="headings">
+								<span class="slider round"></span>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>&emsp;&emsp;Links:</label>
+						</td>
+						<td>
+							<label class="switch">
+								<input type="checkbox" id="cursorsize">
+								<span class="slider round"></span>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						
+					</tr>
+				</table>
+				<br /><br />
+				<div><button class="panelButton" type="submit">Save Changes</button></div>
+				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeUserSettingsMenu()">Cancel</span></div>
+			</form>
+		</div>
+
+		<!-- right menu ---- objects menu -->
+		<div id="rightMenu" class="rightMenu">
+			<a href="javascript:void(0)" class="closeMenuBtn" onclick="closeRightMenu()">×</a>
+
 			<!-- Q is temporary until I add a proper magnifying glass search icon-->
+			<!-- <div id="searchBox"><input type="text"><button>Q</button></div> -->
+
+			<div><button class="panelButton" id="taste">Taste</button></div>
+			<div><button class="panelButton" id="touch">Touch</button></div>
+			<div><button class="panelButton" id="sight">Sight</button></div>
+			<div><button class="panelButton" id="sound">Sound</button></div>
+			<div><button class="panelButton" id="smell">Smell</button></div>
+
 			<div>
-				<h2>My Objects</h2>
-				<ul id="myObjects">
-					<li><button class="panelButton" id="taste">Taste</button></li>
-					<li><button class="panelButton" id="touch">Touch</button></li>
-					<li><button class="panelButton" id="sight">Sight</button></li>
-					<li><button class="panelButton" id="sound">Sound</button></li>
-					<li><button class="panelButton" id="smell">Smell</button></li>
-				</ul>
-			</div>
-			<div>
-				Width
-				<input type="range" id="roomWidth" min="1" max="8" value="4" autocomplete="off"/>
-				Depth
-				<input type="range" id="roomDepth" min="1" max="8" value="4" autocomplete="off"/>
+				<span class="label">Width</span><input type="range" id="roomWidth" min="1" max="8" value="4"
+					autocomplete="off" />
+				<span class="label">Depth</span><input type="range" id="roomDepth" min="1" max="8" value="4"
+					autocomplete="off" />
 				<button class="panelButton" id="roomRegen">Regenerate Room</button>
 			</div>
 		</div>
+
+
+		<!-- on screen controls -->
 		<div id="camControl" style="left:0px; bottom:0px">
 			<div class="zoomControls">
 				<button class="panelButton" id="zoomIn">+</button>
@@ -74,6 +264,88 @@
 		</div>
 
 
+		<!-- defines the methods for displaying and hiding the side menus -->
+		<script>
+			function openLeftMenu() {
+				document.getElementById("leftMenu").style.width = "250px";
+			}
+
+			function closeLeftMenu() {
+				document.getElementById("leftMenu").style.width = "0";
+			}
+
+			function openNewRoomMenu() {
+				// reset form
+				let form = document.getElementById('newroom');
+				form.reset();
+
+				document.getElementById("newRoom").style.width = "250px";
+			}
+
+			function closeNewRoomMenu() {
+				document.getElementById("newRoom").style.width = "0";
+			}
+
+			function openImportRoomMenu() {
+				// reset form
+				let form = document.getElementById('importroom');
+				form.reset();
+
+				document.getElementById("importRoom").style.width = "250px";
+			}
+
+			function closeImportRoomMenu() {
+				document.getElementById("importRoom").style.width = "0";
+			}
+
+			function openExportMenu() {
+				// reset form
+				let form = document.getElementById('exportitem');
+				form.reset();
+
+				document.getElementById("export").style.width = "250px";
+			}
+
+			function closeExportMenu() {
+				document.getElementById("export").style.width = "0";
+			}
+
+			function openUserSettingsMenu() {
+				// reset form
+				let form = document.getElementById('userSettingsForm');
+				form.reset();
+
+				document.getElementById("userSettings").style.width = "250px";
+			}
+
+			function closeUserSettingsMenu() {
+				document.getElementById("userSettings").style.width = "0";
+			}
+
+			function openRightMenu() {
+				document.getElementById("rightMenu").style.width = "250px";
+			}
+
+			function closeRightMenu() {
+				document.getElementById("rightMenu").style.width = "0";
+			}
+		</script>
+
+
+		<script type="module">
+			import { handleNewSubmit, handleImportSubmit, handleExportSubmit } from './js/test.js'
+
+			// once the DOM is loaded, define an event listener for submitting the form
+			document.addEventListener('DOMContentLoaded', (event) => {
+				document.getElementById('newroom').addEventListener('submit', handleNewSubmit);
+
+				document.getElementById('importroom').addEventListener('submit', handleImportSubmit);
+				let file = document.getElementById('file');
+
+				document.getElementById('export').addEventListener('submit', handleExportSubmit);
+			});
+		</script>
+	</div>
 </body>
 
 </html>

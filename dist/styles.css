@@ -7,46 +7,114 @@ body {
     overflow: hidden;
     margin: 0px;
     font-family: 'Filson Pro', sans-serif;
-    color: darkslategrey;
 }
 
-#panel {
-    position: fixed;
-    z-index: 100;
-    width: var(--panel-width);
+
+/* top bar -- index.html */
+#menuBar {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    /* background-color: rgb(0, 145, 171); */
+    background-color: rgb(111, 102, 165);
+}
+
+
+/* left menu -- index.html */
+.leftMenu {
     height: 100%;
-    overflow: auto;
-    border-right: var(--border-style);
-    display: flex;
-    flex-direction: column;
-    transition: 0s 0s height;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    /* background-color: rgb(111, 102, 165); */
     background-color: white;
-    gap: 30px;
-    text-align: center;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
 }
 
-h2 {
-    width: var(--panel-width);
-    border: none;
-    color: darkslategrey;
-    padding: 15px 32px;
-    text-align: center;
+.leftMenu div,
+.leftMenu a {
+    padding: 8px 8px 8px 12px;
     text-decoration: none;
-    display: inline-block;
-    font-size: 30px;
+    color: rgb(0, 0, 0);
+    display: block;
+    transition: 0.3s;
+}
+
+.leftMenu .closeMenuBtn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 32px;
+    margin-left: 50px;
+}
 
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    gap: 10px;
+/* right menu -- index.html */
+.rightMenu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: rgb(111, 102, 165);
+    /* background-color: white; */
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.rightMenu div,
+.rightMenu a {
+    padding: 8px 8px 8px 12px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    display: block;
+    transition: 0.3s;
+}
+
+.rightMenu .closeMenuBtn {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    font-size: 32px;
+    margin-right: 50px;
+}
+
+.label {
+    font-size: 16px;
+}
+
+
+/* menu controls -- index.html */
+.openMenuBtn {
+    border: none;
+    font-size: 14px;
+    color: rgb(0, 0, 0);
+
+    padding: 5px 10px;
 
     background: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
 
     font-family: 'Filson Pro', sans-serif;
 }
 
+.openMenuBtn:hover {
+    background-color: #D9D9D9;
+}
+
+.closeMenuBtn:hover {
+    color: #D9D9D9;
+}
+
+
+/* search bar -- index.html */
 #searchBox {
     margin: 10px 10px 10px 10px;
     display: flex;
@@ -64,19 +132,15 @@ h2 {
     outline: none;
 }
 
+
+/* buttons -- used throughout */
 .panelButton {
     width: var(--panel-width);
     border: none;
-    color: darkslategrey;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    color: rgb(0, 0, 0);
 
-
-    justify-content: center;
-    align-items: center;
     /* TODO: change this to percentage of view height / width */
     padding: 10px 10px 10px 10px;
 
@@ -96,15 +160,8 @@ h2 {
     background-color: #A1A1A1;
 }
 
-#myObjects {
-    list-style-type: none;
-    padding: 0;
-}
 
-#myObjects .panelButton {
-    padding: 14px;
-}
-
+/* on screen controls -- index.html */
 .zoomControls {
     position: fixed;
     bottom: 10%;
@@ -142,4 +199,114 @@ h2 {
     position: absolute;
     top: 0px;
     right: var(--panel-width);
+}
+
+
+/* select control -- used throughout left menu */
+select {
+    border: 0 !important;
+    width: var(--panel-width);
+    border: none;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 4px;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+
+/* input -- used throughout left menu*/
+input {
+    width: var(--panel-width)
+}
+
+
+/* alert -- used throughout left menu */
+.alert {
+    padding: 8px;
+    border-radius: 5.5px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.closeAlertBtn {
+    margin-right: 4px;
+    float: right;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closeAlertBtn:hover {
+    color: black;
+}
+
+
+/* error message -- used throughout left menu*/
+.errorMessage {
+    color: rgb(217, 62, 79);
+    font-style: italic;
+}
+
+
+/* toggle switch -- usersettings.html */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 54px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 6px;
+    bottom: 5px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: rgb(0, 145, 171);
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px rgb(0, 145, 171);
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
