@@ -73,7 +73,8 @@ body {
     padding: 8px 8px 8px 12px;
     text-decoration: none;
     color: rgb(0, 0, 0);
-    display: block;
+    /* temp comment out to hide categories by default */
+    /* display: block; */
     transition: 0.3s;
 }
 

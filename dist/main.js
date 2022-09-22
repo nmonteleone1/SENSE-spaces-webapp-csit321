@@ -159,6 +159,8 @@ document.getElementById("sound").addEventListener("click", function() {loadObjec
 document.getElementById("smell").addEventListener("click", function() {loadObject('smell')});
 document.getElementById("loadObject").addEventListener("change", function() {loadObj(event)})
 
+// setup collapsable dropdown menus
+setupDropdown();
 
 //track mouse position
 window.addEventListener('mousemove', onMouseMove, false);
@@ -479,19 +481,21 @@ function render() {
 }
 
 
-// handle category visibility
+// handle dropdown category visibility
 // todo: move this somewhere better
-var dropdown = document.getElementsByClassName("panelButtonDropdown");
-var i;
+function setupDropdown() {
+	var dropdown = document.getElementsByClassName("panelButtonDropdown");
+	var i;
 
-for (i = 0; i < dropdown.length; i++) {
-	dropdown[i].addEventListener("click", function () {
-		this.classList.toggle("active");
-		var dropdownContent = this.nextElementSibling;
-		if (dropdownContent.style.display === "block") {
-			dropdownContent.style.display = "none";
-		} else {
-			dropdownContent.style.display = "block";
-		}
-	});
+	for (i = 0; i < dropdown.length; i++) {
+		dropdown[i].addEventListener("click", function () {
+			this.classList.toggle("active");
+			var dropdownContent = this.nextElementSibling;
+			if (dropdownContent.style.display === "block") {
+				dropdownContent.style.display = "none";
+			} else {
+				dropdownContent.style.display = "block";
+			}
+		});
+	}
 }
