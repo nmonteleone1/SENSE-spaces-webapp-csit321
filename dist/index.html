@@ -227,17 +227,54 @@
 			<!-- Q is temporary until I add a proper magnifying glass search icon-->
 			<!-- <div id="searchBox"><input type="text"><button>Q</button></div> -->
       <div><input type="file" id="loadObject" class="panelButton"></div>
-			<div><button class="panelButton" id="taste">Taste</button></div>
-			<div><button class="panelButton" id="touch">Touch</button></div>
-			<div><button class="panelButton" id="sight">Sight</button></div>
-			<div><button class="panelButton" id="sound">Sound</button></div>
-			<div><button class="panelButton" id="smell">Smell</button></div>
 
 			<div>
-				<span class="label">Width</span><input type="range" id="roomWidth" min="1" max="8" value="4"
-					autocomplete="off" />
-				<span class="label">Depth</span><input type="range" id="roomDepth" min="1" max="8" value="4"
-					autocomplete="off" />
+				<h2>My Objects</h2>
+				<!-- hardcoded objects pending object "backend" to dynamically load -->
+				<ul id="myObjects">
+					<li><input type="file" id="loadObject" class="panelButton"></li>
+					<!-- TASTE -->
+					<button class="panelButtonDropdown">Taste Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton" id="taste">Taste 1</button></li>
+						<li><button class="panelButton" id="taste2">Taste 2</button></li>
+						<li><button class="panelButton" id="taste3">Taste 3</button></li>
+					</div>
+					<!-- TOUCH -->
+					<button class="panelButtonDropdown">Touch Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton" id="touch">Touch 1</button></li>
+						<li><button class="panelButton" id="touch2">Touch 2</button></li>
+						<li><button class="panelButton" id="touch3">Touch 3</button></li>
+					</div>
+					<!-- SIGHT -->
+					<button class="panelButtonDropdown">Sight Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton" id="sight">Sight 1</button></li>
+						<li><button class="panelButton" id="sight2">Sight 2</button></li>
+						<li><button class="panelButton" id="sight3">Sight 3</button></li>
+					</div>
+					<!-- SOUND -->
+					<button class="panelButtonDropdown">Sound Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton" id="sound">Sound 1</button></li>
+						<li><button class="panelButton" id="sound2">Sound 2</button></li>
+						<li><button class="panelButton" id="sound3">Sound 3</button></li>
+					</div>
+					<!-- SMELL -->
+					<button class="panelButtonDropdown">Smell Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton" id="smell">Smell 1</button></li>
+						<li><button class="panelButton" id="smell2">Smell 2</button></li>
+						<li><button class="panelButton" id="smell3">Smell 3</button></li>
+					</div>
+				</ul>
+			</div>
+			<div>
+				Width
+				<input type="range" id="roomWidth" min="1" max="8" value="4" autocomplete="off"/>
+				Depth
+				<input type="range" id="roomDepth" min="1" max="8" value="4" autocomplete="off"/>
 				<button class="panelButton" id="roomRegen">Regenerate Room</button>
 			</div>
 		</div>
