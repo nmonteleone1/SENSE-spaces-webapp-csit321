@@ -207,6 +207,10 @@ ul {
     font-family: 'Filson Pro', sans-serif;
 }
 
+.sensoryItem {
+    background-color: #DADADA;
+}
+
 
 /* on screen controls -- index.html */
 .zoomControls {
