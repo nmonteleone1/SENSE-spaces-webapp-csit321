@@ -137,6 +137,7 @@ body {
 ul {
     /* remove marker from unordered lists */
     list-style-type: none;
+    padding: 0;
 }
 
 
@@ -169,7 +170,6 @@ ul {
 
 .panelButtonContainer {
     display: none;
-    padding-right: 8px;
 }
 
 .panelButtonDropdown:hover {
@@ -188,7 +188,6 @@ ul {
     width: var(--panel-width);
     border: none;
     color: darkslategrey;
-    padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
