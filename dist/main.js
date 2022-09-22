@@ -499,3 +499,33 @@ function setupDropdown() {
 		});
 	}
 }
+
+var dropdown = document.getElementsByClassName("sensoryItem");
+	var i;
+
+	for (i = 0; i < dropdown.length; i++) {
+		var element = dropdown[i];
+		// console.log(element.innerHTML)
+		// console.log(element.innerHTML.toLowerCase())
+		var data = loadJSON(element.innerHTML.toLowerCase());
+		console.log(data)
+		if(data) {
+			// print(data)
+			console.log(data);
+		}
+
+		// dropdown[i].innerHTML
+
+		
+		// dropdown[i].addEventListener("click", function () {
+		// 	this.classList.toggle("active");
+		// 	var dropdownContent = this.nextElementSibling;
+		// 	if (dropdownContent.style.display === "block") {
+		// 		dropdownContent.style.display = "none";
+		// 	} else {
+		// 		dropdownContent.style.display = "block";
+		// 	}
+		// });
+	}
+
+	// loadJSON('taste')
