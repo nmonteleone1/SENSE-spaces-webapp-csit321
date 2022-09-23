@@ -159,6 +159,8 @@ document.getElementById("sound").addEventListener("click", function() {loadObjec
 document.getElementById("smell").addEventListener("click", function() {loadObject('smell')});
 document.getElementById("loadObject").addEventListener("change", function() {loadObj(event)})
 
+// setup collapsable dropdown menus
+setupDropdown();
 
 //track mouse position
 window.addEventListener('mousemove', onMouseMove, false);
@@ -207,18 +209,21 @@ function loadObj(evt) {
 //////FUNCTIONS//////
 function loadJSON(sense) {
 	var data;
-	let path = 'models/json/'+sense+'.json';
+	let path = 'models/json/' + sense + '.json';
 	fetch(path).then((response) => response.json()).then((json) => data = json);
+	// fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
+	fetch(path).then(response => {return response.json()})
+
 	return data;
 }
 
 function loadObject(sense) {
-	loader.load('models/json/'+sense+'.json', function(obj) {
-		obj.position.set(room.Width/2,0.5,room.Depth/2);
+	loader.load('models/json/' + sense + '.json', function (obj) {
+		obj.position.set(room.Width / 2, 0.5, room.Depth / 2);
 		items.add(obj);
 		scene.add(items);
 	});
-	// var data = loadJSON(sense);
+	var data = loadJSON(sense);
 	// var object = loader.parse(data);
 	// var mesh = new THREE.Mesh(object.geometry, object.materials[0]);
 	// scene.add(mesh);
@@ -475,3 +480,52 @@ function render() {
 	renderer.render(scene, camera);
 }
 
+
+// handle dropdown category visibility
+// todo: move this somewhere better
+function setupDropdown() {
+	var dropdown = document.getElementsByClassName("panelButtonDropdown");
+	var i;
+
+	for (i = 0; i < dropdown.length; i++) {
+		dropdown[i].addEventListener("click", function () {
+			this.classList.toggle("active");
+			var dropdownContent = this.nextElementSibling;
+			if (dropdownContent.style.display === "block") {
+				dropdownContent.style.display = "none";
+			} else {
+				dropdownContent.style.display = "block";
+			}
+		});
+	}
+}
+
+var dropdown = document.getElementsByClassName("sensoryItem");
+	var i;
+
+	for (i = 0; i < dropdown.length; i++) {
+		var element = dropdown[i];
+		// console.log(element.innerHTML)
+		// console.log(element.innerHTML.toLowerCase())
+		var data = loadJSON(element.innerHTML.toLowerCase());
+		// console.log(data)
+		// if(data) {
+		// 	// print(data)
+		// 	console.log(data);
+		// }
+
+		// dropdown[i].innerHTML
+
+		
+		// dropdown[i].addEventListener("click", function () {
+		// 	this.classList.toggle("active");
+		// 	var dropdownContent = this.nextElementSibling;
+		// 	if (dropdownContent.style.display === "block") {
+		// 		dropdownContent.style.display = "none";
+		// 	} else {
+		// 		dropdownContent.style.display = "block";
+		// 	}
+		// });
+	}
+
+	// loadJSON('taste')
