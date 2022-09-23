@@ -6,7 +6,18 @@ https://nmonteleone1.github.io/SENSE-spaces-webapp-csit321/
 
 ## Application Usage
 ### Left Panel
-No current functionality
+- New Room
+  - Brings up a form for Room Generation
+  - Currently not linked to 3D space
+- Import Room
+  - Import .JSON file previously exported to a local machine.
+  - Currently not linked to 3D space
+- Export Room
+  - Export current room into a .JSON file for importing in future.
+  - Currently not linked to 3D space
+- User Settings
+  - Shows options for the user to increase accessibility.
+  - Currently not linked to front end functionality.
 
 ### Right Panel
 - Search Bar
