@@ -211,7 +211,7 @@ function loadJSON(sense) {
 	var data;
 	let path = 'models/json/' + sense + '.json';
 	fetch(path).then((response) => response.json()).then((json) => data = json);
-	fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
+	// fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
 	fetch(path).then(response => {return response.json()})
 
 	return data;
@@ -508,11 +508,11 @@ var dropdown = document.getElementsByClassName("sensoryItem");
 		// console.log(element.innerHTML)
 		// console.log(element.innerHTML.toLowerCase())
 		var data = loadJSON(element.innerHTML.toLowerCase());
-		console.log(data)
-		if(data) {
-			// print(data)
-			console.log(data);
-		}
+		// console.log(data)
+		// if(data) {
+		// 	// print(data)
+		// 	console.log(data);
+		// }
 
 		// dropdown[i].innerHTML
 
