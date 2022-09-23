@@ -187,7 +187,6 @@ ul {
 .panelButtonDropdown {
     width: var(--panel-width);
     border: none;
-    color: darkslategrey;
     text-align: center;
     text-decoration: none;
     display: inline-block;
