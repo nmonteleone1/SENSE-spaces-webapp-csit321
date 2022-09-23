@@ -361,6 +361,7 @@ input:checked+.slider:before {
     background-repeat: no-repeat;
     background-size:contain ;
     padding-top: 30%;
+    text-decoration:underline;
 }
 
 #taste {
