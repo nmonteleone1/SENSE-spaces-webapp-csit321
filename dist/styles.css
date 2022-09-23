@@ -1,5 +1,5 @@
 :root {
-    --panel-width: 220px;
+    --panel-width: 210px;
     --panel-padding: 16px;
 }
 
@@ -206,11 +206,6 @@ ul {
     font-family: 'Filson Pro', sans-serif;
 }
 
-.sensoryItem {
-    background-color: #DADADA;
-}
-
-
 /* on screen controls -- index.html */
 .zoomControls {
     position: fixed;
@@ -359,4 +354,31 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.sensoryItem {
+    /* background-color: #DADADA; */
+    background-repeat: no-repeat;
+    background-size:contain ;
+    padding-top: 30%;
+}
+
+#taste {
+    background-image: url('textures/taste.png');
+}
+
+#touch {
+    background-image: url('textures/touch.png');
+}
+
+#sight {
+    background-image: url('textures/sight.png');
+}
+
+#sound {
+    background-image: url('textures/sound.png');
+}
+
+#smell {
+    background-image: url('textures/smell.png');
 }
