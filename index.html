@@ -226,18 +226,43 @@
 
 			<!-- Q is temporary until I add a proper magnifying glass search icon-->
 			<!-- <div id="searchBox"><input type="text"><button>Q</button></div> -->
-      <div><input type="file" id="loadObject" class="panelButton"></div>
-			<div><button class="panelButton" id="taste">Taste</button></div>
-			<div><button class="panelButton" id="touch">Touch</button></div>
-			<div><button class="panelButton" id="sight">Sight</button></div>
-			<div><button class="panelButton" id="sound">Sound</button></div>
-			<div><button class="panelButton" id="smell">Smell</button></div>
-
 			<div>
-				<span class="label">Width</span><input type="range" id="roomWidth" min="1" max="8" value="4"
-					autocomplete="off" />
-				<span class="label">Depth</span><input type="range" id="roomDepth" min="1" max="8" value="4"
-					autocomplete="off" />
+				<h2>My Objects</h2>
+				<!-- hardcoded objects pending object "backend" to dynamically load -->
+				<ul id="myObjects">
+					<li><input type="file" id="loadObject" class="panelButton"></li>
+					<!-- TASTE -->
+					<button class="panelButtonDropdown">Taste Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton sensoryItem" id="taste">Taste</button></li>
+					</div>
+					<!-- TOUCH -->
+					<button class="panelButtonDropdown">Touch Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton sensoryItem" id="touch">Touch</button></li>
+					</div>
+					<!-- SIGHT -->
+					<button class="panelButtonDropdown">Sight Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton sensoryItem" id="sight">Sight</button></li>
+					</div>
+					<!-- SOUND -->
+					<button class="panelButtonDropdown">Sound Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton sensoryItem" id="sound">Sound</button></li>
+					</div>
+					<!-- SMELL -->
+					<button class="panelButtonDropdown">Smell Category</button>
+					<div class="panelButtonContainer">
+						<li><button class="panelButton sensoryItem" id="smell">Smell</button></li>
+					</div>
+				</ul>
+			</div>
+			<div>
+				Width
+				<input type="range" id="roomWidth" min="1" max="8" value="4" autocomplete="off"/>
+				Depth
+				<input type="range" id="roomDepth" min="1" max="8" value="4" autocomplete="off"/>
 				<button class="panelButton" id="roomRegen">Regenerate Room</button>
 			</div>
 		</div>
