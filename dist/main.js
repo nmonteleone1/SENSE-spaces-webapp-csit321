@@ -543,7 +543,7 @@ function readTextFile(file, callback) {
 }
 
 //usage:
-readTextFile("taste.json", function(text){
+readTextFile("configs/taste.json", function(text){
     var data = JSON.parse(text);
     console.log(data);
 });
