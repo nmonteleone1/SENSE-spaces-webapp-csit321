@@ -1,0 +1,7 @@
+{
+    "config": {
+        "name": "taste",
+        "test1": "somevalue",
+        "type": "Object"
+    }
+}

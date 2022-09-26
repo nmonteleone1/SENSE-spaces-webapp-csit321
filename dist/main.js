@@ -211,7 +211,7 @@ function loadJSON(sense) {
 	var data;
 	let path = 'models/json/' + sense + '.json';
 	fetch(path).then((response) => response.json()).then((json) => data = json);
-	// fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
+	fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
 	fetch(path).then(response => {return response.json()})
 
 	return data;
@@ -507,7 +507,7 @@ var dropdown = document.getElementsByClassName("sensoryItem");
 		var element = dropdown[i];
 		// console.log(element.innerHTML)
 		// console.log(element.innerHTML.toLowerCase())
-		var data = loadJSON(element.innerHTML.toLowerCase());
+		// var data = loadJSON(element.innerHTML.toLowerCase());
 		// console.log(data)
 		// if(data) {
 		// 	// print(data)
@@ -529,3 +529,21 @@ var dropdown = document.getElementsByClassName("sensoryItem");
 	}
 
 	// loadJSON('taste')
+
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+//usage:
+readTextFile("taste.json", function(text){
+    var data = JSON.parse(text);
+    console.log(data);
+});

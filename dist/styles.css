@@ -357,11 +357,15 @@ input:checked+.slider:before {
 }
 
 .sensoryItem {
-    /* background-color: #DADADA; */
     background-repeat: no-repeat;
     background-size:contain ;
     padding-top: 30%;
+}
+
+.sensoryItemText {
+    text-decoration:double;
     text-decoration:underline;
+    /* background-color: green; */
 }
 
 #taste {
