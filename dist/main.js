@@ -530,6 +530,10 @@ var dropdown = document.getElementsByClassName("sensoryItem");
 
 	// loadJSON('taste')
 
+function printData(data){
+	console.log(data)
+};
+
 function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest();
     rawFile.overrideMimeType("application/json");
@@ -542,8 +546,26 @@ function readTextFile(file, callback) {
     rawFile.send(null);
 }
 
+function getSenseData(sense, myCallback){
+	var data = readTextFile("configs/" + sense +".json")
+	myCallback(data)
+};
+
 //usage:
 readTextFile("configs/taste.json", function(text){
     var data = JSON.parse(text);
-    console.log(data);
+	return data
 });
+
+
+var element = document.getElementById("taste");
+console.log(element.innerHTML);
+var result = readTextFile("configs/taste.json", function(text){
+    var data = JSON.parse(text);
+	return "data"
+    // console.log(data);
+});
+
+element.innerHTML = "something"
+
+var callbackResult = readTextFile("configs/taste.json", printData)

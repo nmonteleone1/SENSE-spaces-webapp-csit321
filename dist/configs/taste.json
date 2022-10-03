@@ -1,7 +1,7 @@
 {
     "config": {
-        "name": "taste",
-        "test1": "somevalue",
-        "type": "Object"
+        "name": "taste object title",
+        "description": "subheading",
+        "purchaseLink": "https://github.com/nmonteleone1/SENSE-spaces-webapp-csit321"
     }
 }
