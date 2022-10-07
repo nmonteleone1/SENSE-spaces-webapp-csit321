@@ -145,7 +145,7 @@ document.getElementById("rotateUp").addEventListener("click", function() {rotate
 document.getElementById("rotateDown").addEventListener("click", function() {rotateCamera('down')});
 document.getElementById("rotateLeft").addEventListener("click", function() {rotateCamera('left')});
 document.getElementById("rotateRight").addEventListener("click", function() {rotateCamera('right')});
-document.getElementById("roomRegen").addEventListener("click", regenerateRoom);
+// document.getElementById("roomRegen").addEventListener("click", regenerateRoom);
 document.getElementById("zoomIn").addEventListener("click", function() {zoomCamera(1)});
 document.getElementById("zoomOut").addEventListener("click", function() {zoomCamera(0)});
 document.getElementById("moveUp").addEventListener("click", function() {moveCamera('up')});
@@ -180,8 +180,25 @@ fileInput.addEventListener('change', function() {
 		const contents = event.target.result;
 		const object = new OBJLoader().parse(contents);
 		object.name = fileName;
+		let width = document.getElementById("objectWidth").value;
+		let depth = document.getElementById("objectDepth").value;
+		let height = document.getElementById("objectHeight").value;
+		console.log(width, depth, height);
+		let boxSize = new THREE.Vector3();
+		let boundingBox = new THREE.Box3().setFromObject(object);
+		boundingBox.getSize(boxSize);
+		console.log(boxSize);
+		let xFactor = width/boxSize.x;
+		let yFactor = height/boxSize.y;
+		let zFactor = depth/boxSize.z;
+		object.scale.x = xFactor;
+		object.scale.y = yFactor;
+		object.scale.z = zFactor;
+		console.log(object.scale)
 
 		items.add(object);
+
+		scene.add(items)
 
 	}, false);
 	reader.readAsText(fileInput.files[0]);
@@ -315,9 +332,9 @@ function zoomCamera(zoom) {
 // 	controls.update();
 // }
 
-function regenerateRoom() {
-	var width = parseFloat(document.getElementById('roomWidth').value);
-	var depth = parseFloat(document.getElementById('roomDepth').value);
+export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.Height) {
+	// var width = parseFloat(document.getElementById('roomWidth').value);
+	// var depth = parseFloat(document.getElementById('roomDepth').value);
 
 	if(isNaN(width)) {
 		width = room.Width;
@@ -331,33 +348,39 @@ function regenerateRoom() {
 	else {
 		room.Depth = depth;
 	}
+	if(isNaN(height)) {
+		height = room.Height;
+	}
+	else { 
+		room.Height = height;
+	}
 
 	const xCenter = width/2;
 	const yCenter = depth/2;
 	const wallThickness = 0.1;
 
-	let newSideWallGeometry = new THREE.BoxGeometry(depth+wallThickness, room.Height, wallThickness);
-	let newBackWallGeometry = new THREE.BoxGeometry(width+wallThickness, room.Height, wallThickness);
+	let newSideWallGeometry = new THREE.BoxGeometry(depth+wallThickness, height, wallThickness);
+	let newBackWallGeometry = new THREE.BoxGeometry(width+wallThickness, height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
 	room.rightWall.geometry = newSideWallGeometry;
 	room.backWall.geometry = newBackWallGeometry;
 	room.frontWall.geometry = newBackWallGeometry;	
 
-	room.leftWall.position.set(0,room.Height/2,yCenter);
+	room.leftWall.position.set(0,height/2,yCenter);
 	room.leftWall.rotation.set(0,Math.PI/2,0);
 
-	room.backWall.position.set(xCenter,room.Height/2,0);
+	room.backWall.position.set(xCenter,height/2,0);
 
-	room.rightWall.position.set(width, room.Height/2, yCenter);
+	room.rightWall.position.set(width, height/2, yCenter);
 	room.rightWall.rotation.set(0,Math.PI/2,0);
 
-	room.frontWall.position.set(xCenter, room.Height/2, depth);
+	room.frontWall.position.set(xCenter, height/2, depth);
 
 	plane.geometry = new THREE.PlaneGeometry(width,room.Depth,10,10);
 	plane.position.set(xCenter,0,yCenter);
 	plane.material.map.repeat.set(width/2,depth/2);
 
-	light.position.set(xCenter, 2.7, yCenter);
+	light.position.set(xCenter, height, yCenter);
 	light.distance = Math.max(width,depth)*1.5
 
 	camera.lookAt(xCenter,0,yCenter);
@@ -393,36 +416,53 @@ function onMouseClick(event) {
 }
 
 function wallHiderToggle() {
-	//note: add raycasts to each corner of the room to hide two walls when looking through a corner
-	var dir = new THREE.Vector3();
-	dir.subVectors(new Vector3(room.Width/2,0,room.Depth/2), camera.position).normalize();
-	raycaster.set(camera.position, dir);
-	const intersects = raycaster.intersectObjects(room.walls.children);
-	if(!intersects.length) {
-		return;
+	// get direction to each corner of the room, subtract some arbitrary distance to prevent collisions
+	let buffer = 0.1;
+	let dirs = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+	dirs[0].subVectors(new Vector3(buffer,0,buffer),camera.position).normalize();
+	dirs[1].subVectors(new Vector3(buffer,0,room.Depth-buffer),camera.position).normalize();
+	dirs[2].subVectors(new Vector3(room.Width-buffer,0,buffer),camera.position).normalize();
+	dirs[3].subVectors(new Vector3(room.Width-buffer,0,room.Depth-buffer),camera.position).normalize();
+
+	// create array for storing which walls are blocking view
+	var intersectingWalls = [];
+
+	// add blocking walls to array by checking vision to each corner
+	for(let i = 0; i < dirs.length; i++) {
+		// console.log(dirs[i])
+		raycaster.set(camera.position, dirs[i]);
+		const intersects = raycaster.intersectObjects(room.walls.children);
+		// console.log(intersects)
+		if(!intersects.length) {
+			// console.log('no intersects')
+			continue;
+		}
+		intersectingWalls.push(intersects[0])
 	}
-		
+	// console.log(intersectingWalls)
+
+	// for each wall check if it is in the intersections array and then hide if so
 	room.walls.traverse(function(obj) {
-		const newMaterial = intersects[0].object.material.clone();
-		if(obj.position == intersects[0].object.position) {
-			newMaterial.transparent = true;
-			newMaterial.opacity = 0.25;
-			obj.material = newMaterial;
+		
+		if(obj.type!='Mesh') {return;}
+		// console.log(obj);
+		const newMaterial = obj.material.clone();
+		// console.log(obj.material);
+		// console.log(newMaterial);
+		newMaterial.transparent = false;
+		newMaterial.opacity = 1;
+		for(let i = 0; i < intersectingWalls.length; i++) {
+			// console.log(intersectingWalls[i].object);
+			if(obj.position == intersectingWalls[i].object.position) {
+				// console.log('same position')
+				newMaterial.transparent = true;
+				newMaterial.opacity = 0;
+				break;
+			}
 		}
-		else {
-			newMaterial.transparent = false;
-			newMaterial.opacity = 1;
-			obj.material = newMaterial;
-		}
+		// console.log(newMaterial);
+		obj.material = newMaterial;
 	})
-	// if(intersects[0].object.material.transparent) {
-	// 	newMaterial.transparent = false;
-	// 	newMaterial.opacity = 0;
-	// }
-	// else {
-	// 	newMaterial.transparent = true;
-	// 	newMaterial.opacity = 0.5;
-	// }
 }
 
 function dragObject() {
@@ -447,14 +487,20 @@ function dragObject() {
 		const moveGrid = moveRaycaster.intersectObjects(grid.children);
 		if(moveGrid.length) {
 			for(let obj of moveGrid) {
-				// console.log(obj.point.x);
-				heldObject.position.x = obj.point.x;
-				heldObject.position.z = obj.point.z;
+				// matrixWorld.elements 0 and 10 are where the scale value is stored for the mesh
+				heldObject.position.x = obj.point.x / heldObject.matrixWorld.elements[0];
+				heldObject.position.z = obj.point.z / heldObject.matrixWorld.elements[10];
+				// console.log(heldObject.position.x, obj.point.x);
+				// console.log(heldObject)
 				// heldObjectBB.update();
 				break;
 			}
 		}		
 	}
+}
+
+export function getRoom() {
+	return room;
 }
 
 function findGridPos() {
