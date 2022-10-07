@@ -416,36 +416,50 @@ function onMouseClick(event) {
 }
 
 function wallHiderToggle() {
-	//note: add raycasts to each corner of the room to hide two walls when looking through a corner
-	var dir = new THREE.Vector3();
-	dir.subVectors(new Vector3(room.Width/2,0,room.Depth/2), camera.position).normalize();
-	raycaster.set(camera.position, dir);
-	const intersects = raycaster.intersectObjects(room.walls.children);
-	if(!intersects.length) {
-		return;
+	// get direction to each corner of the room, subtract some arbitrary distance to prevent collisions
+	let buffer = 0.1;
+	let dirs = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+	dirs[0].subVectors(new Vector3(buffer,0,buffer),camera.position).normalize();
+	dirs[1].subVectors(new Vector3(buffer,0,room.Depth-buffer),camera.position).normalize();
+	dirs[2].subVectors(new Vector3(room.Width-buffer,0,buffer),camera.position).normalize();
+	dirs[3].subVectors(new Vector3(room.Width-buffer,0,room.Depth-buffer),camera.position).normalize();
+
+	var intersectingWalls = [];
+
+	for(let i = 0; i < dirs.length; i++) {
+		// console.log(dirs[i])
+		raycaster.set(camera.position, dirs[i]);
+		const intersects = raycaster.intersectObjects(room.walls.children);
+		// console.log(intersects)
+		if(!intersects.length) {
+			// console.log('no intersects')
+			continue;
+		}
+		intersectingWalls.push(intersects[0])
 	}
-		
+	// console.log(intersectingWalls)
+
 	room.walls.traverse(function(obj) {
-		const newMaterial = intersects[0].object.material.clone();
-		if(obj.position == intersects[0].object.position) {
-			newMaterial.transparent = true;
-			newMaterial.opacity = 0.25;
-			obj.material = newMaterial;
+		
+		if(obj.type!='Mesh') {return;}
+		// console.log(obj);
+		const newMaterial = obj.material.clone();
+		// console.log(obj.material);
+		// console.log(newMaterial);
+		newMaterial.transparent = false;
+		newMaterial.opacity = 1;
+		for(let i = 0; i < intersectingWalls.length; i++) {
+			// console.log(intersectingWalls[i].object);
+			if(obj.position == intersectingWalls[i].object.position) {
+				// console.log('same position')
+				newMaterial.transparent = true;
+				newMaterial.opacity = 0;
+				break;
+			}
 		}
-		else {
-			newMaterial.transparent = false;
-			newMaterial.opacity = 1;
-			obj.material = newMaterial;
-		}
+		// console.log(newMaterial);
+		obj.material = newMaterial;
 	})
-	// if(intersects[0].object.material.transparent) {
-	// 	newMaterial.transparent = false;
-	// 	newMaterial.opacity = 0;
-	// }
-	// else {
-	// 	newMaterial.transparent = true;
-	// 	newMaterial.opacity = 0.5;
-	// }
 }
 
 function dragObject() {
