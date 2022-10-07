@@ -1,3 +1,5 @@
+import { regenerateRoom } from "../main.js";
+
 // handle imported file
 export function handleImportSubmit(event) {
     event.preventDefault();
@@ -57,6 +59,9 @@ export function handleNewSubmit(event) {
         // close menus
         document.getElementById("newRoom").style.width = "0";
         document.getElementById("leftMenu").style.width = "0";
+
+        // regenerate room
+        regenerateRoom(newRoom.width, newRoom.depth, newRoom.height);
 
         // reset form
         let form = document.getElementById('newroom');

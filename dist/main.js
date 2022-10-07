@@ -145,7 +145,7 @@ document.getElementById("rotateUp").addEventListener("click", function() {rotate
 document.getElementById("rotateDown").addEventListener("click", function() {rotateCamera('down')});
 document.getElementById("rotateLeft").addEventListener("click", function() {rotateCamera('left')});
 document.getElementById("rotateRight").addEventListener("click", function() {rotateCamera('right')});
-document.getElementById("roomRegen").addEventListener("click", regenerateRoom);
+// document.getElementById("roomRegen").addEventListener("click", regenerateRoom);
 document.getElementById("zoomIn").addEventListener("click", function() {zoomCamera(1)});
 document.getElementById("zoomOut").addEventListener("click", function() {zoomCamera(0)});
 document.getElementById("moveUp").addEventListener("click", function() {moveCamera('up')});
@@ -315,9 +315,9 @@ function zoomCamera(zoom) {
 // 	controls.update();
 // }
 
-function regenerateRoom() {
-	var width = parseFloat(document.getElementById('roomWidth').value);
-	var depth = parseFloat(document.getElementById('roomDepth').value);
+export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.Height) {
+	// var width = parseFloat(document.getElementById('roomWidth').value);
+	// var depth = parseFloat(document.getElementById('roomDepth').value);
 
 	if(isNaN(width)) {
 		width = room.Width;
@@ -331,33 +331,39 @@ function regenerateRoom() {
 	else {
 		room.Depth = depth;
 	}
+	if(isNaN(height)) {
+		height = room.Height;
+	}
+	else { 
+		room.Height = height;
+	}
 
 	const xCenter = width/2;
 	const yCenter = depth/2;
 	const wallThickness = 0.1;
 
-	let newSideWallGeometry = new THREE.BoxGeometry(depth+wallThickness, room.Height, wallThickness);
-	let newBackWallGeometry = new THREE.BoxGeometry(width+wallThickness, room.Height, wallThickness);
+	let newSideWallGeometry = new THREE.BoxGeometry(depth+wallThickness, height, wallThickness);
+	let newBackWallGeometry = new THREE.BoxGeometry(width+wallThickness, height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
 	room.rightWall.geometry = newSideWallGeometry;
 	room.backWall.geometry = newBackWallGeometry;
 	room.frontWall.geometry = newBackWallGeometry;	
 
-	room.leftWall.position.set(0,room.Height/2,yCenter);
+	room.leftWall.position.set(0,height/2,yCenter);
 	room.leftWall.rotation.set(0,Math.PI/2,0);
 
-	room.backWall.position.set(xCenter,room.Height/2,0);
+	room.backWall.position.set(xCenter,height/2,0);
 
-	room.rightWall.position.set(width, room.Height/2, yCenter);
+	room.rightWall.position.set(width, height/2, yCenter);
 	room.rightWall.rotation.set(0,Math.PI/2,0);
 
-	room.frontWall.position.set(xCenter, room.Height/2, depth);
+	room.frontWall.position.set(xCenter, height/2, depth);
 
 	plane.geometry = new THREE.PlaneGeometry(width,room.Depth,10,10);
 	plane.position.set(xCenter,0,yCenter);
 	plane.material.map.repeat.set(width/2,depth/2);
 
-	light.position.set(xCenter, 2.7, yCenter);
+	light.position.set(xCenter, height, yCenter);
 	light.distance = Math.max(width,depth)*1.5
 
 	camera.lookAt(xCenter,0,yCenter);
