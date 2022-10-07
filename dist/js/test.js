@@ -1,4 +1,4 @@
-import { regenerateRoom } from "../main.js";
+import { regenerateRoom, getRoom } from "../main.js";
 
 // handle imported file
 export function handleImportSubmit(event) {
@@ -124,11 +124,12 @@ function exportToJsonFile(jsonData) {
 }
 
 function fakeRoomData() {
+    let room = getRoom()
     let tester = {
         "roomName": "myExportedRoom",
-        "width": 4,
-        "depth": 4,
-        "height": 2.7,
+        "width": room.Width,
+        "depth": room.Depth,
+        "height": room.Height,
         "objects": [
           {
             "name": "object1",

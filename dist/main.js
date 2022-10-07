@@ -180,8 +180,25 @@ fileInput.addEventListener('change', function() {
 		const contents = event.target.result;
 		const object = new OBJLoader().parse(contents);
 		object.name = fileName;
+		let width = document.getElementById("objectWidth").value;
+		let depth = document.getElementById("objectDepth").value;
+		let height = document.getElementById("objectHeight").value;
+		console.log(width, depth, height);
+		let boxSize = new THREE.Vector3();
+		let boundingBox = new THREE.Box3().setFromObject(object);
+		boundingBox.getSize(boxSize);
+		console.log(boxSize);
+		let xFactor = width/boxSize.x;
+		let yFactor = height/boxSize.y;
+		let zFactor = depth/boxSize.z;
+		object.scale.x = xFactor;
+		object.scale.y = yFactor;
+		object.scale.z = zFactor;
+		console.log(object.scale)
 
 		items.add(object);
+
+		scene.add(items)
 
 	}, false);
 	reader.readAsText(fileInput.files[0]);
@@ -453,14 +470,20 @@ function dragObject() {
 		const moveGrid = moveRaycaster.intersectObjects(grid.children);
 		if(moveGrid.length) {
 			for(let obj of moveGrid) {
-				// console.log(obj.point.x);
-				heldObject.position.x = obj.point.x;
-				heldObject.position.z = obj.point.z;
+				// matrixWorld.elements 0 and 10 are where the scale value is stored for the mesh
+				heldObject.position.x = obj.point.x / heldObject.matrixWorld.elements[0];
+				heldObject.position.z = obj.point.z / heldObject.matrixWorld.elements[10];
+				// console.log(heldObject.position.x, obj.point.x);
+				// console.log(heldObject)
 				// heldObjectBB.update();
 				break;
 			}
 		}		
 	}
+}
+
+export function getRoom() {
+	return room;
 }
 
 function findGridPos() {
