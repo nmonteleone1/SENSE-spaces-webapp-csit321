@@ -424,8 +424,10 @@ function wallHiderToggle() {
 	dirs[2].subVectors(new Vector3(room.Width-buffer,0,buffer),camera.position).normalize();
 	dirs[3].subVectors(new Vector3(room.Width-buffer,0,room.Depth-buffer),camera.position).normalize();
 
+	// create array for storing which walls are blocking view
 	var intersectingWalls = [];
 
+	// add blocking walls to array by checking vision to each corner
 	for(let i = 0; i < dirs.length; i++) {
 		// console.log(dirs[i])
 		raycaster.set(camera.position, dirs[i]);
@@ -439,6 +441,7 @@ function wallHiderToggle() {
 	}
 	// console.log(intersectingWalls)
 
+	// for each wall check if it is in the intersections array and then hide if so
 	room.walls.traverse(function(obj) {
 		
 		if(obj.type!='Mesh') {return;}
