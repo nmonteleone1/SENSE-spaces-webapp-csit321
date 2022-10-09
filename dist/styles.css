@@ -56,7 +56,8 @@ body {
 /* right menu -- index.html */
 .rightMenu {
     height: 100%;
-    width: 0;
+    /* start open by default */
+    width: 250px; 
     position: fixed;
     z-index: 1;
     top: 0;
