@@ -575,3 +575,46 @@ var dropdown = document.getElementsByClassName("sensoryItem");
 	}
 
 	// loadJSON('taste')
+
+// setup keypress handling for camera controls
+
+addEventListener('keydown', (event) => { });
+
+onkeydown = (event) => {
+	var keyPressed = event.key
+	// console.log(keyPressed)
+	switch (keyPressed) {
+		case "w":
+			moveCamera('up')
+			break;
+		case "s":
+			moveCamera('down')
+			break;
+		case "a":
+			moveCamera('left')
+			break;
+		case "d":
+			moveCamera('right')
+			break;
+		case "q":
+			zoomCamera(1)
+			break;
+		case "e":
+			zoomCamera(0)
+			break;
+		case "ArrowUp":
+			rotateCamera('up')
+			break;
+		case "ArrowDown":
+			rotateCamera('down')
+			break;
+		case "ArrowLeft":
+			rotateCamera('left')
+			break;
+		case "ArrowRight":
+			rotateCamera('right')
+			break;
+		default:
+			break;
+	}
+};
