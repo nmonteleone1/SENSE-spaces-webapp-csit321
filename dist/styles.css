@@ -44,11 +44,18 @@ body {
     transition: 0.3s;
 }
 
+.leftMenu .info {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    font-size: 4px;
+}
+
 .leftMenu .closeMenuBtn {
     position: absolute;
     top: 0;
     right: 10px;
-    font-size: 32px;
+    font-size: 40px;
     margin-left: 50px;
 }
 
@@ -82,7 +89,7 @@ body {
     position: absolute;
     top: 0;
     left: 10px;
-    font-size: 32px;
+    font-size: 40px;
     margin-right: 50px;
 }
 

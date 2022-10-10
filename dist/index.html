@@ -21,10 +21,22 @@
 	<title>SENSE Spaces Planning Tool</title>
 	<link rel="stylesheet" href="styles.css">
 
-	<!-- <script>
+	<script>
+		// sets cookies
+		function setCookie(cname, cvalue, exdays) {
+			const d = new Date();
+			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+			let expires = "expires=" + d.toUTCString();
+			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+
+			console.log(document.cookie)
+		}
+
+		// gets cookies
 		function getCookie(cname) {
 			let name = cname + "=";
 			let decodedCookie = decodeURIComponent(document.cookie);
+			// console.log(decodedCookie)
 			let ca = decodedCookie.split(';');
 			for (let i = 0; i < ca.length; i++) {
 				let c = ca[i];
@@ -37,20 +49,120 @@
 			}
 			return "";
 		}
-	</script> -->
+
+		// checks cookies and sets the styles
+		function checkCookie() {
+			let fontSize = getCookie("fontSize");
+			if (fontSize != "") {
+				document.querySelector("*").style.fontSize = fontSize;
+
+				const panelButtons = document.querySelectorAll(".panelButton");
+				panelButtons.forEach((x) => {
+					x.style.fontSize = fontSize;
+				});
+
+				const panelDropdown = document.querySelectorAll(".panelButtonDropdown");
+				panelDropdown.forEach((y) => {
+					y.style.fontSize = fontSize;
+				});
+			}
+
+			let textSpacing = getCookie("textSpacing");
+			if (textSpacing != "") {
+				document.querySelector("*").style.letterSpacing = textSpacing;
+
+				const panelButtons = document.querySelectorAll(".panelButton");
+				panelButtons.forEach((x) => {
+					x.style.letterSpacing = textSpacing;
+				});
+
+				const panelDropdown = document.querySelectorAll(".panelButtonDropdown");
+				panelDropdown.forEach((y) => {
+					y.style.letterSpacing = textSpacing;
+				});
+			}
+
+			let highlightButtons = getCookie("highlightButtons");
+			if (highlightButtons != "") {
+				const panelButtons = document.querySelectorAll(".panelButton");
+				panelButtons.forEach((x) => {
+					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+				});
+
+				const panelDropdown = document.querySelectorAll(".panelButtonDropdown");
+				panelDropdown.forEach((y) => {
+					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+				});
+
+				const openButtons = document.querySelectorAll(".openMenuBtn");
+				openButtons.forEach((y) => {
+					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+				});
+
+				const closeButtons = document.querySelectorAll(".closeMenuBtn");
+				closeButtons.forEach((y) => {
+					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+				});
+
+				const cancelButtons = document.querySelectorAll(".cancel");
+				cancelButtons.forEach((y) => {
+					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+				});
+			}
+
+			let highlightLinks = getCookie("highlightLinks");
+			if (highlightLinks != "") {
+				document.querySelector(".info").style.border = (highlightLinks === 'true') ? '5px solid grey' : 'none';
+			}
+		}
+
+		// function deleteAllCookies() {
+		// 	var cookies = document.cookie.split(";");
+
+		// 	for (var i = 0; i < cookies.length; i++) {
+		// 		var cookie = cookies[i];
+		// 		var eqPos = cookie.indexOf("=");
+		// 		var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+		// 		document.cookie = name + "=;expires=Wed, 01 Jan 2025 00:00:00 GMT";
+		// 	}
+
+		// 	let decodedCookie = decodeURIComponent(document.cookie);
+		// 	console.log("dcdel: ", decodedCookie)
+		// }
+
+		// handle user settings
+		function handleUserSettingSubmit(event) {
+			event.preventDefault();
+
+			try {
+				setCookie("fontSize", event.target.fontsize.value, 30);
+				setCookie("textSpacing", event.target.textspacing.value, 30);
+				setCookie("highlightButtons", event.target.buttons.checked, 30);
+				setCookie("highlightLinks", event.target.links.checked, 30);
+
+				checkCookie();
+			} catch (e) {
+				console.error(e)
+				return;
+			}
+		}
+	</script>
 </head>
 
-<body>
+<body id="bod" onload="checkCookie()">
 	<div id="ui">
 		<!-- top bar which contains the buttons for displaying each of the side menus -->
 		<div id="menuBar">
-			<button class="openMenuBtn" onclick="openLeftMenu()">☰</button>
-			<button class="openMenuBtn" onclick="openRightMenu()">☰</button>
+			<div><button class="openMenuBtn" onclick="openLeftMenu()">☰</button></div>
+			<div><button class="openMenuBtn" onclick="openRightMenu()">☰</button></div>
 		</div>
 
 		<!-- left menu ---- user menu -->
 		<div id="leftMenu" class="leftMenu">
-			<a href="javascript:void(0)" class="closeMenuBtn" onclick="closeLeftMenu()">×</a>
+				<div>
+					<a href="./onboarding.html" class="info" target="_blank"><span style="font-size:32px;">ⓘ</span></a>
+					<a href="javascript:void(0)" class="closeMenuBtn" onclick="closeLeftMenu()">×</a>
+				</div>
 
 			<div><button class="panelButton" onclick="openNewRoomMenu()">New Room</button></div>
 			<div><button class="panelButton" onclick="openImportRoomMenu()">Import Room</button></div>
@@ -61,8 +173,6 @@
 
 		<!-- new room ---- user menu -->
 		<div id="newRoom" class="leftMenu">
-			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeNewRoomMenu()">×</a> -->
-
 			<form id="newroom">
 				<table style="padding:8px;">
 					<tr>
@@ -104,17 +214,17 @@
 				</table>
 				<br /><br />
 				<div><button class="panelButton" type="submit">Create Room</button></div>
-				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeNewRoomMenu()">Cancel</span></div>
+				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+					<span onclick="closeNewRoomMenu()">Cancel</span>
+				</div>
 			</form>
 		</div>
 
 
 		<!-- import room ---- user menu -->
 		<div id="importRoom" class="leftMenu">
-			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeImportRoomMenu()">×</a> -->
-
 			<form id="importroom">
-				<div class="alert" style="background-color: rgb(252, 177, 34);">
+				<div id="alert" class="alert" style="background-color: rgb(252, 177, 34);">
 					<span class="closeAlertBtn" onclick="this.parentElement.style.display='none';">&times;</span>
 					<strong>Note:</strong> Files must be in a valid JSON format to upload successfully
 				</div>
@@ -122,18 +232,19 @@
 				<small id="errorMessage" class="errorMessage"></small>
 				<br /><br />
 				<div><button class="panelButton" type="submit">Import Room</button></div>
-				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeImportRoomMenu()">Cancel</span></div>
+				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+					<span onclick="closeImportRoomMenu()">Cancel</span>
+				</div>
 			</form>
 		</div>
 
 
 		<!-- export ---- user menu -->
 		<div id="export" class="leftMenu">
-			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeExportMenu()">×</a> -->
-
 			<form id="exportitem">
 				<div style="width:100%;">
 					<select id="type">
+						<option value="none"></option>
 						<option value="json">Room (.json)</option>
 						<option value="jpeg">Room (.jpeg)</option>
 						<option value="txt">Object List (.txt)</option>
@@ -141,15 +252,15 @@
 				</div>
 				<br />
 				<div><button class="panelButton" type="submit">Export</button></div>
-				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeExportMenu()">Cancel</span></div>
+				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+					<span onclick="closeExportMenu()">Cancel</span>
+				</div>
 			</form>
 		</div>
 
 
 		<!-- user settings ---- user menu -->
 		<div id="userSettings" class="leftMenu">
-			<!-- <a href="javascript:void(0)" class="closeMenuBtn" onclick="closeUserSettingsMenu()">×</a> -->
-
 			<form id="userSettingsForm">
 				<table style="padding:8px;">
 					<tr>
@@ -158,12 +269,12 @@
 					<tr>
 						<td colspan="2">
 							<select id="fontsize">
-								<option value="">Normal</option>
-								<option value="125">125%</option>
-								<option value="150">150%</option>
-								<option value="200">200%</option>
-								<option value="250">250%</option>
-								<option value="300">300%</option>
+								<option value="14px">Default (14px)</option>
+								<option value="10px">10px</option>
+								<option value="12px">12px</option>
+								<option value="16px">16px</option>
+								<option value="18px">18px</option>
+								<option value="20px">20px</option>
 							</select>
 						</td>
 					</tr>
@@ -173,12 +284,12 @@
 					<tr>
 						<td colspan="2">
 							<select id="textspacing">
-								<option value="">Normal</option>
-								<option value="1">1px</option>
-								<option value="2">2px</option>
-								<option value="3">3px</option>
-								<option value="4">4px</option>
-								<option value="5">5px</option>
+								<option value="0px">Default (0px)</option>
+								<option value="1px">1px</option>
+								<option value="2px">2px</option>
+								<option value="3px">3px</option>
+								<option value="4px">4px</option>
+								<option value="5px">5px</option>
 							</select>
 						</td>
 					</tr>
@@ -190,11 +301,11 @@
 					</tr>
 					<tr>
 						<td>
-							<label>&emsp;&emsp;Headings:</label>
+							<label>&emsp;&emsp;Buttons:</label>
 						</td>
 						<td>
 							<label class="switch">
-								<input type="checkbox" id="headings">
+								<input type="checkbox" id="buttons">
 								<span class="slider round"></span>
 							</label>
 						</td>
@@ -205,18 +316,20 @@
 						</td>
 						<td>
 							<label class="switch">
-								<input type="checkbox" id="cursorsize">
+								<input type="checkbox" id="links">
 								<span class="slider round"></span>
 							</label>
 						</td>
 					</tr>
 					<tr>
-						
+
 					</tr>
 				</table>
 				<br /><br />
 				<div><button class="panelButton" type="submit">Save Changes</button></div>
-				<div style="text-align:center; text-decoration: underline; cursor: pointer;"><span onclick="closeUserSettingsMenu()">Cancel</span></div>
+				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+					<span onclick="closeUserSettingsMenu()">Cancel</span>
+				</div>
 			</form>
 		</div>
 
@@ -260,9 +373,9 @@
 			</div>
 			<div>
 				Width
-				<input type="range" id="roomWidth" min="1" max="8" value="4" autocomplete="off"/>
+				<input type="range" id="roomWidth" min="1" max="8" value="4" autocomplete="off" />
 				Depth
-				<input type="range" id="roomDepth" min="1" max="8" value="4" autocomplete="off"/>
+				<input type="range" id="roomDepth" min="1" max="8" value="4" autocomplete="off" />
 				<button class="panelButton" id="roomRegen">Regenerate Room</button>
 			</div>
 		</div>
@@ -293,10 +406,12 @@
 		<!-- defines the methods for displaying and hiding the side menus -->
 		<script>
 			function openLeftMenu() {
+				// open the menu
 				document.getElementById("leftMenu").style.width = "250px";
 			}
 
 			function closeLeftMenu() {
+				// close the menu
 				document.getElementById("leftMenu").style.width = "0";
 			}
 
@@ -305,22 +420,35 @@
 				let form = document.getElementById('newroom');
 				form.reset();
 
+				// reset validation messages
+				document.getElementById('nameInvalid').innerHTML = "";
+				document.getElementById('widthInvalid').innerHTML = "";
+				document.getElementById('depthInvalid').innerHTML = "";
+				document.getElementById('heightInvalid').innerHTML = "";
+
+				// open the menu
 				document.getElementById("newRoom").style.width = "250px";
 			}
 
 			function closeNewRoomMenu() {
+				// close the menu
 				document.getElementById("newRoom").style.width = "0";
 			}
 
 			function openImportRoomMenu() {
+				// reset the alert 
+				document.getElementById('alert').style.display = "block";
+
 				// reset form
 				let form = document.getElementById('importroom');
 				form.reset();
 
+				// open the menu
 				document.getElementById("importRoom").style.width = "250px";
 			}
 
 			function closeImportRoomMenu() {
+				// close the menu
 				document.getElementById("importRoom").style.width = "0";
 			}
 
@@ -329,10 +457,12 @@
 				let form = document.getElementById('exportitem');
 				form.reset();
 
+				// open the menu
 				document.getElementById("export").style.width = "250px";
 			}
 
 			function closeExportMenu() {
+				// close the menu
 				document.getElementById("export").style.width = "0";
 			}
 
@@ -341,18 +471,35 @@
 				let form = document.getElementById('userSettingsForm');
 				form.reset();
 
+				// set form values
+				let fontSize = getCookie("fontSize");
+				document.getElementById("fontsize").value = fontSize || "14px";
+
+				let textSpacing = getCookie("textSpacing");
+				document.getElementById("textspacing").value = textSpacing || "0px";
+
+				let highlightButtons = getCookie("highlightButtons");
+				document.getElementById("buttons").checked = (highlightButtons === 'true');
+
+				let highlightLinks = getCookie("highlightLinks");
+				document.getElementById("links").checked = (highlightLinks === 'true');
+
+				// open the menu
 				document.getElementById("userSettings").style.width = "250px";
 			}
 
 			function closeUserSettingsMenu() {
+				// close the menu
 				document.getElementById("userSettings").style.width = "0";
 			}
 
 			function openRightMenu() {
+				// open the menu
 				document.getElementById("rightMenu").style.width = "250px";
 			}
 
 			function closeRightMenu() {
+				// close the menu
 				document.getElementById("rightMenu").style.width = "0";
 			}
 		</script>
@@ -369,6 +516,8 @@
 				let file = document.getElementById('file');
 
 				document.getElementById('export').addEventListener('submit', handleExportSubmit);
+
+				document.getElementById('userSettingsForm').addEventListener('submit', handleUserSettingSubmit);
 			});
 		</script>
 	</div>
