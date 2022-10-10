@@ -19,6 +19,13 @@ body {
     background-color: rgb(111, 102, 165);
 }
 
+#headerImage {
+    margin: 0;
+    padding: 0;
+    max-height: 10%;
+    max-width: 10%;
+}
+
 
 /* left menu -- index.html */
 .leftMenu {
@@ -44,11 +51,18 @@ body {
     transition: 0.3s;
 }
 
+.leftMenu .info {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    font-size: 4px;
+}
+
 .leftMenu .closeMenuBtn {
     position: absolute;
     top: 0;
     right: 10px;
-    font-size: 32px;
+    font-size: 40px;
     margin-left: 50px;
 }
 
@@ -56,7 +70,8 @@ body {
 /* right menu -- index.html */
 .rightMenu {
     height: 100%;
-    width: 0;
+    /* start open by default */
+    width: 250px; 
     position: fixed;
     z-index: 1;
     top: 0;
@@ -82,7 +97,7 @@ body {
     position: absolute;
     top: 0;
     left: 10px;
-    font-size: 32px;
+    font-size: 40px;
     margin-right: 50px;
 }
 
@@ -94,7 +109,7 @@ body {
 /* menu controls -- index.html */
 .openMenuBtn {
     border: none;
-    font-size: 14px;
+    font-size: 28px;
     color: rgb(0, 0, 0);
 
     padding: 5px 10px;

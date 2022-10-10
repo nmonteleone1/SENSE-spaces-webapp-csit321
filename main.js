@@ -1,10 +1,10 @@
 //////MODULES//////
 import * as THREE from "three";
-import {OrbitControls} from "OrbitControls";
-import {OBJLoader} from "OBJLoader";
+import { OrbitControls } from "OrbitControls";
+import { OBJLoader } from "OBJLoader";
 import { Box3, Group, RedIntegerFormat, Vector3 } from "three";
 
-
+var strDownloadMime = "image/octet-stream";
 
 //////THREE.JS CANVAS//////
 const scene = new THREE.Scene();
@@ -15,7 +15,9 @@ const camera = new THREE.PerspectiveCamera(
 	100
 );
 camera.position.set(5, 5, 5);
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({
+	preserveDrawingBuffer: true
+});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
@@ -30,27 +32,27 @@ function onWindowResize() {
 
 //light the 3d space
 scene.background = new THREE.Color(0x000000);
-const ambientLight = new THREE.AmbientLight(0xffffff,0.75);
-const light = new THREE.PointLight(0xffffff,1,6,2);
-light.position.set(1,3,1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+const light = new THREE.PointLight(0xffffff, 1, 6, 2);
+light.position.set(1, 3, 1);
 light.castShadow = true;
 light.shadow.bias = -0.0001;
-light.shadow.mapSize.width = 1024*4;
-light.shadow.mapSize.height = 1024*4;
+light.shadow.mapSize.width = 1024 * 4;
+light.shadow.mapSize.height = 1024 * 4;
 scene.add(ambientLight);
 scene.add(light);
 
 //mouse camera controls
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.minPolarAngle = Math.PI/12;
-controls.maxPolarAngle = 5*Math.PI/12;
+controls.minPolarAngle = Math.PI / 12;
+controls.maxPolarAngle = 5 * Math.PI / 12;
 
 
 
 //////GLOBALS//////
 var mouse, clickMouse, raycaster, moveRaycaster;
 const zoomFactor = 0.25; // factor must be <1
-const rotateFactor = Math.PI*0.5; // factor of 1 is a full rotation
+const rotateFactor = Math.PI * 0.5; // factor of 1 is a full rotation
 const moveFactor = 0.25;
 var heldObject, heldObjectBB;
 const items = new THREE.Group();
@@ -101,7 +103,7 @@ room.walls.add(room.frontWall);
 const grid = new THREE.Group();
 const textureLoader = new THREE.TextureLoader();
 var floorTexture;
-floorTexture = textureLoader.load('textures/Wood_Floor_007_COLOR.jpg', function(tex) {
+floorTexture = textureLoader.load('textures/Wood_Floor_007_COLOR.jpg', function (tex) {
 	tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
 });
 const plane = new THREE.Mesh(
@@ -170,13 +172,13 @@ window.addEventListener('drag', dragObject, false);
 
 //load objects from file
 const fileInput = document.getElementById("loadObject");
-fileInput.addEventListener('change', function() {
+fileInput.addEventListener('change', function () {
 	const reader = new FileReader();
-	
+
 	var url = URL.createObjectURL(fileInput.files[0])
 	var fileName = fileInput.files[0].name
-	
-	reader.addEventListener('load', async function(event) {
+
+	reader.addEventListener('load', async function (event) {
 		const contents = event.target.result;
 		const object = new OBJLoader().parse(contents);
 		object.name = fileName;
@@ -220,7 +222,7 @@ fileInput.addEventListener('change', function() {
 	// }
 })
 function loadObj(evt) {
-	
+
 }
 
 //////FUNCTIONS//////
@@ -229,7 +231,7 @@ function loadJSON(sense) {
 	let path = 'models/json/' + sense + '.json';
 	fetch(path).then((response) => response.json()).then((json) => data = json);
 	// fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
-	fetch(path).then(response => {return response.json()})
+	fetch(path).then(response => { return response.json() })
 
 	return data;
 }
@@ -247,7 +249,7 @@ function loadObject(sense) {
 }
 
 function moveCamera(direction) {
-	switch(direction) {
+	switch (direction) {
 		case 'up':
 			camera.translateY(0.5);
 			break;
@@ -264,23 +266,23 @@ function moveCamera(direction) {
 }
 
 function rotateCamera(direction) {
-	if(direction == 'up') {
+	if (direction == 'up') {
 		camera.translateY(1);
 		// console.log(camera.position.y);
 		// console.log(camera.position.z);
 		// console.log(camera.position.x);
 	}
-	else if(direction == 'down') {
+	else if (direction == 'down') {
 		camera.translateY(-1);
 		// console.log(camera.position.y);
 		// console.log(camera.position.z);
 		// console.log(camera.position.x);
 	}
-	else if(direction == 'left') {
-		camera.translateX(-1*rotateFactor);
+	else if (direction == 'left') {
+		camera.translateX(-1 * rotateFactor);
 	}
-	else if(direction == 'right') {
-		camera.translateX(1*rotateFactor);
+	else if (direction == 'right') {
+		camera.translateX(1 * rotateFactor);
 	}
 	else {
 		console.log('error rotating camera');
@@ -291,15 +293,15 @@ function rotateCamera(direction) {
 }
 
 function zoomCamera(zoom) {
-	if(zoom == 1) {
-		if(camera.zoom >= 2) {
+	if (zoom == 1) {
+		if (camera.zoom >= 2) {
 			// console.log(camera.zoom); 
 			return;
 		}
 		camera.zoom += 0.25;
 	}
-	else if(zoom == 0) {
-		if(camera.zoom <= zoomFactor) {
+	else if (zoom == 0) {
+		if (camera.zoom <= zoomFactor) {
 			return;
 		}
 		camera.zoom -= 0.25;
@@ -336,13 +338,13 @@ export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.H
 	// var width = parseFloat(document.getElementById('roomWidth').value);
 	// var depth = parseFloat(document.getElementById('roomDepth').value);
 
-	if(isNaN(width)) {
+	if (isNaN(width)) {
 		width = room.Width;
 	}
 	else {
 		room.Width = width;
 	}
-	if(isNaN(depth)) {
+	if (isNaN(depth)) {
 		depth = room.Depth;
 	}
 	else {
@@ -355,16 +357,17 @@ export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.H
 		room.Height = height;
 	}
 
-	const xCenter = width/2;
-	const yCenter = depth/2;
+	const xCenter = width / 2;
+	const yCenter = depth / 2;
 	const wallThickness = 0.1;
+
 
 	let newSideWallGeometry = new THREE.BoxGeometry(depth+wallThickness, height, wallThickness);
 	let newBackWallGeometry = new THREE.BoxGeometry(width+wallThickness, height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
 	room.rightWall.geometry = newSideWallGeometry;
 	room.backWall.geometry = newBackWallGeometry;
-	room.frontWall.geometry = newBackWallGeometry;	
+	room.frontWall.geometry = newBackWallGeometry;
 
 	room.leftWall.position.set(0,height/2,yCenter);
 	room.leftWall.rotation.set(0,Math.PI/2,0);
@@ -376,15 +379,15 @@ export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.H
 
 	room.frontWall.position.set(xCenter, height/2, depth);
 
-	plane.geometry = new THREE.PlaneGeometry(width,room.Depth,10,10);
-	plane.position.set(xCenter,0,yCenter);
-	plane.material.map.repeat.set(width/2,depth/2);
+	plane.geometry = new THREE.PlaneGeometry(width, room.Depth, 10, 10);
+	plane.position.set(xCenter, 0, yCenter);
+	plane.material.map.repeat.set(width / 2, depth / 2);
 
 	light.position.set(xCenter, height, yCenter);
 	light.distance = Math.max(width,depth)*1.5
 
-	camera.lookAt(xCenter,0,yCenter);
-	controls.target.set(xCenter,0,yCenter);
+	camera.lookAt(xCenter, 0, yCenter);
+	controls.target.set(xCenter, 0, yCenter);
 	controls.update();
 }
 
@@ -395,7 +398,7 @@ function onMouseMove(event) {
 }
 
 function onMouseClick(event) {
-	if(heldObject) {
+	if (heldObject) {
 		// console.log('unsetting object');
 		scene.remove(heldObjectBB);
 		heldObject = undefined;
@@ -407,7 +410,7 @@ function onMouseClick(event) {
 	clickMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 	raycaster.setFromCamera(clickMouse, camera);
 	const intersects = raycaster.intersectObjects(items.children);
-	if(intersects.length) {
+	if (intersects.length) {
 		// console.log('setting object');
 		heldObject = intersects[0].object;
 		heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
@@ -466,7 +469,7 @@ function wallHiderToggle() {
 }
 
 function dragObject() {
-	if(heldObject) {
+	if (heldObject) {
 		var collision = false;
 		// scene.traverse(function(obj) {
 		// 	var tempBB = new THREE.Box3().setFromObject(obj);
@@ -482,9 +485,10 @@ function dragObject() {
 		// 		collision = false;
 		// 	}
 		// })
-		if(collision) {return;}
+		if (collision) { return; }
 		moveRaycaster.setFromCamera(mouse, camera);
 		const moveGrid = moveRaycaster.intersectObjects(grid.children);
+
 		if(moveGrid.length) {
 			for(let obj of moveGrid) {
 				// matrixWorld.elements 0 and 10 are where the scale value is stored for the mesh
@@ -495,7 +499,7 @@ function dragObject() {
 				// heldObjectBB.update();
 				break;
 			}
-		}		
+		}
 	}
 }
 
@@ -506,7 +510,7 @@ export function getRoom() {
 function findGridPos() {
 	raycaster.setFromCamera(mouse, camera);
 	const moveGrid = raycaster.intersectObjects(grid.children);
-	if(moveGrid.length) {
+	if (moveGrid.length) {
 		return new THREE.Vector2(moveGrid[0].point.x, moveGrid[0].point.z);
 	}
 }
@@ -515,7 +519,7 @@ function animate() {
 	requestAnimationFrame(animate);
 
 	wallHiderToggle();
-	if(heldObjectBB) {
+	if (heldObjectBB) {
 		heldObjectBB.update();
 	}
 
@@ -547,31 +551,107 @@ function setupDropdown() {
 }
 
 var dropdown = document.getElementsByClassName("sensoryItem");
-	var i;
+var i;
 
-	for (i = 0; i < dropdown.length; i++) {
-		var element = dropdown[i];
-		// console.log(element.innerHTML)
-		// console.log(element.innerHTML.toLowerCase())
-		var data = loadJSON(element.innerHTML.toLowerCase());
-		// console.log(data)
-		// if(data) {
-		// 	// print(data)
-		// 	console.log(data);
-		// }
+for (i = 0; i < dropdown.length; i++) {
+	var element = dropdown[i];
+	// console.log(element.innerHTML)
+	// console.log(element.innerHTML.toLowerCase())
+	var data = loadJSON(element.innerHTML.toLowerCase());
+	// console.log(data)
+	// if(data) {
+	// 	// print(data)
+	// 	console.log(data);
+	// }
 
-		// dropdown[i].innerHTML
+	// dropdown[i].innerHTML
 
-		
-		// dropdown[i].addEventListener("click", function () {
-		// 	this.classList.toggle("active");
-		// 	var dropdownContent = this.nextElementSibling;
-		// 	if (dropdownContent.style.display === "block") {
-		// 		dropdownContent.style.display = "none";
-		// 	} else {
-		// 		dropdownContent.style.display = "block";
-		// 	}
-		// });
+
+	// dropdown[i].addEventListener("click", function () {
+	// 	this.classList.toggle("active");
+	// 	var dropdownContent = this.nextElementSibling;
+	// 	if (dropdownContent.style.display === "block") {
+	// 		dropdownContent.style.display = "none";
+	// 	} else {
+	// 		dropdownContent.style.display = "block";
+	// 	}
+	// });
+}
+
+// loadJSON('taste')
+
+
+
+// handle export to .jpeg
+export function saveAsImage() {
+	var imgData, imgNode;
+
+	try {
+		var strMime = "image/jpeg";
+		imgData = renderer.domElement.toDataURL(strMime);
+
+		saveFile(imgData.replace(strMime, strDownloadMime), "test.jpg");
+
+	} catch (e) {
+		console.log(e);
+		return;
 	}
+}
+
+var saveFile = function (strData, filename) {
+	var link = document.createElement('a');
+	if (typeof link.download === 'string') {
+		document.body.appendChild(link);
+		link.download = filename;
+		link.href = strData;
+		link.click();
+		document.body.removeChild(link);
+	} else {
+		location.replace(uri);
+	}
+}
 
 	// loadJSON('taste')
+
+// setup keypress handling for camera controls
+
+addEventListener('keydown', (event) => { });
+
+onkeydown = (event) => {
+	var keyPressed = event.key
+	// console.log(keyPressed)
+	switch (keyPressed) {
+		case "w":
+			moveCamera('up')
+			break;
+		case "s":
+			moveCamera('down')
+			break;
+		case "a":
+			moveCamera('left')
+			break;
+		case "d":
+			moveCamera('right')
+			break;
+		case "q":
+			zoomCamera(1)
+			break;
+		case "e":
+			zoomCamera(0)
+			break;
+		case "ArrowUp":
+			rotateCamera('up')
+			break;
+		case "ArrowDown":
+			rotateCamera('down')
+			break;
+		case "ArrowLeft":
+			rotateCamera('left')
+			break;
+		case "ArrowRight":
+			rotateCamera('right')
+			break;
+		default:
+			break;
+	}
+};
