@@ -1,3 +1,4 @@
+import { saveAsImage } from '../main.js'
 import { regenerateRoom, getRoom } from "../main.js";
 
 // handle imported file
@@ -29,10 +30,6 @@ function logFile(event) {
         // close menus
         document.getElementById("importRoom").style.width = "0";
         document.getElementById("leftMenu").style.width = "0";
-
-        // reset form
-        let form = document.getElementById('importroom');
-        form.reset();
     } catch (e) {
         document.getElementById('errorMessage').innerHTML = "the format of the uploaded file is invalid"; 
         return
@@ -63,9 +60,6 @@ export function handleNewSubmit(event) {
         // regenerate room
         regenerateRoom(newRoom.width, newRoom.depth, newRoom.height);
 
-        // reset form
-        let form = document.getElementById('newroom');
-        form.reset();
     } catch (e) {
         if(event.target.name.value == "") {
             document.getElementById('nameInvalid').innerHTML = "name is a required field";
@@ -96,18 +90,17 @@ export function handleExportSubmit(event) {
 
     let data = fakeRoomData(); 
     if(event.target.type.value == "json") {
-        exportToJsonFile(data)
+        exportToJsonFile(data);
+    } else if(event.target.type.value == "txt") {
+        exportToTxtFile(data);
     } else {
-
+        // handle export to .jpeg -- function exported from ../main.js
+        saveAsImage()
     }
 
     // close menus
     document.getElementById("export").style.width = "0";
     document.getElementById("leftMenu").style.width = "0";
-
-    // reset form
-    let form = document.getElementById('exportitem');
-    form.reset();
 }
 
 // handle export to JSON file
@@ -116,6 +109,22 @@ function exportToJsonFile(jsonData) {
     let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
 
     let exportFileDefaultName = `${jsonData.roomName}.json`;
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
+
+// handle export to txt file
+function exportToTxtFile(jsonData) {
+    let data = 'Room Name: ' + jsonData.roomName + ' \r\n' + 'Objects: ' + ' \r\n ';
+    let objects =  jsonData.objects.map(x => `\t-- ${x.name}: ${x.location[0]}, ${x.location[1]}, ${x.location[2]} \r\n`);
+    let dataStr = data + objects.join("");
+
+    let dataUri = 'data:text/plain;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+    let exportFileDefaultName = `${jsonData.roomName}.txt`;
 
     let linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
