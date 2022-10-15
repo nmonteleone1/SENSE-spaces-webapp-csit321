@@ -1,0 +1,30 @@
+[
+    {
+        "id": "object1",
+        "name": "Taste Object 11111111111111111",
+        "price": "100",
+        "linkToSite": "https://www.google.com",
+        "linkToModel": "models/json/taste/taste.json"
+    },
+    {
+        "id": "object11",
+        "name": "Taste Object 11111111111111111",
+        "price": "100",
+        "linkToSite": "https://www.google.com",
+        "linkToModel": "models/json/taste/taste.json"
+    },
+    {
+        "id": "object12",
+        "name": "Taste Object 11111111111111111",
+        "price": "100",
+        "linkToSite": "https://www.google.com",
+        "linkToModel": "models/json/taste/taste.json"
+    },
+    {
+        "id": "object31",
+        "name": "Taste Object 11111111111111111",
+        "price": "100",
+        "linkToSite": "https://www.google.com",
+        "linkToModel": "models/json/taste/taste.json"
+    }
+]

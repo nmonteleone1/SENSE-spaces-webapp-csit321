@@ -1,57 +1,21 @@
 import { saveAsImage } from '../main.js'
 import { regenerateRoom, getRoom } from "../main.js";
 
-// handle imported file
-export function handleImportSubmit(event) {
-    event.preventDefault();
-
-    if (!file.value.length) { 
-        document.getElementById('errorMessage').innerHTML = "you must select a file to upload"; 
-        return
-    };
-
-    let reader = new FileReader();
-    reader.onload = logFile;
-    reader.readAsText(file.files[0]);
-}
-
-// parse data from file and navigate back to home page
-function logFile(event) {
-    try {
-        let importedRoom = JSON.parse(event.target.result);
-        document.getElementById('errorMessage').innerHTML = ""; 
-
-        // Values from the JSON can be accessed as follows
-        console.log("Room Name: ", importedRoom.roomName);
-        console.log("Dimensions: ", importedRoom.width, " x ", importedRoom.depth, " x ", importedRoom.height);
-        importedRoom.objects.map((x, index) => console.log(`Object ${index + 1}: `, x.name, "--", x.path, "--", x.model, "--", x.location[0], ",", x.location[1], ",", x.location[2]));
-
-
-        // close menus
-        document.getElementById("importRoom").style.width = "0";
-        document.getElementById("leftMenu").style.width = "0";
-    } catch (e) {
-        document.getElementById('errorMessage').innerHTML = "the format of the uploaded file is invalid"; 
-        return
-    }
-}
-
-
 
 
 // handle new room form, parse data and navigate back to home page
-export function handleNewSubmit(event) {
+export function handleNewRoomSubmit(event) {
     event.preventDefault();
 
     try {
+        // reset validation messages
         document.getElementById('nameInvalid').innerHTML = "";
         document.getElementById('widthInvalid').innerHTML = "";
         document.getElementById('depthInvalid').innerHTML = "";
         document.getElementById('heightInvalid').innerHTML = "";
 
+        // convert form values to json
         let newRoom = JSON.parse(`{"roomName":"${event.target.name.value}", "width":${event.target.width.value}, "depth":${event.target.depth.value}, "height":${event.target.height.value}}`)
-        console.log("Room Name: ", newRoom.roomName);
-        console.log("Dimensions: ", newRoom.width, " x ", newRoom.depth, " x ", newRoom.height);
     
         // close menus
         document.getElementById("newRoom").style.width = "0";
@@ -81,6 +45,43 @@ export function handleNewSubmit(event) {
     }
 }
 
+
+
+// handle imported room file
+export function handleImportRoomSubmit(event) {
+    event.preventDefault();
+
+    // handle no file being uploaded
+    if (!file.value.length) { 
+        document.getElementById('errorMessage').innerHTML = "you must select a file to upload"; 
+        return
+    };
+
+    let reader = new FileReader();
+    reader.onload = handleRoomFile;
+    reader.readAsText(file.files[0]);
+}
+
+// parse data from room file and navigate back to home page
+function handleRoomFile(event) {
+    try {
+        let importedRoom = JSON.parse(event.target.result);
+        document.getElementById('errorMessage').innerHTML = ""; 
+
+        // Values from the JSON can be accessed as follows
+        console.log("Room Name: ", importedRoom.roomName);
+        console.log("Dimensions: ", importedRoom.width, " x ", importedRoom.depth, " x ", importedRoom.height);
+        importedRoom.objects.map((x, index) => console.log(`Object ${index + 1}: `, x.name, "--", x.path, "--", x.model, "--", x.location[0], ",", x.location[1], ",", x.location[2]));
+
+
+        // close menus
+        document.getElementById("importRoom").style.width = "0";
+        document.getElementById("leftMenu").style.width = "0";
+    } catch (e) {
+        document.getElementById('errorMessage').innerHTML = "the format of the uploaded file is invalid"; 
+        return
+    }
+}
 
 
 
@@ -164,4 +165,75 @@ function fakeRoomData() {
       }
 
     return tester;
+}
+
+
+
+// handle new object form, parse data and navigate back to right menu
+export function handleNewObjectSubmit(event) {
+    event.preventDefault();
+
+    try {
+        // reset validation messages
+        document.getElementById('objWidthInvalid').innerHTML = "";
+        document.getElementById('objDepthInvalid').innerHTML = "";
+        document.getElementById('objHeightInvalid').innerHTML = "";
+
+        // convert form values to json
+        let newObject = JSON.parse(`{"width":${event.target.objectWidth.value}, "depth":${event.target.objectDepth.value}, "height":${event.target.objectHeight.value}}`);
+        console.log(newObject)
+    
+        // close menus
+        document.getElementById("newObject").style.width = "0";
+    } catch (e) {    
+        if(isNaN(event.target.objectWidth.value) || event.target.objectWidth.value == "") {
+            document.getElementById('objWidthInvalid').innerHTML = "width is a required field";
+        }
+    
+        if(isNaN(event.target.objectDepth.value) || event.target.objectDepth.value == "") {
+            document.getElementById('objDepthInvalid').innerHTML = "depth is a required field";
+        }
+    
+        if(isNaN(event.target.objectHeight.value) || event.target.objectHeight.value == "") {
+            document.getElementById('objHeightInvalid').innerHTML = "height is a required field";
+        }
+
+        return
+    }
+}
+
+
+
+// handle imported object file
+export function handleImportObjectSubmit(event) {
+    event.preventDefault();
+
+    console.log(event)
+
+    // handle no file being uploaded
+    if (!objectFile.value.length) { 
+        document.getElementById('objectErrorMessage').innerHTML = "you must select a file to upload"; 
+        return
+    };
+
+    let reader = new FileReader();
+    reader.onload = handleObjectFile;
+    reader.readAsText(objectFile.files[0]);
+}
+
+// parse data from object file and navigate back to right menu
+function handleObjectFile(event) {
+    try {
+        let importedObject = JSON.parse(event.target.result);
+        document.getElementById('objectErrorMessage').innerHTML = ""; 
+
+        // Values from the JSON can be accessed as follows
+        console.log(importedObject);
+
+        // close menus
+        document.getElementById("importObject").style.width = "0";
+    } catch (e) {
+        document.getElementById('objectErrorMessage').innerHTML = "the format of the uploaded file is invalid"; 
+        return
+    }
 }

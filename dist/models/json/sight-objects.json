@@ -1,0 +1,9 @@
+[
+    {
+        "id": "object4",
+        "name": "Sight Object 1",
+        "price": "1000",
+        "linkToSite": "https://www.desmos.com/scientific",
+        "linkToModel": "models/json/sight/sight.json"
+    }
+]
