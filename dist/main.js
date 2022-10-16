@@ -155,10 +155,7 @@ document.getElementById("moveDown").addEventListener("click", function () { move
 document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
 
-document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) })
-
-// // setup collapsable dropdown menus
-// setupDropdown();
+document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
 
 //track mouse position
 window.addEventListener('mousemove', onMouseMove, false);
@@ -525,58 +522,6 @@ function animate() {
 function render() {
 	renderer.render(scene, camera);
 }
-
-
-// handle dropdown category visibility
-// todo: move this somewhere better
-// function setupDropdown() {
-// 	var dropdown = document.getElementsByClassName("panelButtonDropdown");
-// 	var i;
-
-// 	for (i = 0; i < dropdown.length; i++) {
-// 		dropdown[i].addEventListener("click", function () {
-// 			this.classList.toggle("active");
-// 			var dropdownContent = this.nextElementSibling;
-// 			if (dropdownContent.style.display === "block") {
-// 				dropdownContent.style.display = "none";
-// 			} else {
-// 				dropdownContent.style.display = "block";
-// 			}
-// 		});
-// 	}
-// }
-
-// var dropdown = document.getElementsByClassName("sensoryItem");
-// var i;
-
-// for (i = 0; i < dropdown.length; i++) {
-// 	var element = dropdown[i];
-// 	// console.log(element.innerHTML)
-// 	// console.log(element.innerHTML.toLowerCase())
-// 	var data = loadJSON(element.innerHTML.toLowerCase());
-// 	// console.log(data)
-// 	// if(data) {
-// 	// 	// print(data)
-// 	// 	console.log(data);
-// 	// }
-
-// 	// dropdown[i].innerHTML
-
-
-// 	// dropdown[i].addEventListener("click", function () {
-// 	// 	this.classList.toggle("active");
-// 	// 	var dropdownContent = this.nextElementSibling;
-// 	// 	if (dropdownContent.style.display === "block") {
-// 	// 		dropdownContent.style.display = "none";
-// 	// 	} else {
-// 	// 		dropdownContent.style.display = "block";
-// 	// 	}
-// 	// });
-// }
-
-// loadJSON('taste')
-
-
 
 // handle export to .jpeg
 export function saveAsImage() {
