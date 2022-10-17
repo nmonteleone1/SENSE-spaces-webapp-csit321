@@ -1,3 +1,4 @@
+// <!-- Meghan {file} -->
 import { saveAsImage } from '../main.js'
 import { regenerateRoom, getRoom } from "../main.js";
 

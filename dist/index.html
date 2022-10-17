@@ -22,6 +22,7 @@
 	<link rel="stylesheet" href="styles.css">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
 
+	<!-- Meghan {script} -->
 	<script>
 		// sets cookies
 		function setCookie(cname, cvalue, exdays) {
@@ -143,6 +144,7 @@
 
 <body id="bod" onload="checkCookie()">
 	<div id="ui">
+		<!-- Jackson and Meghan -->
 		<!-- top bar which contains the buttons for displaying each of the side menus -->
 		<div id="menuBar">
 			<button class="openMenuBtn" onclick="openLeftMenu()">⛭</button>
@@ -150,7 +152,7 @@
 			<button class="openMenuBtn" onclick="openRightMenu()">☰</button>
 		</div>
 
-
+		<!-- Meghan {user menu} -->
 		<!-- left menu ---- user menu -->
 		<div id="leftMenu" class="leftMenu">
 			<div><a href="javascript:void(0)" class="closeMenuBtn" onclick="closeLeftMenu()">×</a></div>
@@ -350,7 +352,7 @@
 			</form>
 		</div>
 
-
+		<!-- Meghan {objects menu} -->
 		<!-- right menu ---- objects menu -->
 		<div id="rightMenu" class="rightMenu">
 			<div><a href="javascript:void(0)" class="closeMenuBtn" onclick="closeRightMenu()">×</a></div>
@@ -461,6 +463,7 @@
 		</div>
 
 
+		<!-- Jackson -->
 		<!-- on screen controls -->
 		<div id="camControl" style="left:0px; bottom:0px">
 			<div class="zoomControls">
@@ -483,7 +486,7 @@
 		</div>
 
 
-
+		<!-- Meghan {script} -->
 		<!-- defines the methods for displaying and hiding the side menus -->
 		<script>
 			function openLeftMenu() {
@@ -659,7 +662,7 @@
 			import { handleNewRoomSubmit, handleImportRoomSubmit, handleExportSubmit, handleNewObjectSubmit, handleImportObjectSubmit } from './js/handler.js'
 			import { loadObject } from './main.js'
 
-
+			// <!-- Meghan -->
 			// once the DOM is loaded
 			document.addEventListener('DOMContentLoaded', (event) => {
 				// load the object information
@@ -679,6 +682,7 @@
 			});
 
 
+			// <!-- Meghan -->
 			// load object data and dynamically set up object dropdowns
 			async function load() {
 				// load taste objects
@@ -750,6 +754,7 @@
 				setEventListeners(smellArray);
 			}
 
+			// <!-- Meghan -->
 			// creates dropdown header
 			function dropdownLoader(sense) {
 				var dropdown = document.createElement("button");
@@ -760,6 +765,7 @@
 				return dropdown;
 			}
 
+			// <!-- Meghan -->
 			// creates dropdown content
 			function contentLoader(array) {
 				var content = document.createElement("div");
@@ -781,6 +787,7 @@
 				return content;
 			}
 
+			// <!-- Meghan -->
 			// adds the event handlers to add and view objects
 			function setEventListeners(array) {
 				for (let x = 0; x < array.length; x++) {
@@ -794,12 +801,14 @@
 				}	
 			}
 
+			// <!-- Meghan -->
 			// adds the object to the room
 			function addObjectToRoom(info) {
 				// load information
 				loadObject(info.linkToModel);
 			}
 
+			// <!-- Meghan -->
 			// opens the view object information submenu
 			function openViewObjectMenu(info) {
 				// load information
@@ -812,6 +821,7 @@
 				document.getElementById("viewObject").style.width = "250px";
 			}
 
+			// <!-- Jackson -->
 			// creates the display for the view object information submenu
 			function loadObjectInformation(info) {
 				let render = `<table style="padding:8px;" class="contentTable"><tr><td>Object Name</td></tr><tr><td>&emsp;${info.name}</td></tr><tr><td>Price</td></tr><tr><td>&emsp;${info.price}</td></tr><tr><td>Link to Resource</td></tr><tr><td id="link">&emsp;<a href='${info.linkToSite}' target='_blank'>${info.linkToSite}</a></td></tr></table>`;

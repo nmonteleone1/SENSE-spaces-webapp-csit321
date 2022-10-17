@@ -523,6 +523,7 @@ function render() {
 	renderer.render(scene, camera);
 }
 
+// <!-- Meghan -->
 // handle export to .jpeg
 export function saveAsImage() {
 	var imgData, imgNode;
@@ -539,6 +540,7 @@ export function saveAsImage() {
 	}
 }
 
+// <!-- Meghan -->
 var saveFile = function (strData, filename) {
 	var link = document.createElement('a');
 	if (typeof link.download === 'string') {
