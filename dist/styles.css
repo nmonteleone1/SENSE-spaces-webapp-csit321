@@ -132,6 +132,10 @@ body {
     transition: 0.3s;
 }
 
+.contentTable tr:nth-child(odd) {
+    font-size: 1.4em;
+}
+
 .panelButton {
     width: var(--panel-width);
     color: rgb(0, 0, 0);
@@ -179,6 +183,25 @@ body {
     background-color: #f1f1f1;
 }
 
+#dropdownTaste{
+    background-color: #d93e4f;
+}
+
+#dropdownTouch{
+    background-color: #fcb122;
+}
+
+#dropdownSight{
+    background-color: #0091ab;
+}
+
+#dropdownSound{
+    background-color: #85ccae;
+}
+
+#dropdownSmell{
+    background-color: #6f66a5;
+}
 
 /* on screen controls -- index.html */
 .zoomControls {
