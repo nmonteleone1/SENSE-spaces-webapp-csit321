@@ -72,6 +72,7 @@ moveRaycaster = new THREE.Raycaster();
 //////3D SPACE GENERATION//////
 //create blank room
 var room = {
+	name: 'default',
 	Width: 4,
 	Depth: 4,
 	Height: 2.7,
@@ -164,61 +165,75 @@ window.addEventListener('click', onMouseClick, false);
 window.addEventListener('drag', dragObject, false);
 
 //load objects from file
-const fileInput = document.getElementById("loadObject");
-fileInput.addEventListener('change', function () {
-	const reader = new FileReader();
+// export function importObject() {
+	const fileInput = document.getElementById("loadObject");
+	fileInput.addEventListener('change', function () {
+		console.log('object changed');
+		const reader = new FileReader();
 
-	var url = URL.createObjectURL(fileInput.files[0])
-	var fileName = fileInput.files[0].name
+		var url = URL.createObjectURL(fileInput.files[0])
+		var fileName = fileInput.files[0].name
 
-	reader.addEventListener('load', async function (event) {
-		const contents = event.target.result;
-		const object = new OBJLoader().parse(contents);
-		object.name = fileName;
-		let width = document.getElementById("objectWidth").value;
-		let depth = document.getElementById("objectDepth").value;
-		let height = document.getElementById("objectHeight").value;
-		console.log(width, depth, height);
-		let boxSize = new THREE.Vector3();
-		let boundingBox = new THREE.Box3().setFromObject(object);
-		boundingBox.getSize(boxSize);
-		console.log(boxSize);
-		let xFactor = width / boxSize.x;
-		let yFactor = height / boxSize.y;
-		let zFactor = depth / boxSize.z;
-		object.scale.x = xFactor;
-		object.scale.y = yFactor;
-		object.scale.z = zFactor;
-		console.log(object.scale)
+		reader.addEventListener('load', async function (event) {
+			const contents = event.target.result;
+			const object = new OBJLoader().parse(contents);
+			object.name = fileName;
+			let width = document.getElementById("objectImportWidth").value;
+			let depth = document.getElementById("objectImportDepth").value;
+			let height = document.getElementById("objectImportHeight").value;
+			console.log(width, depth, height);
+			let boxSize = new THREE.Vector3();
+			let boundingBox = new THREE.Box3().setFromObject(object);
+			boundingBox.getSize(boxSize);
+			console.log(boxSize);
+			let xFactor = width / boxSize.x;
+			let yFactor = height / boxSize.y;
+			let zFactor = depth / boxSize.z;
+			object.scale.x = xFactor;
+			object.scale.y = yFactor;
+			object.scale.z = zFactor;
+			console.log(object.scale)
 
-		items.add(object);
+			items.add(object);
 
-		scene.add(items)
+			scene.add(items)
 
-	}, false);
-	reader.readAsText(fileInput.files[0]);
+		}, false);
+		reader.readAsText(fileInput.files[0]);
 
-	url = url.replace(/^(\.?\/)/, '');
-	console.log(url);
+		url = url.replace(/^(\.?\/)/, '');
+		console.log(url);
 
-	// const[file] = evt.target.files
-	// if(file) {
-	// 	objloader.load(URL.createObjectURL(file), function(obkect) {
-	// 		scene.add(object);
-	// 	},
-	// 	function (xhr) {
-	// 		console.log((xhr.loaded/xhr.total*100) + '% loaded');
-	// 	},
-	// 	function(error) {
-	// 		console.log('Error loading the object');
-	// 	})
-	// }
-})
-function loadObj(evt) {
-
-}
+		// const[file] = evt.target.files
+		// if(file) {
+		// 	objloader.load(URL.createObjectURL(file), function(obkect) {
+		// 		scene.add(object);
+		// 	},
+		// 	function (xhr) {
+		// 		console.log((xhr.loaded/xhr.total*100) + '% loaded');
+		// 	},
+		// 	function(error) {
+		// 		console.log('Error loading the object');
+		// 	})
+		// }
+	})
+// }
 
 //////FUNCTIONS//////
+export function createNewObject(dimensions) {
+	var geometry = new THREE.BoxGeometry(dimensions.width, dimensions.height, dimensions.depth);
+	var wireframe = new THREE.WireframeGeometry(geometry);
+	var line = new THREE.LineSegments(wireframe);
+	line.material.depthTest = true;
+	line.material.opacity = 0.75;
+	line.material.transparent = true;
+	line.material.color.setHex(0x00ff00);
+	line.position.set(0,dimensions.height/2,0);
+
+	items.add(line);
+	scene.add(items);
+}
+
 function loadJSON(sense) {
 	var data;
 	let path = 'models/json/' + sense + '.json';
@@ -327,9 +342,10 @@ function zoomCamera(zoom) {
 // 	controls.update();
 // }
 
-export function regenerateRoom(width = room.Width, depth = room.Depth, height = room.Height) {
+export function regenerateRoom(name = room.name, width = room.Width, depth = room.Depth, height = room.Height, objects = []) {
 	// var width = parseFloat(document.getElementById('roomWidth').value);
 	// var depth = parseFloat(document.getElementById('roomDepth').value);
+	room.name = name;
 
 	if (isNaN(width)) {
 		width = room.Width;
@@ -354,7 +370,6 @@ export function regenerateRoom(width = room.Width, depth = room.Depth, height = 
 	const yCenter = depth / 2;
 	const wallThickness = 0.1;
 
-
 	let newSideWallGeometry = new THREE.BoxGeometry(depth + wallThickness, height, wallThickness);
 	let newBackWallGeometry = new THREE.BoxGeometry(width + wallThickness, height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
@@ -377,7 +392,17 @@ export function regenerateRoom(width = room.Width, depth = room.Depth, height = 
 	plane.material.map.repeat.set(width / 2, depth / 2);
 
 	light.position.set(xCenter, height, yCenter);
-	light.distance = Math.max(width, depth) * 1.5
+	light.distance = Math.max(width, depth) * 1.5;
+
+	// console.log(scene);
+	for(let i = 1; i < objects.length; i++) {
+		// console.log(objects[i]);
+		const object = loader.parse(objects[i]);
+		items.add(object);
+	}
+	
+	scene.add(items);
+	// console.log(scene);
 
 	camera.lookAt(xCenter, 0, yCenter);
 	controls.target.set(xCenter, 0, yCenter);
@@ -497,7 +522,19 @@ function dragObject() {
 }
 
 export function getRoom() {
-	return room;
+	var roomObjects = [];
+	items.traverse(function (obj) {
+		roomObjects.push(obj);
+	})
+	let roomData = {
+        "roomName": room.name,
+        "width": room.Width,
+        "depth": room.Depth,
+        "height": room.Height,
+        "objects": roomObjects
+      }
+	
+	return roomData;
 }
 
 function findGridPos() {
@@ -591,6 +628,12 @@ onkeydown = (event) => {
 			break;
 		case "ArrowRight":
 			rotateCamera('right')
+			break;
+		case "Backspace":
+			heldObject.parent.remove(heldObject);
+			heldObjectBB.parent.remove(heldObjectBB);
+			heldObject = undefined;
+			heldObjectBB = undefined;
 			break;
 		default:
 			break;

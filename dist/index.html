@@ -415,9 +415,36 @@
 		<div id="importObject" class="rightMenu rightSubMenu">
 			<form id="importobject">
 				<div class="contentContainer">
-					<input type="file" id="loadObject">
+					<!-- <input type="file" id="loadObject"> -->
 
 					<table>
+						<tr>
+							<td><label>Object Width:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectImportWidth" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objImportWidthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Object Depth:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectImportDepth" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objImportDepthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Object Height:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectImportHeight" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objImportHeightInvalid" class="errorMessage"></small></td>
+						</tr>
 						<tr>
 							<td>
 								<div id="alertObject" class="alert" style="background-color: rgb(252, 177, 34);">
@@ -428,7 +455,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><input type="file" id="objectFile"></td>
+							<td><input type="file" id="loadObject"></td>
 						</tr>
 						<tr>
 							<td><small id="objectErrorMessage" class="errorMessage"></small></td>

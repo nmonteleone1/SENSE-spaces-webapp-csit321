@@ -1,6 +1,6 @@
 // <!-- Meghan {file} -->
 import { saveAsImage } from '../main.js'
-import { regenerateRoom, getRoom } from "../main.js";
+import { regenerateRoom, getRoom, createNewObject } from "../main.js";
 
 
 
@@ -23,7 +23,7 @@ export function handleNewRoomSubmit(event) {
         document.getElementById("leftMenu").style.width = "0";
 
         // regenerate room
-        regenerateRoom(newRoom.width, newRoom.depth, newRoom.height);
+        regenerateRoom(newRoom.roomName, newRoom.width, newRoom.depth, newRoom.height);
 
     } catch (e) {
         if(event.target.name.value == "") {
@@ -67,13 +67,15 @@ export function handleImportRoomSubmit(event) {
 function handleRoomFile(event) {
     try {
         let importedRoom = JSON.parse(event.target.result);
-        document.getElementById('errorMessage').innerHTML = ""; 
+        console.log(importedRoom);
+        // document.getElementById('errorMessage').innerHTML = ""; 
 
         // Values from the JSON can be accessed as follows
-        console.log("Room Name: ", importedRoom.roomName);
-        console.log("Dimensions: ", importedRoom.width, " x ", importedRoom.depth, " x ", importedRoom.height);
-        importedRoom.objects.map((x, index) => console.log(`Object ${index + 1}: `, x.name, "--", x.path, "--", x.model, "--", x.location[0], ",", x.location[1], ",", x.location[2]));
-
+        // console.log("Room Name: ", importedRoom.roomName);
+        // console.log("Dimensions: ", importedRoom.width, " x ", importedRoom.depth, " x ", importedRoom.height);
+        // importedRoom.objects.map((x, index) => console.log(`Object ${index + 1}: `, x.name, "--", x.path, "--", x.model, "--", x.location[0], ",", x.location[1], ",", x.location[2]));
+        // console.log(importedRoom.roomName, importedRoom.width, importedRoom.depth, importedRoom.height, importedRoom.objects);
+        regenerateRoom(importedRoom.roomName, importedRoom.width, importedRoom.depth, importedRoom.height, importedRoom.objects);
 
         // close menus
         document.getElementById("importRoom").style.width = "0";
@@ -90,7 +92,7 @@ function handleRoomFile(event) {
 export function handleExportSubmit(event) {
     event.preventDefault();
 
-    let data = fakeRoomData(); 
+    let data = getRoom(); 
     if(event.target.type.value == "json") {
         exportToJsonFile(data);
     } else if(event.target.type.value == "txt") {
@@ -183,6 +185,7 @@ export function handleNewObjectSubmit(event) {
         // convert form values to json
         let newObject = JSON.parse(`{"width":${event.target.objectWidth.value}, "depth":${event.target.objectDepth.value}, "height":${event.target.objectHeight.value}}`);
         console.log(newObject)
+        createNewObject(newObject);
     
         // close menus
         document.getElementById("newObject").style.width = "0";
