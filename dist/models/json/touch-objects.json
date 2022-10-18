@@ -1,0 +1,16 @@
+[
+    {
+        "id": "object2",
+        "name": "Touch Object 1",
+        "price": "1000",
+        "linkToSite": "https://www.desmos.com/scientific",
+        "linkToModel": "models/json/touch/touch.json"
+    },
+    {
+        "id": "object3",
+        "name": "Touch Object 2",
+        "price": "100",
+        "linkToSite": "https://www.google.com",
+        "linkToModel": "models/json/touch/touch-two.json"
+    }
+]

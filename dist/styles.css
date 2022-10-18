@@ -1,3 +1,5 @@
+/* <!-- Jackson and Meghan --> */
+
 :root {
     --panel-width: 210px;
     --panel-padding: 16px;
@@ -15,15 +17,15 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 8px;
-    /* background-color: rgb(0, 145, 171); */
-    background-color: rgb(111, 102, 165);
+    background-color: #D9D9D9;
+    align-items: center;
 }
 
 #headerImage {
     margin: 0;
     padding: 0;
-    max-height: 10%;
-    max-width: 10%;
+    max-height: 8%;
+    max-width: 8%;
 }
 
 
@@ -35,27 +37,10 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    /* background-color: rgb(111, 102, 165); */
-    background-color: white;
+    background-color: #D9D9D9;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
-}
-
-.leftMenu div,
-.leftMenu a {
-    padding: 8px 8px 8px 12px;
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-    display: block;
-    transition: 0.3s;
-}
-
-.leftMenu .info {
-    position: absolute;
-    top: 0;
-    left: 10px;
-    font-size: 4px;
 }
 
 .leftMenu .closeMenuBtn {
@@ -63,7 +48,10 @@ body {
     top: 0;
     right: 10px;
     font-size: 40px;
-    margin-left: 50px;
+    padding: 8px 8px 8px 12px;
+    text-decoration: none;
+    color: #555;
+    transition: 0.3s;
 }
 
 
@@ -71,26 +59,15 @@ body {
 .rightMenu {
     height: 100%;
     /* start open by default */
-    width: 250px; 
+    width: 250px;
     position: fixed;
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: rgb(111, 102, 165);
-    /* background-color: white; */
+    background-color: #D9D9D9;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
-}
-
-.rightMenu div,
-.rightMenu a {
-    padding: 8px 8px 8px 12px;
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-    /* temp comment out to hide categories by default */
-    /* display: block; */
-    transition: 0.3s;
 }
 
 .rightMenu .closeMenuBtn {
@@ -98,35 +75,35 @@ body {
     top: 0;
     left: 10px;
     font-size: 40px;
-    margin-right: 50px;
+    padding: 8px 8px 8px 12px;
+    text-decoration: none;
+    color: #555;
+    transition: 0.3s;
 }
 
-.label {
-    font-size: 16px;
+.rightSubMenu {
+    width: 0;
 }
 
 
 /* menu controls -- index.html */
 .openMenuBtn {
-    border: none;
-    font-size: 28px;
-    color: rgb(0, 0, 0);
-
     padding: 5px 10px;
-
     background: white;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-
     font-family: 'Filson Pro', sans-serif;
+    height: 34px;
+    width: 38px;
 }
 
 .openMenuBtn:hover {
-    background-color: #D9D9D9;
+    color: white;
+    background-color: #777;
 }
 
 .closeMenuBtn:hover {
-    color: #D9D9D9;
+    color: #777;
 }
 
 
@@ -149,76 +126,83 @@ body {
 }
 
 
-ul {
-    /* remove marker from unordered lists */
-    list-style-type: none;
-    padding: 0;
+/* buttons -- used throughout */
+.contentContainer {
+    padding: 8px 8px 8px 8px;
+    display: flex;
+    justify-content: center;
+    transition: 0.3s;
 }
 
+.contentTable tr:nth-child(odd) {
+    font-size: 1.4em;
+}
 
-/* buttons -- used throughout */
 .panelButton {
     width: var(--panel-width);
-    border: none;
-    display: inline-block;
-    font-size: 16px;
     color: rgb(0, 0, 0);
-
     /* TODO: change this to percentage of view height / width */
     padding: 10px 10px 10px 10px;
-
     background: white;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     margin: 0.1rem 0.1rem 0.1rem 0.1rem;
-
     font-family: 'Filson Pro', sans-serif;
 }
 
 .panelButton:hover {
-    background-color: #D9D9D9;
+    background-color: #A1A1A1;
 }
 
 .panelButton:active {
-    background-color: #A1A1A1;
+
+    color: white;
+    background-color: #777;
 }
 
-.panelButtonContainer {
-    display: none;
-}
 
-.panelButtonDropdown:hover {
-    background-color: #D9D9D9;
-}
-
-.panelButtonDropdown:active {
-    background-color: #A1A1A1;
-}
-
-.panelButtonDropdownExpanded {
-    background-color: blue;
-}
-
-.panelButtonDropdown {
-    width: var(--panel-width);
+/* dropdowns -- index.html */
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
     border: none;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
+    text-align: left;
+    outline: none;
+}
 
+.active,
+.collapsible:hover {
+    background-color: #555;
+}
 
-    justify-content: center;
-    align-items: center;
-    /* TODO: change this to percentage of view height / width */
-    padding: 10px 10px 10px 10px;
+.content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
 
-    background: white;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    margin: 0.1rem 0.1rem 0.1rem 0.1rem;
+#dropdownTaste{
+    background-color: #d93e4f;
+}
 
-    font-family: 'Filson Pro', sans-serif;
+#dropdownTouch{
+    background-color: #fcb122;
+}
+
+#dropdownSight{
+    background-color: #0091ab;
+}
+
+#dropdownSound{
+    background-color: #85ccae;
+}
+
+#dropdownSmell{
+    background-color: #6f66a5;
 }
 
 /* on screen controls -- index.html */
@@ -369,32 +353,4 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
-}
-
-.sensoryItem {
-    /* background-color: #DADADA; */
-    background-repeat: no-repeat;
-    background-size:contain ;
-    padding-top: 30%;
-    text-decoration:underline;
-}
-
-#taste {
-    background-image: url('textures/taste.png');
-}
-
-#touch {
-    background-image: url('textures/touch.png');
-}
-
-#sight {
-    background-image: url('textures/sight.png');
-}
-
-#sound {
-    background-image: url('textures/sound.png');
-}
-
-#smell {
-    background-image: url('textures/smell.png');
 }

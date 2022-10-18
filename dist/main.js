@@ -143,26 +143,19 @@ animate();
 
 
 //////UI INTEGRATION//////
-document.getElementById("rotateUp").addEventListener("click", function() {rotateCamera('up')});
-document.getElementById("rotateDown").addEventListener("click", function() {rotateCamera('down')});
-document.getElementById("rotateLeft").addEventListener("click", function() {rotateCamera('left')});
-document.getElementById("rotateRight").addEventListener("click", function() {rotateCamera('right')});
+document.getElementById("rotateUp").addEventListener("click", function () { rotateCamera('up') });
+document.getElementById("rotateDown").addEventListener("click", function () { rotateCamera('down') });
+document.getElementById("rotateLeft").addEventListener("click", function () { rotateCamera('left') });
+document.getElementById("rotateRight").addEventListener("click", function () { rotateCamera('right') });
 // document.getElementById("roomRegen").addEventListener("click", regenerateRoom);
-document.getElementById("zoomIn").addEventListener("click", function() {zoomCamera(1)});
-document.getElementById("zoomOut").addEventListener("click", function() {zoomCamera(0)});
-document.getElementById("moveUp").addEventListener("click", function() {moveCamera('up')});
-document.getElementById("moveDown").addEventListener("click", function() {moveCamera('down')});
-document.getElementById("moveLeft").addEventListener("click", function() {moveCamera('left')});
-document.getElementById("moveRight").addEventListener("click", function() {moveCamera('right')});
-document.getElementById("taste").addEventListener("click", function() {loadObject('taste')});
-document.getElementById("touch").addEventListener("click", function() {loadObject('touch')});
-document.getElementById("sight").addEventListener("click", function() {loadObject('sight')});
-document.getElementById("sound").addEventListener("click", function() {loadObject('sound')});
-document.getElementById("smell").addEventListener("click", function() {loadObject('smell')});
-document.getElementById("loadObject").addEventListener("change", function() {loadObj(event)})
+document.getElementById("zoomIn").addEventListener("click", function () { zoomCamera(1) });
+document.getElementById("zoomOut").addEventListener("click", function () { zoomCamera(0) });
+document.getElementById("moveUp").addEventListener("click", function () { moveCamera('up') });
+document.getElementById("moveDown").addEventListener("click", function () { moveCamera('down') });
+document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
+document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
 
-// setup collapsable dropdown menus
-setupDropdown();
+document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
 
 //track mouse position
 window.addEventListener('mousemove', onMouseMove, false);
@@ -190,9 +183,9 @@ fileInput.addEventListener('change', function () {
 		let boundingBox = new THREE.Box3().setFromObject(object);
 		boundingBox.getSize(boxSize);
 		console.log(boxSize);
-		let xFactor = width/boxSize.x;
-		let yFactor = height/boxSize.y;
-		let zFactor = depth/boxSize.z;
+		let xFactor = width / boxSize.x;
+		let yFactor = height / boxSize.y;
+		let zFactor = depth / boxSize.z;
 		object.scale.x = xFactor;
 		object.scale.y = yFactor;
 		object.scale.z = zFactor;
@@ -236,13 +229,13 @@ function loadJSON(sense) {
 	return data;
 }
 
-function loadObject(sense) {
-	loader.load('models/json/' + sense + '.json', function (obj) {
+export function loadObject(path) {
+	loader.load(path, function (obj) {
 		obj.position.set(room.Width / 2, 0.5, room.Depth / 2);
 		items.add(obj);
 		scene.add(items);
 	});
-	var data = loadJSON(sense);
+	// var data = loadJSON(sense);
 	// var object = loader.parse(data);
 	// var mesh = new THREE.Mesh(object.geometry, object.materials[0]);
 	// scene.add(mesh);
@@ -334,7 +327,7 @@ function zoomCamera(zoom) {
 // 	controls.update();
 // }
 
-export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.Height) {
+export function regenerateRoom(width = room.Width, depth = room.Depth, height = room.Height) {
 	// var width = parseFloat(document.getElementById('roomWidth').value);
 	// var depth = parseFloat(document.getElementById('roomDepth').value);
 
@@ -350,10 +343,10 @@ export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.H
 	else {
 		room.Depth = depth;
 	}
-	if(isNaN(height)) {
+	if (isNaN(height)) {
 		height = room.Height;
 	}
-	else { 
+	else {
 		room.Height = height;
 	}
 
@@ -362,29 +355,29 @@ export function regenerateRoom(width=room.Width, depth=room.Depth, height=room.H
 	const wallThickness = 0.1;
 
 
-	let newSideWallGeometry = new THREE.BoxGeometry(depth+wallThickness, height, wallThickness);
-	let newBackWallGeometry = new THREE.BoxGeometry(width+wallThickness, height, wallThickness);
+	let newSideWallGeometry = new THREE.BoxGeometry(depth + wallThickness, height, wallThickness);
+	let newBackWallGeometry = new THREE.BoxGeometry(width + wallThickness, height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
 	room.rightWall.geometry = newSideWallGeometry;
 	room.backWall.geometry = newBackWallGeometry;
 	room.frontWall.geometry = newBackWallGeometry;
 
-	room.leftWall.position.set(0,height/2,yCenter);
-	room.leftWall.rotation.set(0,Math.PI/2,0);
+	room.leftWall.position.set(0, height / 2, yCenter);
+	room.leftWall.rotation.set(0, Math.PI / 2, 0);
 
-	room.backWall.position.set(xCenter,height/2,0);
+	room.backWall.position.set(xCenter, height / 2, 0);
 
-	room.rightWall.position.set(width, height/2, yCenter);
-	room.rightWall.rotation.set(0,Math.PI/2,0);
+	room.rightWall.position.set(width, height / 2, yCenter);
+	room.rightWall.rotation.set(0, Math.PI / 2, 0);
 
-	room.frontWall.position.set(xCenter, height/2, depth);
+	room.frontWall.position.set(xCenter, height / 2, depth);
 
 	plane.geometry = new THREE.PlaneGeometry(width, room.Depth, 10, 10);
 	plane.position.set(xCenter, 0, yCenter);
 	plane.material.map.repeat.set(width / 2, depth / 2);
 
 	light.position.set(xCenter, height, yCenter);
-	light.distance = Math.max(width,depth)*1.5
+	light.distance = Math.max(width, depth) * 1.5
 
 	camera.lookAt(xCenter, 0, yCenter);
 	controls.target.set(xCenter, 0, yCenter);
@@ -422,21 +415,21 @@ function wallHiderToggle() {
 	// get direction to each corner of the room, subtract some arbitrary distance to prevent collisions
 	let buffer = 0.1;
 	let dirs = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
-	dirs[0].subVectors(new Vector3(buffer,0,buffer),camera.position).normalize();
-	dirs[1].subVectors(new Vector3(buffer,0,room.Depth-buffer),camera.position).normalize();
-	dirs[2].subVectors(new Vector3(room.Width-buffer,0,buffer),camera.position).normalize();
-	dirs[3].subVectors(new Vector3(room.Width-buffer,0,room.Depth-buffer),camera.position).normalize();
+	dirs[0].subVectors(new Vector3(buffer, 0, buffer), camera.position).normalize();
+	dirs[1].subVectors(new Vector3(buffer, 0, room.Depth - buffer), camera.position).normalize();
+	dirs[2].subVectors(new Vector3(room.Width - buffer, 0, buffer), camera.position).normalize();
+	dirs[3].subVectors(new Vector3(room.Width - buffer, 0, room.Depth - buffer), camera.position).normalize();
 
 	// create array for storing which walls are blocking view
 	var intersectingWalls = [];
 
 	// add blocking walls to array by checking vision to each corner
-	for(let i = 0; i < dirs.length; i++) {
+	for (let i = 0; i < dirs.length; i++) {
 		// console.log(dirs[i])
 		raycaster.set(camera.position, dirs[i]);
 		const intersects = raycaster.intersectObjects(room.walls.children);
 		// console.log(intersects)
-		if(!intersects.length) {
+		if (!intersects.length) {
 			// console.log('no intersects')
 			continue;
 		}
@@ -445,18 +438,18 @@ function wallHiderToggle() {
 	// console.log(intersectingWalls)
 
 	// for each wall check if it is in the intersections array and then hide if so
-	room.walls.traverse(function(obj) {
-		
-		if(obj.type!='Mesh') {return;}
+	room.walls.traverse(function (obj) {
+
+		if (obj.type != 'Mesh') { return; }
 		// console.log(obj);
 		const newMaterial = obj.material.clone();
 		// console.log(obj.material);
 		// console.log(newMaterial);
 		newMaterial.transparent = false;
 		newMaterial.opacity = 1;
-		for(let i = 0; i < intersectingWalls.length; i++) {
+		for (let i = 0; i < intersectingWalls.length; i++) {
 			// console.log(intersectingWalls[i].object);
-			if(obj.position == intersectingWalls[i].object.position) {
+			if (obj.position == intersectingWalls[i].object.position) {
 				// console.log('same position')
 				newMaterial.transparent = true;
 				newMaterial.opacity = 0;
@@ -489,8 +482,8 @@ function dragObject() {
 		moveRaycaster.setFromCamera(mouse, camera);
 		const moveGrid = moveRaycaster.intersectObjects(grid.children);
 
-		if(moveGrid.length) {
-			for(let obj of moveGrid) {
+		if (moveGrid.length) {
+			for (let obj of moveGrid) {
 				// matrixWorld.elements 0 and 10 are where the scale value is stored for the mesh
 				heldObject.position.x = obj.point.x / heldObject.matrixWorld.elements[0];
 				heldObject.position.z = obj.point.z / heldObject.matrixWorld.elements[10];
@@ -530,58 +523,7 @@ function render() {
 	renderer.render(scene, camera);
 }
 
-
-// handle dropdown category visibility
-// todo: move this somewhere better
-function setupDropdown() {
-	var dropdown = document.getElementsByClassName("panelButtonDropdown");
-	var i;
-
-	for (i = 0; i < dropdown.length; i++) {
-		dropdown[i].addEventListener("click", function () {
-			this.classList.toggle("active");
-			var dropdownContent = this.nextElementSibling;
-			if (dropdownContent.style.display === "block") {
-				dropdownContent.style.display = "none";
-			} else {
-				dropdownContent.style.display = "block";
-			}
-		});
-	}
-}
-
-var dropdown = document.getElementsByClassName("sensoryItem");
-var i;
-
-for (i = 0; i < dropdown.length; i++) {
-	var element = dropdown[i];
-	// console.log(element.innerHTML)
-	// console.log(element.innerHTML.toLowerCase())
-	var data = loadJSON(element.innerHTML.toLowerCase());
-	// console.log(data)
-	// if(data) {
-	// 	// print(data)
-	// 	console.log(data);
-	// }
-
-	// dropdown[i].innerHTML
-
-
-	// dropdown[i].addEventListener("click", function () {
-	// 	this.classList.toggle("active");
-	// 	var dropdownContent = this.nextElementSibling;
-	// 	if (dropdownContent.style.display === "block") {
-	// 		dropdownContent.style.display = "none";
-	// 	} else {
-	// 		dropdownContent.style.display = "block";
-	// 	}
-	// });
-}
-
-// loadJSON('taste')
-
-
-
+// <!-- Meghan -->
 // handle export to .jpeg
 export function saveAsImage() {
 	var imgData, imgNode;
@@ -598,6 +540,7 @@ export function saveAsImage() {
 	}
 }
 
+// <!-- Meghan -->
 var saveFile = function (strData, filename) {
 	var link = document.createElement('a');
 	if (typeof link.download === 'string') {
@@ -611,10 +554,8 @@ var saveFile = function (strData, filename) {
 	}
 }
 
-	// loadJSON('taste')
 
 // setup keypress handling for camera controls
-
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
