@@ -20,9 +20,9 @@
 
 	<title>SENSE Spaces Planning Tool</title>
 	<link rel="stylesheet" href="styles.css">
-
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
-  
+
+	<!-- Meghan {script} -->
 	<script>
 		// sets cookies
 		function setCookie(cname, cvalue, exdays) {
@@ -30,15 +30,12 @@
 			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
 			let expires = "expires=" + d.toUTCString();
 			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-
-			console.log(document.cookie)
 		}
 
 		// gets cookies
 		function getCookie(cname) {
 			let name = cname + "=";
 			let decodedCookie = decodeURIComponent(document.cookie);
-			// console.log(decodedCookie)
 			let ca = decodedCookie.split(';');
 			for (let i = 0; i < ca.length; i++) {
 				let c = ca[i];
@@ -63,8 +60,13 @@
 					x.style.fontSize = fontSize;
 				});
 
-				const panelDropdown = document.querySelectorAll(".panelButtonDropdown");
+				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
+					y.style.fontSize = fontSize;
+				});
+
+				const openButtons = document.querySelectorAll(".openMenuBtn");
+				openButtons.forEach((y) => {
 					y.style.fontSize = fontSize;
 				});
 			}
@@ -78,7 +80,7 @@
 					x.style.letterSpacing = textSpacing;
 				});
 
-				const panelDropdown = document.querySelectorAll(".panelButtonDropdown");
+				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
 					y.style.letterSpacing = textSpacing;
 				});
@@ -91,7 +93,7 @@
 					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
 				});
 
-				const panelDropdown = document.querySelectorAll(".panelButtonDropdown");
+				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
 					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
 				});
@@ -114,25 +116,14 @@
 
 			let highlightLinks = getCookie("highlightLinks");
 			if (highlightLinks != "") {
-				document.querySelector(".info").style.border = (highlightLinks === 'true') ? '5px solid grey' : 'none';
+				const links = document.querySelectorAll("#link")
+				links.forEach((y) => {
+					y.style.border = (highlightLinks === 'true') ? '5px solid grey' : 'none';
+				});
 			}
 		}
 
-		// function deleteAllCookies() {
-		// 	var cookies = document.cookie.split(";");
-
-		// 	for (var i = 0; i < cookies.length; i++) {
-		// 		var cookie = cookies[i];
-		// 		var eqPos = cookie.indexOf("=");
-		// 		var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-		// 		document.cookie = name + "=;expires=Wed, 01 Jan 2025 00:00:00 GMT";
-		// 	}
-
-		// 	let decodedCookie = decodeURIComponent(document.cookie);
-		// 	console.log("dcdel: ", decodedCookie)
-		// }
-
-		// handle user settings
+		// handle user settings form submit
 		function handleUserSettingSubmit(event) {
 			event.preventDefault();
 
@@ -153,242 +144,353 @@
 
 <body id="bod" onload="checkCookie()">
 	<div id="ui">
+		<!-- Jackson and Meghan -->
 		<!-- top bar which contains the buttons for displaying each of the side menus -->
 		<div id="menuBar">
 			<button class="openMenuBtn" onclick="openLeftMenu()">⛭</button>
 			<img id="headerImage" src="textures/logo.png">
-			<button class="openMenuBtn" <button onclick="window.open('https://www.uow.edu.au/global-challenges/building-resilient-communities/sense-spaces/','_blank');" type="button">🛈</button>
 			<button class="openMenuBtn" onclick="openRightMenu()">☰</button>
 		</div>
 
+		<!-- Meghan {user menu} -->
 		<!-- left menu ---- user menu -->
 		<div id="leftMenu" class="leftMenu">
-				<div>
-					<a href="./onboarding.html" class="info" target="_blank"><span style="font-size:32px;">ⓘ</span></a>
-					<a href="javascript:void(0)" class="closeMenuBtn" onclick="closeLeftMenu()">×</a>
-				</div>
+			<div><a href="javascript:void(0)" class="closeMenuBtn" onclick="closeLeftMenu()">×</a></div>
 
-			<div><button class="panelButton" onclick="openNewRoomMenu()">New Room</button></div>
-			<div><button class="panelButton" onclick="openImportRoomMenu()">Import Room</button></div>
-			<div><button class="panelButton" onclick="openExportMenu()">Export</button></div>
-			<div><button class="panelButton" onclick="openUserSettingsMenu()">User Settings</button></div>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openNewRoomMenu()">New Room</button>
+			</div>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openImportRoomMenu()">Import Room</button>
+			</div>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openExportMenu()">Export</button>
+			</div>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openUserSettingsMenu()">User Settings</button>
+			</div>
+			<div class="contentContainer">
+				<button id="link" class="panelButton" onclick="window.open('./onboarding.html')">User Onboarding</button>
+			</div>
+			<div class="contentContainer">
+				<button id="link" class="panelButton" onclick="window.open('https://www.uow.edu.au/global-challenges/building-resilient-communities/sense-spaces/','_blank');">About Us</button>
+			</div>
 		</div>
-
 
 		<!-- new room ---- user menu -->
 		<div id="newRoom" class="leftMenu">
 			<form id="newroom">
-				<table style="padding:8px;">
-					<tr>
-						<td><label>Room name:</label></td>
-					</tr>
-					<tr>
-						<td><input type="text" id="name" /></td>
-					</tr>
-					<tr>
-						<td>&nbsp;<small id="nameInvalid" class="errorMessage"></small></td>
-					</tr>
-					<tr>
-						<td><label>Width (m):</label></td>
-					</tr>
-					<tr>
-						<td><input type="number" id="width" min="0" /></td>
-					</tr>
-					<tr>
-						<td>&nbsp;<small id="widthInvalid" class="errorMessage"></small></td>
-					</tr>
-					<tr>
-						<td><label>Depth (m):</label></td>
-					</tr>
-					<tr>
-						<td><input type="number" id="depth" min="0" /></td>
-					</tr>
-					<tr>
-						<td>&nbsp;<small id="depthInvalid" class="errorMessage"></small></td>
-					</tr>
-					<tr>
-						<td><label>Height (m):</label></td>
-					</tr>
-					<tr>
-						<td><input type="number" id="height" min="0" /></td>
-					</tr>
-					<tr>
-						<td>&nbsp;<small id="heightInvalid" class="errorMessage"></small></td>
-					</tr>
-				</table>
-				<br /><br />
-				<div><button class="panelButton" type="submit">Create Room</button></div>
+				<div class="contentContainer">
+					<table>
+						<tr>
+							<td><label>Room name:</label></td>
+						</tr>
+						<tr>
+							<td><input type="text" id="name" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="nameInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Width (m):</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="width" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="widthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Depth (m):</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="depth" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="depthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Height (m):</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="height" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="heightInvalid" class="errorMessage"></small></td>
+						</tr>
+					</table>
+				</div>
+				<div class="contentContainer"><button class="panelButton" type="submit">Create Room</button></div>
 				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
 					<span onclick="closeNewRoomMenu()">Cancel</span>
 				</div>
 			</form>
 		</div>
 
-
 		<!-- import room ---- user menu -->
 		<div id="importRoom" class="leftMenu">
 			<form id="importroom">
-				<div id="alert" class="alert" style="background-color: rgb(252, 177, 34);">
-					<span class="closeAlertBtn" onclick="this.parentElement.style.display='none';">&times;</span>
-					<strong>Note:</strong> Files must be in a valid JSON format to upload successfully
+				<div class="contentContainer">
+					<table>
+						<tr>
+							<td>
+								<div id="alert" class="alert" style="background-color: rgb(252, 177, 34);">
+									<span class="closeAlertBtn"
+										onclick="this.parentElement.style.display='none';">&times;</span>
+									<strong>Note:</strong> Files must be in a valid JSON format to upload successfully
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><input type="file" id="file" accept=".json" /></td>
+						</tr>
+						<tr>
+							<td><small id="errorMessage" class="errorMessage"></small></td>
+						</tr>
+					</table>
 				</div>
-				<input type="file" id="file" accept=".json" />
-				<small id="errorMessage" class="errorMessage"></small>
-				<br /><br />
-				<div><button class="panelButton" type="submit">Import Room</button></div>
+				<div class="contentContainer"><button class="panelButton" type="submit">Import Room</button></div>
 				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
 					<span onclick="closeImportRoomMenu()">Cancel</span>
 				</div>
 			</form>
 		</div>
 
-
 		<!-- export ---- user menu -->
 		<div id="export" class="leftMenu">
 			<form id="exportitem">
-				<div style="width:100%;">
-					<select id="type">
-						<option value="none"></option>
-						<option value="json">Room (.json)</option>
-						<option value="jpeg">Room (.jpeg)</option>
-						<option value="txt">Object List (.txt)</option>
-					</select>
+				<div class="contentContainer">
+					<table>
+						<tr>
+							<td>
+								<select id="type">
+									<option value="none"></option>
+									<option value="json">Room (.json)</option>
+									<option value="jpeg">Room (.jpeg)</option>
+									<option value="txt">Object List (.txt)</option>
+								</select>
+							</td>
+						</tr>
+					</table>
 				</div>
-				<br />
-				<div><button class="panelButton" type="submit">Export</button></div>
+				<div class="contentContainer"><button class="panelButton" type="submit">Export</button></div>
 				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
 					<span onclick="closeExportMenu()">Cancel</span>
 				</div>
 			</form>
 		</div>
 
-
 		<!-- user settings ---- user menu -->
 		<div id="userSettings" class="leftMenu">
 			<form id="userSettingsForm">
-				<table style="padding:8px;">
-					<tr>
-						<td colspan="2"><label>Font size:</label></td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<select id="fontsize">
-								<option value="14px">Default (14px)</option>
-								<option value="10px">10px</option>
-								<option value="12px">12px</option>
-								<option value="16px">16px</option>
-								<option value="18px">18px</option>
-								<option value="20px">20px</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2"><label>Text spacing:</label></td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<select id="textspacing">
-								<option value="0px">Default (0px)</option>
-								<option value="1px">1px</option>
-								<option value="2px">2px</option>
-								<option value="3px">3px</option>
-								<option value="4px">4px</option>
-								<option value="5px">5px</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2"><label>Highlight</label></td>
-					</tr>
-					<tr>
-						<td></td>
-					</tr>
-					<tr>
-						<td>
-							<label>&emsp;&emsp;Buttons:</label>
-						</td>
-						<td>
-							<label class="switch">
-								<input type="checkbox" id="buttons">
-								<span class="slider round"></span>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label>&emsp;&emsp;Links:</label>
-						</td>
-						<td>
-							<label class="switch">
-								<input type="checkbox" id="links">
-								<span class="slider round"></span>
-							</label>
-						</td>
-					</tr>
-					<tr>
-
-					</tr>
-				</table>
-				<br /><br />
-				<div><button class="panelButton" type="submit">Save Changes</button></div>
+				<div class="contentContainer">
+					<table>
+						<tr>
+							<td colspan="2"><label>Font size:</label></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<select id="fontsize">
+									<option value="14px">Default (14px)</option>
+									<option value="10px">10px</option>
+									<option value="12px">12px</option>
+									<option value="16px">16px</option>
+									<option value="18px">18px</option>
+									<option value="20px">20px</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2"><label>Text spacing:</label></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<select id="textspacing">
+									<option value="0px">Default (0px)</option>
+									<option value="1px">1px</option>
+									<option value="2px">2px</option>
+									<option value="3px">3px</option>
+									<option value="4px">4px</option>
+									<option value="5px">5px</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2"><label>Highlight</label></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td>
+								<label>&emsp;&emsp;Buttons:</label>
+							</td>
+							<td>
+								<label class="switch">
+									<input type="checkbox" id="buttons">
+									<span class="slider round"></span>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>&emsp;&emsp;Links:</label>
+							</td>
+							<td>
+								<label class="switch">
+									<input type="checkbox" id="links">
+									<span class="slider round"></span>
+								</label>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="contentContainer"><button class="panelButton" type="submit">Save Changes</button></div>
 				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
 					<span onclick="closeUserSettingsMenu()">Cancel</span>
 				</div>
 			</form>
 		</div>
 
+		<!-- Meghan {objects menu} -->
 		<!-- right menu ---- objects menu -->
 		<div id="rightMenu" class="rightMenu">
-			<a href="javascript:void(0)" class="closeMenuBtn" onclick="closeRightMenu()">×</a>
+			<div><a href="javascript:void(0)" class="closeMenuBtn" onclick="closeRightMenu()">×</a></div>
 
-			<!-- Q is temporary until I add a proper magnifying glass search icon-->
-			<!-- <div id="searchBox"><input type="text"><button>Q</button></div> -->
-			<div>
-				<h2>My Objects</h2>
-				<!-- hardcoded objects pending object "backend" to dynamically load -->
-				<ul id="myObjects">
-					<!-- NEW OBJECT -->
-					<li>Obj Width<input type="number" id="objectWidth"/></li>
-					<li>Obj Depth<input type="number" id="objectDepth"/></li>
-					<li>Obj Height<input type="number" id="objectHeight"/></li>
-					<li><input type="file" id="loadObject" class="panelButton"></li>
-					<!-- TASTE -->
-					<button class="panelButtonDropdown">Taste Category</button>
-					<div class="panelButtonContainer">
-						<li><button class="panelButton sensoryItem" id="taste">Taste</button></li>
-					</div>
-					<!-- TOUCH -->
-					<button class="panelButtonDropdown">Touch Category</button>
-					<div class="panelButtonContainer">
-						<li><button class="panelButton sensoryItem" id="touch">Touch</button></li>
-					</div>
-					<!-- SIGHT -->
-					<button class="panelButtonDropdown">Sight Category</button>
-					<div class="panelButtonContainer">
-						<li><button class="panelButton sensoryItem" id="sight">Sight</button></li>
-					</div>
-					<!-- SOUND -->
-					<button class="panelButtonDropdown">Sound Category</button>
-					<div class="panelButtonContainer">
-						<li><button class="panelButton sensoryItem" id="sound">Sound</button></li>
-					</div>
-					<!-- SMELL -->
-					<button class="panelButtonDropdown">Smell Category</button>
-					<div class="panelButtonContainer">
-						<li><button class="panelButton sensoryItem" id="smell">Smell</button></li>
-					</div>
-				</ul>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openNewObjectMenu()">New Object</button>
 			</div>
-			<!-- <div>
-				Width
-				<input type="range" id="roomWidth" min="1" max="8" value="4" autocomplete="off" />
-				Depth
-				<input type="range" id="roomDepth" min="1" max="8" value="4" autocomplete="off" />
-				<button class="panelButton" id="roomRegen">Regenerate Room</button>
-			</div> -->
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openImportObjectMenu()">Import Object</button>
+			</div>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openPredefinedObjectMenu()">Predefined Object</button>
+			</div>
+
+			<!-- <div id="searchBox"><input type="text"><button>🔎︎</button></div> -->
+		</div>
+
+		<!-- new object ---- objects menu -->
+		<div id="newObject" class="rightMenu rightSubMenu">
+			<form id="newobject">
+				<div class="contentContainer">
+					<table>
+						<tr>
+							<td><label>Object Width:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectWidth" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objWidthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Object Depth:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectDepth" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objDepthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Object Height:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectHeight" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objHeightInvalid" class="errorMessage"></small></td>
+						</tr>
+					</table>
+				</div>
+				<div class="contentContainer"><button class="panelButton" type="submit">Create Object</button></div>
+				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+					<span onclick="closeNewObjectMenu()">Cancel</span>
+				</div>
+			</form>
+		</div>
+
+		<!-- import object ---- objects menu -->
+		<div id="importObject" class="rightMenu rightSubMenu">
+			<form id="importobject">
+				<div class="contentContainer">
+					<!-- <input type="file" id="loadObject"> -->
+
+					<table>
+						<tr>
+							<td><label>Object Width:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectImportWidth" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objImportWidthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Object Depth:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectImportDepth" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objImportDepthInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td><label>Object Height:</label></td>
+						</tr>
+						<tr>
+							<td><input type="number" id="objectImportHeight" min="0" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="objImportHeightInvalid" class="errorMessage"></small></td>
+						</tr>
+						<tr>
+							<td>
+								<div id="alertObject" class="alert" style="background-color: rgb(252, 177, 34);">
+									<span class="closeAlertBtn"
+										onclick="this.parentElement.style.display='none';">&times;</span>
+									<strong>Note:</strong> Files must be in a valid JSON format to upload successfully
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><input type="file" id="loadObject"></td>
+						</tr>
+						<tr>
+							<td><small id="objectErrorMessage" class="errorMessage"></small></td>
+						</tr>
+					</table>
+				</div>
+				<div class="contentContainer"><button class="panelButton" type="submit">Import Object</button></div>
+				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+					<span onclick="closeImportObjectMenu()">Cancel</span>
+				</div>
+			</form>
+		</div>
+
+		<!-- pre-defined objects ---- objects menu -->
+		<div id="predefinedObject" class="rightMenu rightSubMenu">
+			<div id="objects"></div>
+			<br/>
+			<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<span onclick="closePredefinedObjectMenu()">Cancel</span>
+			</div>
+		</div>
+
+		<!-- view object information ---- pre-defined objects - objects menu -->
+		<div id="viewObject" class="rightMenu rightSubMenu">
+			<div class="contentContainer">
+				<div id="view"></div>
+			</div>
+			<br/>
+			<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<span onclick="closeViewObjectMenu()">Cancel</span>
+			</div>
 		</div>
 
 
+		<!-- Jackson -->
 		<!-- on screen controls -->
 		<div id="camControl" style="left:0px; bottom:0px">
 			<div class="zoomControls">
@@ -411,6 +513,7 @@
 		</div>
 
 
+		<!-- Meghan {script} -->
 		<!-- defines the methods for displaying and hiding the side menus -->
 		<script>
 			function openLeftMenu() {
@@ -450,6 +553,9 @@
 				// reset form
 				let form = document.getElementById('importroom');
 				form.reset();
+
+				// reset validation message
+				document.getElementById('errorMessage').innerHTML = "";
 
 				// open the menu
 				document.getElementById("importRoom").style.width = "250px";
@@ -510,23 +616,244 @@
 				// close the menu
 				document.getElementById("rightMenu").style.width = "0";
 			}
+
+			function openNewObjectMenu() {
+				// reset form
+				let form = document.getElementById('newobject');
+				form.reset();
+
+				// reset validation messages
+				document.getElementById('objWidthInvalid').innerHTML = "";
+				document.getElementById('objDepthInvalid').innerHTML = "";
+				document.getElementById('objHeightInvalid').innerHTML = "";
+
+				// open the menu
+				document.getElementById("newObject").style.width = "250px";
+			}
+
+			function closeNewObjectMenu() {
+				// close the menu
+				document.getElementById("newObject").style.width = "0";
+			}
+
+			function openImportObjectMenu() {
+				// reset the alert 
+				document.getElementById('alertObject').style.display = "block";
+
+				// reset form
+				let form = document.getElementById('importobject');
+				form.reset();
+
+				// reset validation message
+				document.getElementById('objectErrorMessage').innerHTML = "";
+
+				// open the menu
+				document.getElementById("importObject").style.width = "250px";
+			}
+
+			function closeImportObjectMenu() {
+				// close the menu
+				document.getElementById("importObject").style.width = "0";
+			}
+
+			function openPredefinedObjectMenu() {
+				// recheck cookies to ensure styles are set on dynamically rendered content
+				checkCookie();
+
+				// set the dropdowns to be inactive and content not displaying on open
+				var dropdowns = document.getElementsByClassName("collapsible");
+				for (var i = 0; i < dropdowns.length; i++) {
+					dropdowns[i].classList.remove("active");
+					var content = dropdowns[i].nextElementSibling;
+					content.style.maxHeight = null;
+				}
+
+				// open the menu
+				document.getElementById("predefinedObject").style.width = "250px";
+			}
+
+			function closePredefinedObjectMenu() {
+				// close the menu
+				document.getElementById("predefinedObject").style.width = "0";
+			}
+
+			function closeViewObjectMenu() {
+				// close the menu
+				document.getElementById("viewObject").style.width = "0";
+			}
 		</script>
 
 
+		<!-- handles the functions which require connection to 'main.js' or 'forms.js' -->
 		<script type="module">
-			import { handleNewSubmit, handleImportSubmit, handleExportSubmit } from './js/test.js'
+			import { handleNewRoomSubmit, handleImportRoomSubmit, handleExportSubmit, handleNewObjectSubmit, handleImportObjectSubmit } from './js/handler.js'
+			import { loadObject } from './main.js'
 
-			// once the DOM is loaded, define an event listener for submitting the form
+			// <!-- Meghan -->
+			// once the DOM is loaded
 			document.addEventListener('DOMContentLoaded', (event) => {
-				document.getElementById('newroom').addEventListener('submit', handleNewSubmit);
+				// load the object information
+				load();
 
-				document.getElementById('importroom').addEventListener('submit', handleImportSubmit);
+				// define an event listener for submitting the forms -- left menu
+				document.getElementById('newroom').addEventListener('submit', handleNewRoomSubmit);
+				document.getElementById('importroom').addEventListener('submit', handleImportRoomSubmit);
 				let file = document.getElementById('file');
-
 				document.getElementById('export').addEventListener('submit', handleExportSubmit);
-
 				document.getElementById('userSettingsForm').addEventListener('submit', handleUserSettingSubmit);
+
+				// define an event listener for submitting the forms -- right menu
+				document.getElementById('newobject').addEventListener('submit', handleNewObjectSubmit);
+				document.getElementById('importobject').addEventListener('submit', handleImportObjectSubmit);
+				let objectFile = document.getElementById('objectFile');
 			});
+
+
+			// <!-- Meghan -->
+			// load object data and dynamically set up object dropdowns
+			async function load() {
+				// load taste objects
+				const tasteResult = await fetch('models/json/taste-objects.json')
+				let tasteArray = await tasteResult.json();
+				var taste = dropdownLoader("Taste");
+				var tasteContent = contentLoader(tasteArray);
+
+				// load touch objects
+				const touchResult = await fetch('models/json/touch-objects.json')
+				let touchArray = await touchResult.json();
+				var touch = dropdownLoader("Touch");
+				var touchContent = contentLoader(touchArray);
+
+				// load sight objects
+				const sightResult = await fetch('models/json/sight-objects.json')
+				let sightArray = await sightResult.json();
+				var sight = dropdownLoader("Sight");
+				var sightContent = contentLoader(sightArray);
+
+				// load sound objects
+				const soundResult = await fetch('models/json/sound-objects.json')
+				let soundArray = await soundResult.json();
+				var sound = dropdownLoader("Sound");
+				var soundContent = contentLoader(soundArray);
+
+				// load smell objects
+				const smellResult = await fetch('models/json/smell-objects.json')
+				let smellArray = await smellResult.json();
+
+				var smell = dropdownLoader("Smell");
+				var smellContent = contentLoader(smellArray);
+
+				// add dropdowns to pre-defined objects submenu
+				var menuContainer = document.getElementById("objects");
+				menuContainer.innerHTML = "";
+				menuContainer.appendChild(taste);
+				menuContainer.appendChild(tasteContent);
+				menuContainer.appendChild(touch);
+				menuContainer.appendChild(touchContent);
+				menuContainer.appendChild(sight);
+				menuContainer.appendChild(sightContent);
+				menuContainer.appendChild(sound);
+				menuContainer.appendChild(soundContent);
+				menuContainer.appendChild(smell);
+				menuContainer.appendChild(smellContent);
+
+				// add the event handler to toggle the dropdowns
+				var dropdowns = document.getElementsByClassName("collapsible");
+				var i;
+
+				for (i = 0; i < dropdowns.length; i++) {
+					dropdowns[i].addEventListener("click", function () {
+						this.classList.toggle("active");
+						var content = this.nextElementSibling;
+						if (content.style.maxHeight) {
+							content.style.maxHeight = null;
+						} else {
+							content.style.maxHeight = content.scrollHeight + "px";
+						}
+					});
+				}
+
+				// add the event handlers to add and view objects
+				setEventListeners(tasteArray);
+				setEventListeners(touchArray);
+				setEventListeners(sightArray);
+				setEventListeners(soundArray);
+				setEventListeners(smellArray);
+			}
+
+			// <!-- Meghan -->
+			// creates dropdown header
+			function dropdownLoader(sense) {
+				var dropdown = document.createElement("button");
+				dropdown.className = "collapsible";
+				dropdown.innerHTML = `${sense} Category`;
+				dropdown.id = `dropdown${sense}`
+
+				return dropdown;
+			}
+
+			// <!-- Meghan -->
+			// creates dropdown content
+			function contentLoader(array) {
+				var content = document.createElement("div");
+				content.className = "content"
+
+				var objects = `<table style="width:100%; padding:8px;">`;
+
+				for (let x = 0; x < array.length; x++) {
+					objects +=
+						`<tr>
+							<td style="text-align: center;"><button id="${array[x].id}" class="openMenuBtn">+</button></td>
+							<td style="text-align: center; ">${array[x].name}</td>
+							<td style="text-align: center;"><button id="${array[x].name}" class="openMenuBtn">→</button></td>
+						</tr>`;
+				}
+
+				content.innerHTML = objects + `</table>`;
+
+				return content;
+			}
+
+			// <!-- Meghan -->
+			// adds the event handlers to add and view objects
+			function setEventListeners(array) {
+				for (let x = 0; x < array.length; x++) {
+					document.getElementById(array[x].id).addEventListener("click", function () {
+						addObjectToRoom(array[x]);
+					});
+
+					document.getElementById(array[x].name).addEventListener("click", function () {
+						openViewObjectMenu(array[x]);
+					});
+				}	
+			}
+
+			// <!-- Meghan -->
+			// adds the object to the room
+			function addObjectToRoom(info) {
+				// load information
+				loadObject(info.linkToModel);
+			}
+
+			// <!-- Meghan -->
+			// opens the view object information submenu
+			function openViewObjectMenu(info) {
+				// load information
+				loadObjectInformation(info);
+
+				// recheck cookies to ensure styles are set on dynamically rendered content
+				checkCookie();
+
+				// open the menu
+				document.getElementById("viewObject").style.width = "250px";
+			}
+
+			// <!-- Jackson -->
+			// creates the display for the view object information submenu
+			function loadObjectInformation(info) {
+				let render = `<table style="padding:8px;" class="contentTable"><tr><td>Object Name</td></tr><tr><td>&emsp;${info.name}</td></tr><tr><td>Price</td></tr><tr><td>&emsp;${info.price}</td></tr><tr><td>Link to Resource</td></tr><tr><td id="link">&emsp;<a href='${info.linkToSite}' target='_blank'>${info.linkToSite}</a></td></tr></table>`;
+				document.getElementById("view").innerHTML = render;
+			}
 		</script>
 	</div>
 </body>
