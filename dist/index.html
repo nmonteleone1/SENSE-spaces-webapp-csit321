@@ -878,6 +878,12 @@
 					<tr>
 						<td id="link">&emsp;<a href='${info?.linkToSite}' target='_blank'>${info?.linkToSite}</a></td>
 					</tr>
+					<tr>
+						<td>Image preview:</td>
+					</tr>
+					<tr>
+						<td><img class="objectPicture" src="${info?.linkToImage ?? "textures/placeholder.png"}"></td>
+					</tr>
 				</table>
 				`;
 				document.getElementById("view").innerHTML = render;
