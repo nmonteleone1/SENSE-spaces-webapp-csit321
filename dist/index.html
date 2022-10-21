@@ -851,7 +851,35 @@
 			// <!-- Jackson -->
 			// creates the display for the view object information submenu
 			function loadObjectInformation(info) {
-				let render = `<table style="padding:8px;" class="contentTable"><tr><td>Object Name</td></tr><tr><td>&emsp;${info.name}</td></tr><tr><td>Price</td></tr><tr><td>&emsp;${info.price}</td></tr><tr><td>Link to Resource</td></tr><tr><td id="link">&emsp;<a href='${info.linkToSite}' target='_blank'>${info.linkToSite}</a></td></tr></table>`;
+				console.log(info)
+				let render = `
+				<table style="padding:8px;" class="contentTable">
+					<tr>
+						<td>Object Name</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.name}</td>
+					</tr>
+					<tr>
+						<td>Price</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.price}</td>
+					</tr>
+					<tr>
+						<td>Dimensions:</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.dimensions?.width} x ${info?.dimensions?.width} x ${info?.dimensions?.width}</td>
+					</tr>
+					<tr>
+						<td>Link to Resource</td>
+					</tr>
+					<tr>
+						<td id="link">&emsp;<a href='${info?.linkToSite}' target='_blank'>${info?.linkToSite}</a></td>
+					</tr>
+				</table>
+				`;
 				document.getElementById("view").innerHTML = render;
 			}
 		</script>

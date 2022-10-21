@@ -3,6 +3,11 @@
         "id": "object1",
         "name": "Taste Object 11111111111111111",
         "price": "100",
+        "dimensions": {
+            "width": "1 metres",
+            "depth": "2 metres",
+            "height": "3 metres"
+        },
         "linkToSite": "https://www.google.com",
         "linkToModel": "models/json/taste/taste.json"
     },
