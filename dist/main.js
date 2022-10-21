@@ -630,6 +630,8 @@ onkeydown = (event) => {
 			rotateCamera('right')
 			break;
 		case "Backspace":
+			if (!heldObject)
+				break;
 			heldObject.parent.remove(heldObject);
 			heldObjectBB.parent.remove(heldObjectBB);
 			heldObject = undefined;
