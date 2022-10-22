@@ -359,3 +359,9 @@ input:checked+.slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.pageContent {
+    display: flex;
+    justify-content: center;
+    column-gap: 2%;
+}
