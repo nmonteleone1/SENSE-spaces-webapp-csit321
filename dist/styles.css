@@ -15,6 +15,7 @@ body {
 /* top bar -- index.html */
 #menuBar {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     padding: 8px;
     background-color: #D9D9D9;
@@ -361,6 +362,10 @@ input:checked+.slider:before {
 }
 
 /* shortcuts & onboarding page styling */
+
+#menuBar.logoOnly {
+    justify-content: center;
+}
 
 .pageContent {
     display: flex;
