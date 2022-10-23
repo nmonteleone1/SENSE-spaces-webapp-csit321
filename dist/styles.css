@@ -360,8 +360,22 @@ input:checked+.slider:before {
     border-radius: 50%;
 }
 
+/* shortcuts & onboarding page styling */
+
 .pageContent {
     display: flex;
     justify-content: center;
     column-gap: 2%;
+}
+
+.shortcutTable{
+    border: 1px solid
+}
+
+.shortcutTable tr:nth-child(odd) {
+    background-color:#D9D9D9;
+}
+
+.shortcutH2{
+    text-align: center;
 }
