@@ -535,6 +535,7 @@ function deselectObject() {
 
 // remove object and object highlight from scene - Nick
 function removeObject() {
+	if (!heldObject) return;
 	heldObject.parent.remove(heldObject);
 	heldObjectBB.parent.remove(heldObjectBB);
 	heldObject = undefined;
