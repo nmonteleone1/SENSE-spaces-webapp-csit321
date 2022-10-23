@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "OrbitControls";
 import { OBJLoader } from "OBJLoader";
-import { Box3, Group, RedIntegerFormat, Vector3 } from "three";
+import { Box3, Group, RedIntegerFormat, Spherical, Vector3 } from "three";
 
 var strDownloadMime = "image/octet-stream";
 
@@ -30,7 +30,7 @@ function onWindowResize() {
 	render();
 }
 
-//light the 3d space
+// light the 3d space - Nick
 scene.background = new THREE.Color(0x000000);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
 const light = new THREE.PointLight(0xffffff, 1, 6, 2);
@@ -42,35 +42,40 @@ light.shadow.mapSize.height = 1024 * 4;
 scene.add(ambientLight);
 scene.add(light);
 
-//mouse camera controls
+// camera controls - Nick
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.minPolarAngle = Math.PI / 12;
 controls.maxPolarAngle = 5 * Math.PI / 12;
-
-
+controls.listenToKeyEvents(window);
+controls.keyPanSpeed = 28;
+controls.keys = {
+	LEFT: 'KeyA',
+	UP: 'KeyW',
+	RIGHT: 'KeyD',
+	BOTTOM: 'KeyS'
+};
 
 //////GLOBALS//////
-var mouse, clickMouse, raycaster, moveRaycaster;
-const zoomFactor = 0.25; // factor must be <1
-const rotateFactor = Math.PI * 0.5; // factor of 1 is a full rotation
+var mouse, raycaster, moveRaycaster;
+const zoomFactor = 0.95; // factor must be <1
+const rotateFactor = Math.PI * 0.1; // factor of 1 is a full rotation
 const moveFactor = 0.25;
 var heldObject, heldObjectBB;
 const items = new THREE.Group();
 const loader = new THREE.ObjectLoader();
 const objloader = new OBJLoader();
 
-//mouse tracking within canvas
+// mouse tracking within canvas - Nick
 mouse = new THREE.Vector2();
-clickMouse = new THREE.Vector2();
 
-//
+// raycasters to be used for object locations - Nick
 raycaster = new THREE.Raycaster();
 moveRaycaster = new THREE.Raycaster();
 
 
 
 //////3D SPACE GENERATION//////
-//create blank room
+// create blank room - Nick
 var room = {
 	name: 'default',
 	Width: 4,
@@ -100,7 +105,7 @@ room.walls.add(room.backWall);
 room.walls.add(room.rightWall);
 room.walls.add(room.frontWall);
 
-//plane for object location tracking
+// plane for object location tracking - Nick
 const grid = new THREE.Group();
 const textureLoader = new THREE.TextureLoader();
 var floorTexture;
@@ -119,25 +124,11 @@ plane.receiveShadow = true;
 plane.rotation.x = -Math.PI / 2;
 grid.add(plane);
 
-//populate scene
+// populate scene with generated objects - Nick
 scene.add(room.walls);
 scene.add(grid);
 
-// //bounding box testing
-// var cubeBB = new Box3().setFromObject(cube);
-// const geometryBB = new THREE.BoxGeometry(cubeBB.min.x,cubeBB.max.y,cubeBB.min.z);
-// const materialBB = new THREE.MeshPhongMaterial({
-// 	color: 0xff0000,
-// 	wireframe: true,
-// });
-// const cubeBBox = new THREE.Mesh(geometryBB, materialBB);
-// var cubeBBoxBox = new Box3().setFromObject(cubeBBox);
-// cubeBBox.position.set(2,1,2);
-
-// var cubeBBHelper = new THREE.Box3Helper(cubeBB, 0xff0000)
-// scene.add(cubeBBHelper);
-
-//start application
+// start application - Nick
 regenerateRoom();
 animate();
 
@@ -148,21 +139,13 @@ document.getElementById("rotateUp").addEventListener("click", function () { rota
 document.getElementById("rotateDown").addEventListener("click", function () { rotateCamera('down') });
 document.getElementById("rotateLeft").addEventListener("click", function () { rotateCamera('left') });
 document.getElementById("rotateRight").addEventListener("click", function () { rotateCamera('right') });
-// document.getElementById("roomRegen").addEventListener("click", regenerateRoom);
 document.getElementById("zoomIn").addEventListener("click", function () { zoomCamera(1) });
 document.getElementById("zoomOut").addEventListener("click", function () { zoomCamera(0) });
 document.getElementById("moveUp").addEventListener("click", function () { moveCamera('up') });
 document.getElementById("moveDown").addEventListener("click", function () { moveCamera('down') });
 document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
-
 document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
-
-//track mouse position
-window.addEventListener('mousemove', onMouseMove, false);
-//object grab
-window.addEventListener('click', onMouseClick, false);
-window.addEventListener('drag', dragObject, false);
 
 //load objects from file
 // export function importObject() {
@@ -220,6 +203,8 @@ window.addEventListener('drag', dragObject, false);
 // }
 
 //////FUNCTIONS//////
+
+
 export function createNewObject(dimensions) {
 	var geometry = new THREE.BoxGeometry(dimensions.width, dimensions.height, dimensions.depth);
 	var wireframe = new THREE.WireframeGeometry(geometry);
@@ -250,10 +235,6 @@ export function loadObject(path) {
 		items.add(obj);
 		scene.add(items);
 	});
-	// var data = loadJSON(sense);
-	// var object = loader.parse(data);
-	// var mesh = new THREE.Mesh(object.geometry, object.materials[0]);
-	// scene.add(mesh);
 }
 
 function moveCamera(direction) {
@@ -273,28 +254,31 @@ function moveCamera(direction) {
 	}
 }
 
+// var cameraMatrix = new THREE.Matrix4();
 function rotateCamera(direction) {
+	// cameraMatrix = camera.projectionMatrix;
 	if (direction == 'up') {
+		// cameraMatrix.makeRotationZ(rotateFactor)
+		// cameraMatrix.makeRotationX(-rotateFactor)
 		camera.translateY(1);
-		// console.log(camera.position.y);
-		// console.log(camera.position.z);
-		// console.log(camera.position.x);
 	}
 	else if (direction == 'down') {
+		// cameraMatrix.makeRotationZ(-rotateFactor)
+		// cameraMatrix.makeRotationX(rotateFactor)
 		camera.translateY(-1);
-		// console.log(camera.position.y);
-		// console.log(camera.position.z);
-		// console.log(camera.position.x);
 	}
 	else if (direction == 'left') {
+		// cameraMatrix.makeRotationY(-rotateFactor)
 		camera.translateX(-1 * rotateFactor);
 	}
 	else if (direction == 'right') {
+		// cameraMatrix.makeRotationY(+rotateFactor)
 		camera.translateX(1 * rotateFactor);
 	}
 	else {
 		console.log('error rotating camera');
 	}
+	// camera.projectionMatrix = cameraMatrix;
 	camera.lookAt(scene.position);
 	camera.updateProjectionMatrix();
 	controls.update();
@@ -303,16 +287,17 @@ function rotateCamera(direction) {
 function zoomCamera(zoom) {
 	if (zoom == 1) {
 		if (camera.zoom >= 2) {
-			// console.log(camera.zoom); 
 			return;
 		}
-		camera.zoom += 0.25;
+		// controls.dollyIn(0.25);
+		camera.fov *= zoomFactor;
+		
 	}
 	else if (zoom == 0) {
 		if (camera.zoom <= zoomFactor) {
 			return;
 		}
-		camera.zoom -= 0.25;
+		camera.fov /= zoomFactor;
 	}
 	else {
 		console.log('error zooming camera');
@@ -342,9 +327,8 @@ function zoomCamera(zoom) {
 // 	controls.update();
 // }
 
+// room initializer, called on first run, on new room submit, on import room submit - Nick
 export function regenerateRoom(name = room.name, width = room.Width, depth = room.Depth, height = room.Height, objects = []) {
-	// var width = parseFloat(document.getElementById('roomWidth').value);
-	// var depth = parseFloat(document.getElementById('roomDepth').value);
 	room.name = name;
 
 	if (isNaN(width)) {
@@ -409,35 +393,200 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 	controls.update();
 }
 
+//// MOUSE CONTROLS ////
+
+// set flag for if an object should track with mouse - Nick
+var draggable = false;
+
+// track mouse position - Nick
+renderer.domElement.addEventListener('mousemove', onMouseMove, false);
 function onMouseMove(event) {
-	dragObject();
-	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+	mouse.x = (event.offsetX / renderer.domElement.width) * 2 - 1;
+	mouse.y = -(event.offsetY / renderer.domElement.height) * 2 + 1;
+
+	// if object is draggable follow mouse
+	if (draggable) {
+		dragObject();
+	}
 }
 
-function onMouseClick(event) {
+// turn off camera controls if an object is under mouse for manipulation - Nick
+renderer.domElement.addEventListener('mousedown', onMouseDown, false);
+function onMouseDown() {
+	selectObject();
 	if (heldObject) {
-		// console.log('unsetting object');
-		scene.remove(heldObjectBB);
-		heldObject = undefined;
-		heldObjectBB = undefined;
-		return;
+		controls.enabled = false;
+		draggable = true;
 	}
+}
 
-	clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-	clickMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-	raycaster.setFromCamera(clickMouse, camera);
+// turn on camera controls after dragging is complete - Nick
+renderer.domElement.addEventListener('mouseup', onMouseUp, false);
+function onMouseUp() {
+	controls.enabled = true;
+	draggable = false;
+}
+
+// if object is under mouse pointer highlight it - Nick
+function selectObject() {
+	raycaster.setFromCamera(mouse, camera);
 	const intersects = raycaster.intersectObjects(items.children);
 	if (intersects.length) {
-		// console.log('setting object');
-		heldObject = intersects[0].object;
-		heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
-		scene.add(heldObjectBB);
+		// if the object is already selected, break - Nick
+		if (heldObject == intersects[0].object) {return;}
+		else {
+			deselectObject();
+			heldObject = intersects[0].object;
+			heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
+			scene.add(heldObjectBB);
+			objectProperties();
+		}	
+	}
+	else {
+		deselectObject();
 	}
 }
 
+// show object properties - Nick
+document.getElementById("objectProperties").style.visibility = "hidden";
+function objectProperties() {
+	document.getElementById("objectProperties").style.visibility = "visible";
+	// let xFactor = heldObject.scale.x;
+	// let yFactor = heldObject.scale.y;
+	// let zFactor = heldObject.scale.z;
+	// let boxSize = new THREE.Vector3();
+	// let boundingBox = new THREE.Box3().setFromObject(heldObject);
+	// boundingBox.getSize(boxSize);
+	// console.log(boxSize);
+	// let width = xFactor * boxSize.x;
+	// let height = yFactor * boxSize.y;
+	// let depth = zFactor * boxSize.z;
+	document.getElementById("propWidth").value = heldObject.scale.x;
+	document.getElementById("propHeight").value = heldObject.scale.y;
+	document.getElementById("propDepth").value = heldObject.scale.z;
+}
+
+// change object properties - Nick
+const propWidth = document.getElementById("propWidth");
+propWidth.addEventListener('change', updateProperties, false)
+const propHeight = document.getElementById("propHeight");
+propHeight.addEventListener('change', updateProperties, false)
+const propDepth = document.getElementById("propDepth");
+propDepth.addEventListener('change', updateProperties, false)
+
+function updateProperties() {
+	let width = document.getElementById("propWidth").value;
+	let height = document.getElementById("propHeight").value;
+	let depth = document.getElementById("propDepth").value;
+	heldObject.scale.x = width;
+	heldObject.scale.y = height;
+	heldObject.scale.z = depth;
+}
+
+// move selected object (onscreen button) - Nick
+function moveObject(direction) {
+	switch (direction) {
+		case 'up':
+			heldObject.position.y += moveFactor;
+			break;
+		case 'down':
+			heldObject.position.y -= moveFactor;
+			break;
+		case 'left':
+			heldObject.position.x += moveFactor;
+			break;
+		case 'right':
+			heldObject.position.x -= moveFactor;
+			break;
+		case 'forward':
+			heldObject.position.z += moveFactor;
+			break;
+		case 'backward':
+			heldObject.position.z -= moveFactor;
+			break;
+	}
+}
+document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
+document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
+document.getElementById("moveObjectLeft").addEventListener("click", function () { moveObject('left') });
+document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
+document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
+document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
+
+// rotate selected object - Nick
+function rotateObject(object, factor) {
+	object.rotation.y += factor * 0.05;
+}
+function rotateUp(object, factor) {
+	object.rotation.x += factor * 0.05;
+}
+document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, Math.PI) });
+document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -Math.PI) });
+document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, Math.PI) });
+document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -Math.PI) });
+
+// unhighlight selected object - Nick
+function deselectObject() {
+	scene.remove(heldObjectBB);
+	heldObject = undefined;
+	heldObjectBB = undefined;
+	document.getElementById("objectProperties").style.visibility = "hidden";
+}
+
+// remove object and object highlight from scene - Nick
+function removeObject() {
+	heldObject.parent.remove(heldObject);
+	heldObjectBB.parent.remove(heldObjectBB);
+	heldObject = undefined;
+	heldObjectBB = undefined;
+	document.getElementById("objectProperties").style.visibility = "hidden";
+}
+document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
+
+// adds object rotation when the object is selected, hovered, and the wheel is scrolled. - Nick
+addEventListener('wheel', onMouseWheel, false);
+function onMouseWheel(event) {
+	controls.enableZoom = false;
+	if (heldObject) {
+		raycaster.setFromCamera(mouse, camera);
+		const intersects = raycaster.intersectObject(heldObject);
+		if(intersects.length) {
+			rotateObject(heldObject, event.deltaY);
+		}
+		else {
+			controls.enableZoom = true;
+		}
+	}
+	else {
+		controls.enableZoom = true;
+	}
+	
+}
+
+// move objects with mouse pointer (only across floor plane) - Nick
+window.addEventListener('drag', dragObject, false);
+function dragObject() {
+	if (heldObject) {
+		// converts the mouse position on the screen to its visual position on the floor plane - Nick
+		moveRaycaster.setFromCamera(mouse, camera);
+		const moveGrid = moveRaycaster.intersectObjects(grid.children);
+
+		if (moveGrid.length) {
+			for (let obj of moveGrid) {
+				// removes the object from the item group, updates its global position, and then adds it back to the item group - Nick
+				scene.attach(heldObject);
+				heldObject.position.x = obj.point.x;
+				heldObject.position.z = obj.point.z;
+				items.attach(heldObject);
+				break;
+			}
+		}
+	}
+}
+
+// hide walls that block view to the room - Nick
 function wallHiderToggle() {
-	// get direction to each corner of the room, subtract some arbitrary distance to prevent collisions
+	// get direction to each corner of the room, subtract some arbitrary distance to prevent collisions - Nick
 	let buffer = 0.1;
 	let dirs = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
 	dirs[0].subVectors(new Vector3(buffer, 0, buffer), camera.position).normalize();
@@ -445,82 +594,38 @@ function wallHiderToggle() {
 	dirs[2].subVectors(new Vector3(room.Width - buffer, 0, buffer), camera.position).normalize();
 	dirs[3].subVectors(new Vector3(room.Width - buffer, 0, room.Depth - buffer), camera.position).normalize();
 
-	// create array for storing which walls are blocking view
+	// create array for storing which walls are blocking view - Nick
 	var intersectingWalls = [];
 
-	// add blocking walls to array by checking vision to each corner
+	// add blocking walls to array by checking vision to each corner - Nick
 	for (let i = 0; i < dirs.length; i++) {
-		// console.log(dirs[i])
 		raycaster.set(camera.position, dirs[i]);
 		const intersects = raycaster.intersectObjects(room.walls.children);
-		// console.log(intersects)
 		if (!intersects.length) {
-			// console.log('no intersects')
 			continue;
 		}
 		intersectingWalls.push(intersects[0])
 	}
-	// console.log(intersectingWalls)
 
-	// for each wall check if it is in the intersections array and then hide if so
+	// for each wall check if it is in the intersections array and then hide if so - Nick
 	room.walls.traverse(function (obj) {
 
 		if (obj.type != 'Mesh') { return; }
-		// console.log(obj);
 		const newMaterial = obj.material.clone();
-		// console.log(obj.material);
-		// console.log(newMaterial);
 		newMaterial.transparent = false;
 		newMaterial.opacity = 1;
 		for (let i = 0; i < intersectingWalls.length; i++) {
-			// console.log(intersectingWalls[i].object);
 			if (obj.position == intersectingWalls[i].object.position) {
-				// console.log('same position')
 				newMaterial.transparent = true;
 				newMaterial.opacity = 0;
 				break;
 			}
 		}
-		// console.log(newMaterial);
 		obj.material = newMaterial;
 	})
 }
 
-function dragObject() {
-	if (heldObject) {
-		var collision = false;
-		// scene.traverse(function(obj) {
-		// 	var tempBB = new THREE.Box3().setFromObject(obj);
-		// 	if(tempBB.equals(cubeBB) || tempBB.equals(cubeBBoxBox)) {
-		// 		collision = false;
-		// 	}
-		// 	else if(tempBB.intersectsBox(cubeBB)) {
-		// 		collision = true;
-		// 		console.log('collision');
-		// 		return;
-		// 	}
-		// 	else {
-		// 		collision = false;
-		// 	}
-		// })
-		if (collision) { return; }
-		moveRaycaster.setFromCamera(mouse, camera);
-		const moveGrid = moveRaycaster.intersectObjects(grid.children);
-
-		if (moveGrid.length) {
-			for (let obj of moveGrid) {
-				// matrixWorld.elements 0 and 10 are where the scale value is stored for the mesh
-				heldObject.position.x = obj.point.x / heldObject.matrixWorld.elements[0];
-				heldObject.position.z = obj.point.z / heldObject.matrixWorld.elements[10];
-				// console.log(heldObject.position.x, obj.point.x);
-				// console.log(heldObject)
-				// heldObjectBB.update();
-				break;
-			}
-		}
-	}
-}
-
+// convert room data into an array for export - Nick
 export function getRoom() {
 	var roomObjects = [];
 	items.traverse(function (obj) {
@@ -537,14 +642,7 @@ export function getRoom() {
 	return roomData;
 }
 
-function findGridPos() {
-	raycaster.setFromCamera(mouse, camera);
-	const moveGrid = raycaster.intersectObjects(grid.children);
-	if (moveGrid.length) {
-		return new THREE.Vector2(moveGrid[0].point.x, moveGrid[0].point.z);
-	}
-}
-
+// animates the viewport, runs every frame. - Nick
 function animate() {
 	requestAnimationFrame(animate);
 
@@ -591,26 +689,25 @@ var saveFile = function (strData, filename) {
 	}
 }
 
-
-// setup keypress handling for camera controls
+// setup keypress handling for camera controls - Jackson
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
 	var keyPressed = event.key
 	// console.log(keyPressed)
 	switch (keyPressed) {
-		case "w":
-			moveCamera('up')
-			break;
-		case "s":
-			moveCamera('down')
-			break;
-		case "a":
-			moveCamera('left')
-			break;
-		case "d":
-			moveCamera('right')
-			break;
+		// case "w":
+		// 	moveCamera('up')
+		// 	break;
+		// case "s":
+		// 	moveCamera('down')
+		// 	break;
+		// case "a":
+		// 	moveCamera('left')
+		// 	break;
+		// case "d":
+		// 	moveCamera('right')
+		// 	break;
 		case "q":
 			zoomCamera(1)
 			break;
@@ -630,12 +727,7 @@ onkeydown = (event) => {
 			rotateCamera('right')
 			break;
 		case "Backspace":
-			if (!heldObject)
-				break;
-			heldObject.parent.remove(heldObject);
-			heldObjectBB.parent.remove(heldObjectBB);
-			heldObject = undefined;
-			heldObjectBB = undefined;
+			removeObject();
 			break;
 		default:
 			break;
