@@ -69,6 +69,16 @@
 				openButtons.forEach((y) => {
 					y.style.fontSize = fontSize;
 				});
+
+				const inputFields = document.querySelectorAll("input");
+				inputFields.forEach((y) => {
+					y.style.fontSize = fontSize;
+				});
+
+				const selectFields = document.querySelectorAll("select");
+				selectFields.forEach((y) => {
+					y.style.fontSize = fontSize;
+				});
 			}
 
 			let textSpacing = getCookie("textSpacing");
@@ -82,6 +92,16 @@
 
 				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
+					y.style.letterSpacing = textSpacing;
+				});
+
+				const inputFields = document.querySelectorAll("input");
+				inputFields.forEach((y) => {
+					y.style.letterSpacing = textSpacing;
+				});
+
+				const selectFields = document.querySelectorAll("select");
+				selectFields.forEach((y) => {
 					y.style.letterSpacing = textSpacing;
 				});
 			}
@@ -357,14 +377,17 @@
 		<div id="rightMenu" class="rightMenu">
 			<div><a href="javascript:void(0)" class="closeMenuBtn" onclick="closeRightMenu()">×</a></div>
 
-			<div class="contentContainer">
-				<button class="panelButton" onclick="openNewObjectMenu()">New Object</button>
+			<div style="padding-left:20px;">
+				<h2>I want to...</h2>
 			</div>
 			<div class="contentContainer">
-				<button class="panelButton" onclick="openImportObjectMenu()">Import Object</button>
+				<button class="panelButton" onclick="openNewObjectMenu()">Create a new object</button>
 			</div>
 			<div class="contentContainer">
-				<button class="panelButton" onclick="openPredefinedObjectMenu()">Predefined Object</button>
+				<button class="panelButton" onclick="openImportObjectMenu()">Import an existing object</button>
+			</div>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openPredefinedObjectMenu()">Choose an object from the predefined set</button>
 			</div>
 
 			<!-- <div id="searchBox"><input type="text"><button>🔎︎</button></div> -->
