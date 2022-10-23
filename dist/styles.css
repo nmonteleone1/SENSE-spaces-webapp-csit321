@@ -365,17 +365,26 @@ input:checked+.slider:before {
 .pageContent {
     display: flex;
     justify-content: center;
+    align-items: center;
     column-gap: 2%;
 }
 
-.shortcutTable{
+.shortcutContent {
+    flex-direction: row;
+}
+
+.onboardingContent {
+    flex-direction: column;
+}
+
+.shortcutTable {
     border: 1px solid
 }
 
 .shortcutTable tr:nth-child(odd) {
-    background-color:#D9D9D9;
+    background-color: #D9D9D9;
 }
 
-.shortcutH2{
+.shortcutH2 {
     text-align: center;
 }
