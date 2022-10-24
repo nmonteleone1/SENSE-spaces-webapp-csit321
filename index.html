@@ -12,6 +12,7 @@
 					"three": "https://unpkg.com/three@0.140.2/build/three.module.js",
 					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js",
 					"OBJLoader": "https://unpkg.com/three@0.140.2/examples/jsm/loaders/OBJLoader.js",
+					"GLTFLoader": "https://unpkg.com/three@0.140.2/examples/jsm/loaders/GLTFLoader.js",
 					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
 				}
 			}
@@ -69,6 +70,16 @@
 				openButtons.forEach((y) => {
 					y.style.fontSize = fontSize;
 				});
+
+				const inputFields = document.querySelectorAll("input");
+				inputFields.forEach((y) => {
+					y.style.fontSize = fontSize;
+				});
+
+				const selectFields = document.querySelectorAll("select");
+				selectFields.forEach((y) => {
+					y.style.fontSize = fontSize;
+				});
 			}
 
 			let textSpacing = getCookie("textSpacing");
@@ -82,6 +93,16 @@
 
 				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
+					y.style.letterSpacing = textSpacing;
+				});
+
+				const inputFields = document.querySelectorAll("input");
+				inputFields.forEach((y) => {
+					y.style.letterSpacing = textSpacing;
+				});
+
+				const selectFields = document.querySelectorAll("select");
+				selectFields.forEach((y) => {
 					y.style.letterSpacing = textSpacing;
 				});
 			}
@@ -166,11 +187,17 @@
 			<div class="contentContainer">
 				<button class="panelButton" onclick="openExportMenu()">Export</button>
 			</div>
+			<br>
+			<hr>
+			<br>
 			<div class="contentContainer">
 				<button class="panelButton" onclick="openUserSettingsMenu()">User Settings</button>
 			</div>
 			<div class="contentContainer">
 				<button id="link" class="panelButton" onclick="window.open('./onboarding.html')">User Onboarding</button>
+			</div>
+			<div class="contentContainer">
+				<button id="link" class="panelButton" onclick="window.open('./shortcuts.html')">Keyboard Shortcuts</button>
 			</div>
 			<div class="contentContainer">
 				<button id="link" class="panelButton" onclick="window.open('https://www.uow.edu.au/global-challenges/building-resilient-communities/sense-spaces/','_blank');">About Us</button>
@@ -357,14 +384,17 @@
 		<div id="rightMenu" class="rightMenu">
 			<div><a href="javascript:void(0)" class="closeMenuBtn" onclick="closeRightMenu()">×</a></div>
 
-			<div class="contentContainer">
-				<button class="panelButton" onclick="openNewObjectMenu()">New Object</button>
+			<div style="padding-left:20px;">
+				<h2>I want to...</h2>
 			</div>
 			<div class="contentContainer">
-				<button class="panelButton" onclick="openImportObjectMenu()">Import Object</button>
+				<button class="panelButton" onclick="openNewObjectMenu()">Create a new object</button>
 			</div>
 			<div class="contentContainer">
-				<button class="panelButton" onclick="openPredefinedObjectMenu()">Predefined Object</button>
+				<button class="panelButton" onclick="openImportObjectMenu()">Import an existing object</button>
+			</div>
+			<div class="contentContainer">
+				<button class="panelButton" onclick="openPredefinedObjectMenu()">Choose an object from the predefined set</button>
 			</div>
 
 			<!-- <div id="searchBox"><input type="text"><button>🔎︎</button></div> -->
@@ -375,19 +405,19 @@
 						<td><label>Object Width:</label></td>
 					</tr>
 					<tr>
-						<td><input type="range" id="propWidth" min="0" max="5" step="0.1"/></td>
+						<td><input type="range" id="propWidth" min="0.1" max="5" step="0.1"/></td>
 					</tr>
 					<tr>
 						<td><label>Object Depth:</label></td>
 					</tr>
 					<tr>
-						<td><input type="range" id="propDepth" min="0" max="5" step="0.1"/></td>
+						<td><input type="range" id="propDepth" min="0.1" max="5" step="0.1"/></td>
 					</tr>
 					<tr>
 						<td><label>Object Height:</label></td>
 					</tr>
 					<tr>
-						<td><input type="range" id="propHeight" min="0" max="5" step="0.1"/></td>
+						<td><input type="range" id="propHeight" min="0.1" max="5" step="0.1"/></td>
 					</tr>
 					<tr>
 						<td><button id="removeObject">Remove Object</button></td>
@@ -907,7 +937,41 @@
 			// <!-- Jackson -->
 			// creates the display for the view object information submenu
 			function loadObjectInformation(info) {
-				let render = `<table style="padding:8px;" class="contentTable"><tr><td>Object Name</td></tr><tr><td>&emsp;${info.name}</td></tr><tr><td>Price</td></tr><tr><td>&emsp;${info.price}</td></tr><tr><td>Link to Resource</td></tr><tr><td id="link">&emsp;<a href='${info.linkToSite}' target='_blank'>${info.linkToSite}</a></td></tr></table>`;
+				console.log(info)
+				let render = `
+				<table style="padding:8px;" class="contentTable">
+					<tr>
+						<td>Object Name</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.name}</td>
+					</tr>
+					<tr>
+						<td>Price</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.price}</td>
+					</tr>
+					<tr>
+						<td>Dimensions:</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.dimensions?.width} x ${info?.dimensions?.width} x ${info?.dimensions?.width}</td>
+					</tr>
+					<tr>
+						<td>Link to Resource</td>
+					</tr>
+					<tr>
+						<td id="link">&emsp;<a href='${info?.linkToSite}' target='_blank'>${info?.linkToSite}</a></td>
+					</tr>
+					<tr>
+						<td>Image preview:</td>
+					</tr>
+					<tr>
+						<td><img class="objectPicture" src="${info?.linkToImage ?? "textures/placeholder.png"}"></td>
+					</tr>
+				</table>
+				`;
 				document.getElementById("view").innerHTML = render;
 			}
 		</script>
