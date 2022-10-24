@@ -386,10 +386,40 @@ input:checked+.slider:before {
     border: 1px solid
 }
 
+.shortcutTable td{
+    /* padding: 1% 2% 1% 4%; */
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
 .shortcutTable tr:nth-child(odd) {
     background-color: #D9D9D9;
 }
 
 .shortcutH2 {
     text-align: center;
+}
+
+/* selected object thing */
+/* copied from panelbutton*/
+
+#objectProperties td button{
+    width: var(--panel-width);
+    color: rgb(0, 0, 0);
+    /* TODO: change this to percentage of view height / width */
+    padding: 10px 10px 10px 10px;
+    background: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin: 0.1rem 0.1rem 0.1rem 0.1rem;
+    font-family: 'Filson Pro', sans-serif;
+}
+
+#objectProperties td button:hover {
+    background-color: #A1A1A1;
+}
+
+#objectProperties td button:active {
+    color: white;
+    background-color: #777;
 }
