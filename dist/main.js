@@ -2,6 +2,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "OrbitControls";
 import { OBJLoader } from "OBJLoader";
+import { GLTFLoader } from "GLTFLoader";
 import { Box3, Group, RedIntegerFormat, Spherical, Vector3 } from "three";
 
 var strDownloadMime = "image/octet-stream";
@@ -48,12 +49,12 @@ controls.minPolarAngle = Math.PI / 12;
 controls.maxPolarAngle = 5 * Math.PI / 12;
 controls.listenToKeyEvents(window);
 controls.keyPanSpeed = 28;
-controls.keys = {
-	LEFT: 'KeyA',
-	UP: 'KeyW',
-	RIGHT: 'KeyD',
-	BOTTOM: 'KeyS'
-};
+// controls.keys = {
+// 	LEFT: 'KeyA',
+// 	UP: 'KeyW',
+// 	RIGHT: 'KeyD',
+// 	BOTTOM: 'KeyS'
+// };
 
 //////GLOBALS//////
 var mouse, raycaster, moveRaycaster;
@@ -147,6 +148,12 @@ document.getElementById("moveLeft").addEventListener("click", function () { move
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
 document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
 
+const gltfLoader = new GLTFLoader();
+function loadGLTF() {
+	var file = document.getElementById("loadObject");
+
+}
+
 //load objects from file
 // export function importObject() {
 	const fileInput = document.getElementById("loadObject");
@@ -164,18 +171,17 @@ document.getElementById("loadObject").addEventListener("change", function () { l
 			let width = document.getElementById("objectImportWidth").value;
 			let depth = document.getElementById("objectImportDepth").value;
 			let height = document.getElementById("objectImportHeight").value;
-			console.log(width, depth, height);
 			let boxSize = new THREE.Vector3();
 			let boundingBox = new THREE.Box3().setFromObject(object);
 			boundingBox.getSize(boxSize);
-			console.log(boxSize);
 			let xFactor = width / boxSize.x;
 			let yFactor = height / boxSize.y;
 			let zFactor = depth / boxSize.z;
 			object.scale.x = xFactor;
 			object.scale.y = yFactor;
 			object.scale.z = zFactor;
-			console.log(object.scale)
+			object.position.x = room.Width/2;
+			object.position.z = room.Depth/2;
 
 			items.add(object);
 
@@ -378,9 +384,7 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 	light.position.set(xCenter, height, yCenter);
 	light.distance = Math.max(width, depth) * 1.5;
 
-	// console.log(scene);
 	for(let i = 1; i < objects.length; i++) {
-		// console.log(objects[i]);
 		const object = loader.parse(objects[i]);
 		items.add(object);
 	}
@@ -433,10 +437,12 @@ function selectObject() {
 	const intersects = raycaster.intersectObjects(items.children);
 	if (intersects.length) {
 		// if the object is already selected, break - Nick
-		if (heldObject == intersects[0].object) {return;}
+		// var parent = getObjectGroup(intersects[0].object);
+		let parent = getObjectGroup(intersects[0].object.parent);
+		if (heldObject == parent) {return;}
 		else {
 			deselectObject();
-			heldObject = intersects[0].object;
+			heldObject = parent;
 			heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
 			scene.add(heldObjectBB);
 			objectProperties();
@@ -445,6 +451,21 @@ function selectObject() {
 	else {
 		deselectObject();
 	}
+}
+
+// get grouped object - Nick
+function getObjectGroup(object) {
+	var parent = object.parent;
+	while (parent != items) {
+		parent = object.parent;
+		console.log(object);
+		if (object == scene) {
+			return;
+		}
+		object = parent;
+	}
+	
+	return object;
 }
 
 // show object properties - Nick
@@ -485,12 +506,13 @@ function updateProperties() {
 
 // move selected object (onscreen button) - Nick
 function moveObject(direction) {
+	scene.attach(heldObject);
 	switch (direction) {
 		case 'up':
 			heldObject.position.y += moveFactor;
 			break;
 		case 'down':
-			heldObject.position.y -= moveFactor;
+			heldObject.position.y -= 0.1;
 			break;
 		case 'left':
 			heldObject.position.x += moveFactor;
@@ -505,6 +527,7 @@ function moveObject(direction) {
 			heldObject.position.z -= moveFactor;
 			break;
 	}
+	items.attach(heldObject);
 }
 document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
 document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
@@ -512,6 +535,36 @@ document.getElementById("moveObjectLeft").addEventListener("click", function () 
 document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
 document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
 document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
+
+// check object is in bounds - Nick
+function checkLocation() {
+	scene.attach(heldObject);
+	let pos = heldObject.position;
+	let bb = new THREE.Box3();
+	bb.setFromObject(heldObject, true);
+	let width = bb.max.x - bb.min.x;
+	let height = bb.max.y - bb.min.y;
+	let depth = bb.max.z - bb.min.z;
+	if(bb.min.x < 0+0.05) {
+		heldObject.position.x = width/2 + 0.05;
+	}
+	if(bb.min.y < 0) {
+		heldObject.position.y = height/2;
+	}
+	if(bb.min.z < 0+0.05) {
+		heldObject.position.z = depth/2 + 0.05;
+	}
+	if(bb.max.x > room.Width-0.05) {
+		heldObject.position.x = room.Width - width/2 - 0.05;
+	}
+	// if(bb.max.y > room.Height) {
+	// 	heldObject.position.y = height/2;
+	// }
+	if(bb.max.z > room.Depth-0.05) {
+		heldObject.position.z = room.Depth - depth/2 - 0.05;
+	}
+	items.attach(heldObject);
+}
 
 // rotate selected object - Nick
 function rotateObject(object, factor) {
@@ -650,7 +703,9 @@ function animate() {
 	if (heldObjectBB) {
 		heldObjectBB.update();
 	}
-
+	if(heldObject) {
+		checkLocation(heldObject);
+	}
 	render();
 }
 
@@ -696,18 +751,18 @@ onkeydown = (event) => {
 	var keyPressed = event.key
 	// console.log(keyPressed)
 	switch (keyPressed) {
-		// case "w":
-		// 	moveCamera('up')
-		// 	break;
-		// case "s":
-		// 	moveCamera('down')
-		// 	break;
-		// case "a":
-		// 	moveCamera('left')
-		// 	break;
-		// case "d":
-		// 	moveCamera('right')
-		// 	break;
+		case "w":
+			moveCamera('up')
+			break;
+		case "s":
+			moveCamera('down')
+			break;
+		case "a":
+			moveCamera('left')
+			break;
+		case "d":
+			moveCamera('right')
+			break;
 		case "q":
 			zoomCamera(1)
 			break;
