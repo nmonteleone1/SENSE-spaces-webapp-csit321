@@ -438,11 +438,11 @@ function selectObject() {
 	if (intersects.length) {
 		// if the object is already selected, break - Nick
 		// var parent = getObjectGroup(intersects[0].object);
-		let parent = getObjectGroup(intersects[0].object.parent);
-		if (heldObject == parent) {return;}
+		let parent = getObjectGroup(intersects[0].object);
+		if (heldObject == intersects[0].object) {return;}
 		else {
 			deselectObject();
-			heldObject = parent;
+			heldObject = intersects[0].object;
 			heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
 			scene.add(heldObjectBB);
 			objectProperties();
@@ -456,11 +456,16 @@ function selectObject() {
 // get grouped object - Nick
 function getObjectGroup(object) {
 	var parent = object.parent;
+	console.log(parent);
+	if(parent == scene || parent == items) {
+		console.log('parent scene')
+		return object;
+	}
 	while (parent != items) {
 		parent = object.parent;
 		console.log(object);
-		if (object == scene) {
-			return;
+		if(parent == scene) {
+			return object;
 		}
 		object = parent;
 	}
