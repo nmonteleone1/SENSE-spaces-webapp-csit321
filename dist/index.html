@@ -187,11 +187,17 @@
 			<div class="contentContainer">
 				<button class="panelButton" onclick="openExportMenu()">Export</button>
 			</div>
+			<br>
+			<hr>
+			<br>
 			<div class="contentContainer">
 				<button class="panelButton" onclick="openUserSettingsMenu()">User Settings</button>
 			</div>
 			<div class="contentContainer">
 				<button id="link" class="panelButton" onclick="window.open('./onboarding.html')">User Onboarding</button>
+			</div>
+			<div class="contentContainer">
+				<button id="link" class="panelButton" onclick="window.open('./shortcuts.html')">Keyboard Shortcuts</button>
 			</div>
 			<div class="contentContainer">
 				<button id="link" class="panelButton" onclick="window.open('https://www.uow.edu.au/global-challenges/building-resilient-communities/sense-spaces/','_blank');">About Us</button>
@@ -931,7 +937,41 @@
 			// <!-- Jackson -->
 			// creates the display for the view object information submenu
 			function loadObjectInformation(info) {
-				let render = `<table style="padding:8px;" class="contentTable"><tr><td>Object Name</td></tr><tr><td>&emsp;${info.name}</td></tr><tr><td>Price</td></tr><tr><td>&emsp;${info.price}</td></tr><tr><td>Link to Resource</td></tr><tr><td id="link">&emsp;<a href='${info.linkToSite}' target='_blank'>${info.linkToSite}</a></td></tr></table>`;
+				console.log(info)
+				let render = `
+				<table style="padding:8px;" class="contentTable">
+					<tr>
+						<td>Object Name</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.name}</td>
+					</tr>
+					<tr>
+						<td>Price</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.price}</td>
+					</tr>
+					<tr>
+						<td>Dimensions:</td>
+					</tr>
+					<tr>
+						<td>&emsp;${info?.dimensions?.width} x ${info?.dimensions?.width} x ${info?.dimensions?.width}</td>
+					</tr>
+					<tr>
+						<td>Link to Resource</td>
+					</tr>
+					<tr>
+						<td id="link">&emsp;<a href='${info?.linkToSite}' target='_blank'>${info?.linkToSite}</a></td>
+					</tr>
+					<tr>
+						<td>Image preview:</td>
+					</tr>
+					<tr>
+						<td><img class="objectPicture" src="${info?.linkToImage ?? "textures/placeholder.png"}"></td>
+					</tr>
+				</table>
+				`;
 				document.getElementById("view").innerHTML = render;
 			}
 		</script>
