@@ -32,7 +32,7 @@ function onWindowResize() {
 }
 
 // light the 3d space - Nick
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color("rgb(119, 119, 119)");
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
 const light = new THREE.PointLight(0xffffff, 1, 6, 2);
 light.position.set(1, 3, 1);
