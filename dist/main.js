@@ -62,7 +62,7 @@ const zoomFactor = 0.95; // factor must be <1
 const rotateFactor = Math.PI * 0.05; // factor of 1 is a full rotation
 const moveFactor = 0.25;
 var heldObject, heldObjectBB;
-const items = new THREE.Group();
+var items = new THREE.Group();
 const loader = new THREE.ObjectLoader();
 const objloader = new OBJLoader();
 var measurementScale = 1000;
@@ -348,6 +348,10 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 
 	light.position.set(xCenter, height, yCenter);
 	light.distance = Math.max(width, depth) * 1.5;
+
+	items.traverse(function (obj) {
+		items.remove(obj);
+	})
 
 	for(let i = 1; i < objects.length; i++) {
 		const object = loader.parse(objects[i]);
