@@ -718,6 +718,8 @@ var saveFile = function (strData, filename) {
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
+	// console.log(event.target.tagName)
+	if (event.target.tagName == "INPUT") { return; } // return early if we're currently tying into an input field
 	var keyPressed = event.key
 	switch (keyPressed) {
 		case "w":
