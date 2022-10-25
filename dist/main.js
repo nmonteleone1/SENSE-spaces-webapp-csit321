@@ -718,9 +718,40 @@ var saveFile = function (strData, filename) {
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
+	// console.log(event.key)
 	// console.log(event.target.tagName)
-	if (event.target.tagName == "INPUT") { return; } // return early if we're currently tying into an input field
+	if (event.target.tagName == "INPUT") { return; } // return early if we're currently typing into an input field
 	var keyPressed = event.key
+	// if an object is selected, adjust object position instead of camera position
+	if (heldObject) {
+		switch (keyPressed) {
+			case "w":
+				moveObject('forward')
+				break;
+			case "s":
+				moveObject('backward')
+				break;
+			case "a":
+				moveObject('left')
+				break;
+			case "d":
+				moveObject('right')
+				break;
+			case "q":
+				moveObject('down')
+				break;
+			case "e":
+				moveObject('up')
+				break;
+			case "Backspace":
+				removeObject()
+				break;
+			default:
+				break;
+		}
+		return; // return so we don't touch the camera
+	}
+
 	switch (keyPressed) {
 		case "w":
 			moveCamera('up')
@@ -751,9 +782,6 @@ onkeydown = (event) => {
 			break;
 		case "ArrowRight":
 			rotateCamera('right')
-			break;
-		case "Backspace":
-			removeObject();
 			break;
 		default:
 			break;
