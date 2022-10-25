@@ -210,7 +210,7 @@
 				<div class="contentContainer">
 					<table>
 						<tr>
-							<td><label>Room name:</label></td>
+							<td><label>Room Name</label></td>
 						</tr>
 						<tr>
 							<td><input type="text" id="name" /></td>
@@ -219,28 +219,28 @@
 							<td>&nbsp;<small id="nameInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Width (m):</label></td>
+							<td><label>Width (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="width" min="0" /></td>
+							<td><input type="number" id="width" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="widthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Depth (m):</label></td>
+							<td><label>Depth (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="depth" min="0" /></td>
+							<td><input type="number" id="depth" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="depthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Height (m):</label></td>
+							<td><label>Height (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="height" min="0" /></td>
+							<td><input type="number" id="height" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="heightInvalid" class="errorMessage"></small></td>
@@ -264,7 +264,7 @@
 								<div id="alert" class="alert" style="background-color: rgb(252, 177, 34);">
 									<span class="closeAlertBtn"
 										onclick="this.parentElement.style.display='none';">&times;</span>
-									<strong>Note:</strong> Files must be in a valid JSON format to upload successfully
+									<strong>Note:</strong> Files must be in a valid .json format to upload successfully
 								</div>
 							</td>
 						</tr>
@@ -290,13 +290,25 @@
 					<table>
 						<tr>
 							<td>
+								<div id="exportAlert" class="alert" style="background-color: rgb(252, 177, 34);">
+									<span class="closeAlertBtn"
+										onclick="this.parentElement.style.display='none';">&times;</span>
+									<strong>Note:</strong> check the position of your camera to ensure you are taking a screenshot of the view you would like to export
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<select id="type">
 									<option value="none"></option>
 									<option value="json">Room (.json)</option>
 									<option value="jpeg">Room (.jpeg)</option>
-									<option value="txt">Object List (.txt)</option>
+									<!-- <option value="txt">Object List (.txt)</option> -->
 								</select>
 							</td>
+						</tr>
+						<tr>
+							<td>&nbsp;<small id="exportError" class="errorMessage"></small></td>
 						</tr>
 					</table>
 				</div>
@@ -398,6 +410,7 @@
 			</div>
 
 			<!-- <div id="searchBox"><input type="text"><button>🔎︎</button></div> -->
+			
 			<!-- object properties menu, change size position rotation -->
 			<div class="contentContainer">
 				<table id="objectProperties">
@@ -405,52 +418,52 @@
 						<td><label>Object Width:</label></td>
 					</tr>
 					<tr>
-						<td><input type="range" id="propWidth" min="0.1" max="5" step="0.1"/></td>
+						<td><input type="range" id="propWidth" min="0.1" max="5" step="0.1" /></td>
 					</tr>
 					<tr>
 						<td><label>Object Depth:</label></td>
 					</tr>
 					<tr>
-						<td><input type="range" id="propDepth" min="0.1" max="5" step="0.1"/></td>
+						<td><input type="range" id="propDepth" min="0.1" max="5" step="0.1" /></td>
 					</tr>
 					<tr>
 						<td><label>Object Height:</label></td>
 					</tr>
 					<tr>
-						<td><input type="range" id="propHeight" min="0.1" max="5" step="0.1"/></td>
+						<td><input type="range" id="propHeight" min="0.1" max="5" step="0.1" /></td>
 					</tr>
 					<tr>
-						<td><button id="removeObject">Remove Object</button></td>
+						<td><button id="removeObject" class="panelButton">Remove Object</button></td>
 					</tr>
 					<tr>
-						<td><button id="moveObjectUp">Move Up</button></td>
+						<td><button id="moveObjectUp" class="panelButton">Move Up</button></td>
 					</tr>
 					<tr>
-						<td><button id="moveObjectDown">Move Down</button></td>
+						<td><button id="moveObjectDown" class="panelButton">Move Down</button></td>
 					</tr>
 					<tr>
-						<td><button id="moveObjectLeft">Move Left</button></td>
+						<td><button id="moveObjectLeft" class="panelButton">Move Left</button></td>
 					</tr>
 					<tr>
-						<td><button id="moveObjectRight">Move Right</button></td>
+						<td><button id="moveObjectRight" class="panelButton">Move Right</button></td>
 					</tr>
 					<tr>
-						<td><button id="moveObjectForward">Move Forward</button></td>
+						<td><button id="moveObjectForward" class="panelButton">Move Forward</button></td>
 					</tr>
 					<tr>
-						<td><button id="moveObjectBackward">Move Backward</button></td>
+						<td><button id="moveObjectBackward" class="panelButton">Move Backward</button></td>
 					</tr>
 					<tr>
-						<td><button id="rotateObjectUp">Rotate Up</button></td>
+						<td><button id="rotateObjectUp" class="panelButton">Rotate Up</button></td>
 					</tr>
 					<tr>
-						<td><button id="rotateObjectDown">Rotate Down</button></td>
+						<td><button id="rotateObjectDown" class="panelButton">Rotate Down</button></td>
 					</tr>
 					<tr>
-						<td><button id="rotateObjectLeft">Rotate Left</button></td>
+						<td><button id="rotateObjectLeft" class="panelButton">Rotate Left</button></td>
 					</tr>
 					<tr>
-						<td><button id="rotateObjectRight">Rotate Right</button></td>
+						<td><button id="rotateObjectRight" class="panelButton">Rotate Right</button></td>
 					</tr>
 				</table>
 			</div>
@@ -462,28 +475,28 @@
 				<div class="contentContainer">
 					<table>
 						<tr>
-							<td><label>Object Width:</label></td>
+							<td><label>Object Width (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="objectWidth" min="0" /></td>
+							<td><input type="number" id="objectWidth" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="objWidthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Object Depth:</label></td>
+							<td><label>Object Depth (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="objectDepth" min="0" /></td>
+							<td><input type="number" id="objectDepth" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="objDepthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Object Height:</label></td>
+							<td><label>Object Height (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="objectHeight" min="0" /></td>
+							<td><input type="number" id="objectHeight" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="objHeightInvalid" class="errorMessage"></small></td>
@@ -505,28 +518,28 @@
 
 					<table>
 						<tr>
-							<td><label>Object Width:</label></td>
+							<td><label>Object Width (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="objectImportWidth" min="0" /></td>
+							<td><input type="number" id="objectImportWidth" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="objImportWidthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Object Depth:</label></td>
+							<td><label>Object Depth (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="objectImportDepth" min="0" /></td>
+							<td><input type="number" id="objectImportDepth" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="objImportDepthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Object Height:</label></td>
+							<td><label>Object Height (mm)</label></td>
 						</tr>
 						<tr>
-							<td><input type="number" id="objectImportHeight" min="0" /></td>
+							<td><input type="number" id="objectImportHeight" min="0" step="any" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;<small id="objImportHeightInvalid" class="errorMessage"></small></td>
@@ -536,12 +549,12 @@
 								<div id="alertObject" class="alert" style="background-color: rgb(252, 177, 34);">
 									<span class="closeAlertBtn"
 										onclick="this.parentElement.style.display='none';">&times;</span>
-									<strong>Note:</strong> Files must be in a valid JSON format to upload successfully
+									<strong>Note:</strong> Files must be in a valid .obj format to upload successfully
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<td><input type="file" id="loadObject"></td>
+							<td><input type="file" id="loadObject" accept=".obj"></td>
 						</tr>
 						<tr>
 							<td><small id="objectErrorMessage" class="errorMessage"></small></td>
@@ -602,6 +615,15 @@
 		<!-- Meghan {script} -->
 		<!-- defines the methods for displaying and hiding the side menus -->
 		<script>
+			// display alert for exporting an image
+			document.getElementById('type').addEventListener('change', () => {
+				if (document.getElementById('type').value == "jpeg") {
+					document.getElementById('exportAlert').style.display = "block";
+				} else {
+					document.getElementById('exportAlert').style.display = "none";
+				}
+			});
+
 			function openLeftMenu() {
 				// open the menu
 				document.getElementById("leftMenu").style.width = "250px";
@@ -653,9 +675,15 @@
 			}
 
 			function openExportMenu() {
+				// reset the alert 
+				document.getElementById('exportAlert').style.display = "none";
+
 				// reset form
 				let form = document.getElementById('exportitem');
 				form.reset();
+
+				// reset validation message
+				document.getElementById('exportError').innerHTML = "";
 
 				// open the menu
 				document.getElementById("export").style.width = "250px";
@@ -779,21 +807,20 @@
 			// once the DOM is loaded
 			document.addEventListener('DOMContentLoaded', (event) => {
 				// load the object information
-				load();
+				if (document.readyState !== "loading") {
+					load();
 
-				// define an event listener for submitting the forms -- left menu
-				document.getElementById('newroom').addEventListener('submit', handleNewRoomSubmit);
-				document.getElementById('importroom').addEventListener('submit', handleImportRoomSubmit);
-				let file = document.getElementById('file');
-				document.getElementById('export').addEventListener('submit', handleExportSubmit);
-				document.getElementById('userSettingsForm').addEventListener('submit', handleUserSettingSubmit);
+					// define an event listener for submitting the forms -- left menu
+					document.getElementById('newroom').addEventListener('submit', handleNewRoomSubmit);
+					document.getElementById('importroom').addEventListener('submit', handleImportRoomSubmit);
+					document.getElementById('export').addEventListener('submit', handleExportSubmit);
+					document.getElementById('userSettingsForm').addEventListener('submit', handleUserSettingSubmit);
 
-				// define an event listener for submitting the forms -- right menu
-				document.getElementById('newobject').addEventListener('submit', handleNewObjectSubmit);
-				document.getElementById('importobject').addEventListener('submit', handleImportObjectSubmit);
-				let objectFile = document.getElementById('objectFile');
+					// define an event listener for submitting the forms -- right menu
+					document.getElementById('newobject').addEventListener('submit', handleNewObjectSubmit);
+					document.getElementById('importobject').addEventListener('submit', handleImportObjectSubmit);
+				}
 			});
-
 
 			// <!-- Meghan -->
 			// load object data and dynamically set up object dropdowns
@@ -911,7 +938,7 @@
 					document.getElementById(array[x].name).addEventListener("click", function () {
 						openViewObjectMenu(array[x]);
 					});
-				}	
+				}
 			}
 
 			// <!-- Meghan -->
@@ -919,6 +946,9 @@
 			function addObjectToRoom(info) {
 				// load information
 				loadObject(info.linkToModel);
+
+				// close the menu
+				document.getElementById("predefinedObject").style.width = "0";
 			}
 
 			// <!-- Meghan -->
