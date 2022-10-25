@@ -61,6 +61,11 @@
 					x.style.fontSize = fontSize;
 				});
 
+				const smallPanelButtons = document.querySelectorAll(".smallPanelButton");
+				smallPanelButtons.forEach((x) => {
+					x.style.fontSize = fontSize;
+				});
+
 				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
 					y.style.fontSize = fontSize;
@@ -91,6 +96,11 @@
 					x.style.letterSpacing = textSpacing;
 				});
 
+				const smallPanelButtons = document.querySelectorAll(".smallPanelButton");
+				smallPanelButtons.forEach((x) => {
+					x.style.letterSpacing = textSpacing;
+				});
+
 				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
 					y.style.letterSpacing = textSpacing;
@@ -111,6 +121,11 @@
 			if (highlightButtons != "") {
 				const panelButtons = document.querySelectorAll(".panelButton");
 				panelButtons.forEach((x) => {
+					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+				});
+
+				const smallPanelButtons = document.querySelectorAll(".smallPanelButton");
+				smallPanelButtons.forEach((x) => {
 					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
 				});
 
@@ -412,60 +427,9 @@
 			<!-- <div id="searchBox"><input type="text"><button>🔎︎</button></div> -->
 			
 			<!-- object properties menu, change size position rotation -->
+			<br/>
 			<div class="contentContainer">
-				<table id="objectProperties">
-					<tr>
-						<td><label>Object Width:</label></td>
-					</tr>
-					<tr>
-						<td><input type="range" id="propWidth" min="0.1" max="5" step="0.1" /></td>
-					</tr>
-					<tr>
-						<td><label>Object Depth:</label></td>
-					</tr>
-					<tr>
-						<td><input type="range" id="propDepth" min="0.1" max="5" step="0.1" /></td>
-					</tr>
-					<tr>
-						<td><label>Object Height:</label></td>
-					</tr>
-					<tr>
-						<td><input type="range" id="propHeight" min="0.1" max="5" step="0.1" /></td>
-					</tr>
-					<tr>
-						<td><button id="removeObject" class="panelButton">Remove Object</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectUp" class="panelButton">Move Up</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectDown" class="panelButton">Move Down</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectLeft" class="panelButton">Move Left</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectRight" class="panelButton">Move Right</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectForward" class="panelButton">Move Forward</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectBackward" class="panelButton">Move Backward</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectUp" class="panelButton">Rotate Up</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectDown" class="panelButton">Rotate Down</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectLeft" class="panelButton">Rotate Left</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectRight" class="panelButton">Rotate Right</button></td>
-					</tr>
-				</table>
+				<div id="objectProperties"></div>
 			</div>
 		</div>
 
@@ -514,8 +478,6 @@
 		<div id="importObject" class="rightMenu rightSubMenu">
 			<form id="importobject">
 				<div class="contentContainer">
-					<!-- <input type="file" id="loadObject"> -->
-
 					<table>
 						<tr>
 							<td><label>Object Width (mm)</label></td>
@@ -622,6 +584,11 @@
 				} else {
 					document.getElementById('exportAlert').style.display = "none";
 				}
+			});
+
+			// recheck cookies to ensure styles are set on dynamically rendered content
+			document.getElementById('objectProperties').addEventListener('DOMSubtreeModified', () => {
+				checkCookie(); 
 			});
 
 			function openLeftMenu() {

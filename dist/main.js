@@ -154,60 +154,6 @@ function loadGLTF() {
 
 }
 
-//load objects from file
-// // export function importObject() {
-// 	const fileInput = document.getElementById("loadObject");
-// 	fileInput.addEventListener('change', function () {
-// 		console.log('object changed');
-// 		const reader = new FileReader();
-
-// 		var url = URL.createObjectURL(fileInput.files[0])
-// 		var fileName = fileInput.files[0].name
-
-// 		reader.addEventListener('load', async function (event) {
-// 			const contents = event.target.result;
-// 			const object = new OBJLoader().parse(contents);
-// 			object.name = fileName;
-// 			let width = document.getElementById("objectImportWidth").value;
-// 			let depth = document.getElementById("objectImportDepth").value;
-// 			let height = document.getElementById("objectImportHeight").value;
-// 			let boxSize = new THREE.Vector3();
-// 			let boundingBox = new THREE.Box3().setFromObject(object);
-// 			boundingBox.getSize(boxSize);
-// 			let xFactor = width / boxSize.x;
-// 			let yFactor = height / boxSize.y;
-// 			let zFactor = depth / boxSize.z;
-// 			object.scale.x = xFactor;
-// 			object.scale.y = yFactor;
-// 			object.scale.z = zFactor;
-// 			object.position.x = room.Width/2;
-// 			object.position.z = room.Depth/2;
-
-// 			items.add(object);
-
-// 			scene.add(items)
-
-// 		}, false);
-// 		reader.readAsText(fileInput.files[0]);
-
-// 		url = url.replace(/^(\.?\/)/, '');
-// 		console.log(url);
-
-// 		// const[file] = evt.target.files
-// 		// if(file) {
-// 		// 	objloader.load(URL.createObjectURL(file), function(obkect) {
-// 		// 		scene.add(object);
-// 		// 	},
-// 		// 	function (xhr) {
-// 		// 		console.log((xhr.loaded/xhr.total*100) + '% loaded');
-// 		// 	},
-// 		// 	function(error) {
-// 		// 		console.log('Error loading the object');
-// 		// 	})
-// 		// }
-// 	})
-// // }
-
 export function importObject(fileInput, width, height, depth) {
 	const reader = new FileReader();
 
@@ -507,31 +453,90 @@ function getObjectGroup(object) {
 }
 
 // show object properties - Nick
-document.getElementById("objectProperties").style.visibility = "hidden";
+document.getElementById("objectProperties").innerHTML = "";
 function objectProperties() {
-	document.getElementById("objectProperties").style.visibility = "visible";
-	// let xFactor = heldObject.scale.x;
-	// let yFactor = heldObject.scale.y;
-	// let zFactor = heldObject.scale.z;
-	// let boxSize = new THREE.Vector3();
-	// let boundingBox = new THREE.Box3().setFromObject(heldObject);
-	// boundingBox.getSize(boxSize);
-	// console.log(boxSize);
-	// let width = xFactor * boxSize.x;
-	// let height = yFactor * boxSize.y;
-	// let depth = zFactor * boxSize.z;
+	document.getElementById("objectProperties").innerHTML = `
+		<hr/>
+		<div style="padding-left:20px;">
+			<h2>Object Properties</h2>
+		</div>
+		<div class="smallContentContainer">
+			<table>
+				<tr>
+					<td><label>Object Width:</label></td>
+				</tr>
+				<tr>
+					<td><input style="width:200px" type="range" id="propWidth" min="0.1" max="5" step="0.1" oninput="this.nextElementSibling.value = this.value" />&nbsp;<output>${heldObject.scale.x}</output></td>
+				</tr>
+				<tr>
+					<td><label>Object Depth:</label></td>
+				</tr>
+				<tr>
+					<td><input style="width:200px" type="range" id="propDepth" min="0.1" max="5" step="0.1" oninput="this.nextElementSibling.value = this.value" />&nbsp;<output>${heldObject.scale.z}</output></td>
+				</tr>
+				<tr>
+					<td><label>Object Height:</label></td>
+				</tr>
+				<tr>
+					<td><input style="width:200px" type="range" id="propHeight" min="0.1" max="5" step="0.1" oninput="this.nextElementSibling.value = this.value" />&nbsp;<output>${heldObject.scale.y}</output></td>
+				</tr>
+			</table>
+		</div>
+		<div class="smallContentContainer">
+			<button id="moveObjectUp" class="smallPanelButton">Move Up</button>
+			<button id="moveObjectDown" class="smallPanelButton">Move Down</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="moveObjectLeft" class="smallPanelButton">Move Left</button>
+			<button id="moveObjectRight" class="smallPanelButton">Move Right</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="moveObjectForward" class="smallPanelButton">Move Forward</button>
+			<button id="moveObjectBackward" class="smallPanelButton">Move Backward</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="rotateObjectUp" class="smallPanelButton">Rotate Up</button>
+			<button id="rotateObjectDown" class="smallPanelButton">Rotate Down</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="rotateObjectLeft" class="smallPanelButton">Rotate Left</button>
+			<button id="rotateObjectRight" class="smallPanelButton">Rotate Right</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="removeObject" class="panelButton">Remove Object</button>
+		</div>
+	`;
+
 	document.getElementById("propWidth").value = heldObject.scale.x;
 	document.getElementById("propHeight").value = heldObject.scale.y;
 	document.getElementById("propDepth").value = heldObject.scale.z;
+
+	setEventListeners();
 }
 
-// change object properties - Nick
-const propWidth = document.getElementById("propWidth");
-propWidth.addEventListener('change', updateProperties, false)
-const propHeight = document.getElementById("propHeight");
-propHeight.addEventListener('change', updateProperties, false)
-const propDepth = document.getElementById("propDepth");
-propDepth.addEventListener('change', updateProperties, false)
+// set the event listeners for the object properties - Nick
+function setEventListeners() {
+	const propWidth = document.getElementById("propWidth");
+	propWidth.addEventListener('change', updateProperties, false)
+	const propHeight = document.getElementById("propHeight");
+	propHeight.addEventListener('change', updateProperties, false)
+	const propDepth = document.getElementById("propDepth");
+	propDepth.addEventListener('change', updateProperties, false)
+
+	document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
+	document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
+	document.getElementById("moveObjectLeft").addEventListener("click", function () { moveObject('left') });
+	document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
+	document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
+	document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
+
+	document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, Math.PI) });
+	document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -Math.PI) });
+	document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, Math.PI) });
+	document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -Math.PI) });
+
+	document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
+}
 
 function updateProperties() {
 	let width = document.getElementById("propWidth").value;
@@ -567,12 +572,7 @@ function moveObject(direction) {
 	}
 	items.attach(heldObject);
 }
-document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
-document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
-document.getElementById("moveObjectLeft").addEventListener("click", function () { moveObject('left') });
-document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
-document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
-document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
+
 
 // check object is in bounds - Nick
 function checkLocation() {
@@ -611,17 +611,14 @@ function rotateObject(object, factor) {
 function rotateUp(object, factor) {
 	object.rotation.x += factor * 0.05;
 }
-document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, Math.PI) });
-document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -Math.PI) });
-document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, Math.PI) });
-document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -Math.PI) });
+
 
 // unhighlight selected object - Nick
 function deselectObject() {
 	scene.remove(heldObjectBB);
 	heldObject = undefined;
 	heldObjectBB = undefined;
-	document.getElementById("objectProperties").style.visibility = "hidden";
+	document.getElementById("objectProperties").innerHTML = "";
 }
 
 // remove object and object highlight from scene - Nick
@@ -631,9 +628,9 @@ function removeObject() {
 	heldObjectBB.parent.remove(heldObjectBB);
 	heldObject = undefined;
 	heldObjectBB = undefined;
-	document.getElementById("objectProperties").style.visibility = "hidden";
+	document.getElementById("objectProperties").innerHTML = "";
 }
-document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
+
 
 // adds object rotation when the object is selected, hovered, and the wheel is scrolled. - Nick
 addEventListener('wheel', onMouseWheel, false);
