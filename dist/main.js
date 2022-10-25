@@ -155,43 +155,37 @@ function loadGLTF() {
 }
 
 //load objects from file
-// export function importObject() {
-	const fileInput = document.getElementById("loadObject");
-	fileInput.addEventListener('change', function () {
-		const reader = new FileReader();
+export function importObject(fileInput, width, height, depth) {
+	const reader = new FileReader();
 
-		var url = URL.createObjectURL(fileInput.files[0])
-		var fileName = fileInput.files[0].name
+	var url = URL.createObjectURL(fileInput.files[0])
+	var fileName = fileInput.files[0].name
 
-		reader.addEventListener('load', async function (event) {
-			const contents = event.target.result;
-			const object = new OBJLoader().parse(contents);
-			object.name = fileName;
-			let width = document.getElementById("objectImportWidth").value / measurementScale;
-			let depth = document.getElementById("objectImportDepth").value / measurementScale;
-			let height = document.getElementById("objectImportHeight").value / measurementScale;
-			let boxSize = new THREE.Vector3();
-			let boundingBox = new THREE.Box3().setFromObject(object);
-			boundingBox.getSize(boxSize);
-			let xFactor = width / boxSize.x;
-			let yFactor = height / boxSize.y;
-			let zFactor = depth / boxSize.z;
-			object.scale.x = xFactor;
-			object.scale.y = yFactor;
-			object.scale.z = zFactor;
-			object.position.x = room.Width/2;
-			object.position.z = room.Depth/2;
+	reader.addEventListener('load', async function (event) {
+		const contents = event.target.result;
+		const object = new OBJLoader().parse(contents);
+		object.name = fileName;
+		let boxSize = new THREE.Vector3();
+		let boundingBox = new THREE.Box3().setFromObject(object);
+		boundingBox.getSize(boxSize);
+		let xFactor = (width / measurementScale) / boxSize.x;
+		let yFactor = (height / measurementScale) / boxSize.y;
+		let zFactor = (depth / measurementScale) / boxSize.z;
+		object.scale.x = xFactor;
+		object.scale.y = yFactor;
+		object.scale.z = zFactor;
+		object.position.x = room.Width/2;
+		object.position.z = room.Depth/2;
 
-			items.add(object);
+		items.add(object);
 
-			scene.add(items)
+		scene.add(items)
 
-		}, false);
-		reader.readAsText(fileInput.files[0]);
+	}, false);
+	reader.readAsText(fileInput.files[0]);
 
-		url = url.replace(/^(\.?\/)/, '');
-	})
-// }
+	url = url.replace(/^(\.?\/)/, '');
+}
 
 //////FUNCTIONS//////
 
