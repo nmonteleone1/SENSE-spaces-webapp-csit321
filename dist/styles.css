@@ -142,7 +142,7 @@ body {
     font-size: 1.4em;
 }
 
-.objectPicture{
+.objectPicture {
     width: 100%;
     height: 100%;
 }
@@ -194,23 +194,23 @@ body {
     background-color: #f1f1f1;
 }
 
-#dropdownTaste{
+#dropdownTaste {
     background-color: #d93e4f;
 }
 
-#dropdownTouch{
+#dropdownTouch {
     background-color: #fcb122;
 }
 
-#dropdownSight{
+#dropdownSight {
     background-color: #0091ab;
 }
 
-#dropdownSound{
+#dropdownSound {
     background-color: #85ccae;
 }
 
-#dropdownSmell{
+#dropdownSmell {
     background-color: #6f66a5;
 }
 
@@ -389,7 +389,7 @@ input:checked+.slider:before {
     border: 1px solid
 }
 
-.shortcutTable td{
+.shortcutTable td {
     /* padding: 1% 2% 1% 4%; */
     padding-left: 1%;
     padding-right: 1%;
@@ -406,7 +406,7 @@ input:checked+.slider:before {
 /* selected object thing */
 /* copied from panelbutton*/
 
-#objectProperties td button{
+#objectProperties td button {
     width: var(--panel-width);
     color: rgb(0, 0, 0);
     /* TODO: change this to percentage of view height / width */
