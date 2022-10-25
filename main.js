@@ -191,7 +191,13 @@ export function importObject(fileInput, width, height, depth) {
 
 
 export function createNewObject(dimensions) {
-	var geometry = new THREE.BoxGeometry(dimensions.width / measurementScale, dimensions.height / measurementScale, dimensions.depth / measurementScale);
+	let width = dimensions.width / measurementScale;
+	let depth = dimensions.depth / measurementScale;
+	let height = dimensions.height / measurementScale;
+	console.log(width, height, depth);
+	
+	var geometry = new THREE.BoxGeometry(width, height, depth);
+	console.log(geometry);
 	var material = new THREE.MeshPhongMaterial( {color: 0xA020F0} );
 	var cube = new THREE.Mesh(geometry, material);
 	cube.material.opacity = 0.75;
@@ -206,7 +212,7 @@ export function createNewObject(dimensions) {
 	// line.material.color.setHex(0x00ff00);
 	// line.position.set(0,dimensions.height/2,0);
 
-	cube.position.set(room.Width/2, dimensions.height/2, room.Depth/2);
+	cube.position.set(room.Width/2, height/2, room.Depth/2);
 	items.add(cube);
 	scene.add(items);
 }
