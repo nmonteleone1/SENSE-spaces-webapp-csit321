@@ -1,6 +1,6 @@
 // <!-- Meghan {file} -->
 import { saveAsImage } from '../main.js'
-import { regenerateRoom, getRoom, createNewObject } from "../main.js";
+import { regenerateRoom, getRoom, createNewObject, importObject } from "../main.js";
 
 
 
@@ -17,7 +17,7 @@ export function handleNewRoomSubmit(event) {
 
         // convert form values to json
         let newRoom = JSON.parse(`{"roomName":"${event.target.name.value}", "width":${event.target.width.value}, "depth":${event.target.depth.value}, "height":${event.target.height.value}}`)
-    
+
         // close menus
         document.getElementById("newRoom").style.width = "0";
         document.getElementById("leftMenu").style.width = "0";
@@ -26,19 +26,19 @@ export function handleNewRoomSubmit(event) {
         regenerateRoom(newRoom.roomName, newRoom.width, newRoom.depth, newRoom.height);
 
     } catch (e) {
-        if(event.target.name.value == "") {
+        if (event.target.name.value == "") {
             document.getElementById('nameInvalid').innerHTML = "name is a required field";
         }
-    
-        if(isNaN(event.target.width.value) || event.target.width.value == "") {
+
+        if (isNaN(event.target.width.value) || event.target.width.value == "") {
             document.getElementById('widthInvalid').innerHTML = "width is a required field";
         }
-    
-        if(isNaN(event.target.depth.value) || event.target.depth.value == "") {
+
+        if (isNaN(event.target.depth.value) || event.target.depth.value == "") {
             document.getElementById('depthInvalid').innerHTML = "depth is a required field";
         }
-    
-        if(isNaN(event.target.height.value) || event.target.height.value == "") {
+
+        if (isNaN(event.target.height.value) || event.target.height.value == "") {
             document.getElementById('heightInvalid').innerHTML = "height is a required field";
         }
 
@@ -52,9 +52,11 @@ export function handleNewRoomSubmit(event) {
 export function handleImportRoomSubmit(event) {
     event.preventDefault();
 
+    let file = document.getElementById('file');
+
     // handle no file being uploaded
-    if (!file.value.length) { 
-        document.getElementById('errorMessage').innerHTML = "you must select a file to upload"; 
+    if (!file.value.length) {
+        document.getElementById('errorMessage').innerHTML = "you must select a file to upload";
         return
     };
 
@@ -67,21 +69,16 @@ export function handleImportRoomSubmit(event) {
 function handleRoomFile(event) {
     try {
         let importedRoom = JSON.parse(event.target.result);
-        console.log(importedRoom);
-        // document.getElementById('errorMessage').innerHTML = ""; 
+        document.getElementById('errorMessage').innerHTML = "";
 
-        // Values from the JSON can be accessed as follows
-        // console.log("Room Name: ", importedRoom.roomName);
-        // console.log("Dimensions: ", importedRoom.width, " x ", importedRoom.depth, " x ", importedRoom.height);
-        // importedRoom.objects.map((x, index) => console.log(`Object ${index + 1}: `, x.name, "--", x.path, "--", x.model, "--", x.location[0], ",", x.location[1], ",", x.location[2]));
-        // console.log(importedRoom.roomName, importedRoom.width, importedRoom.depth, importedRoom.height, importedRoom.objects);
+        // regenerate room
         regenerateRoom(importedRoom.roomName, importedRoom.width, importedRoom.depth, importedRoom.height, importedRoom.objects);
 
         // close menus
         document.getElementById("importRoom").style.width = "0";
         document.getElementById("leftMenu").style.width = "0";
     } catch (e) {
-        document.getElementById('errorMessage').innerHTML = "the format of the uploaded file is invalid"; 
+        document.getElementById('errorMessage').innerHTML = "the format of the uploaded file is invalid";
         return
     }
 }
@@ -91,15 +88,19 @@ function handleRoomFile(event) {
 // handle export form
 export function handleExportSubmit(event) {
     event.preventDefault();
+    
+    // reset validation message
+    document.getElementById('exportError').innerHTML = "";
 
-    let data = getRoom(); 
-    if(event.target.type.value == "json") {
+    let data = getRoom();
+    if (event.target.type.value == "json") {
         exportToJsonFile(data);
-    } else if(event.target.type.value == "txt") {
-        exportToTxtFile(data);
-    } else {
+    } else if(event.target.type.value == "jpeg") {
         // handle export to .jpeg -- function exported from ../main.js
         saveAsImage()
+    } else {
+        document.getElementById("exportError").innerHTML = "you must select a type to export";
+        return;
     }
 
     // close menus
@@ -110,7 +111,7 @@ export function handleExportSubmit(event) {
 // handle export to JSON file
 function exportToJsonFile(jsonData) {
     let dataStr = JSON.stringify(jsonData);
-    let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
 
     let exportFileDefaultName = `${jsonData.roomName}.json`;
 
@@ -120,13 +121,14 @@ function exportToJsonFile(jsonData) {
     linkElement.click();
 }
 
+// THIS NO LONGER WORKS WITH THE WAY WE HAVE IMPLEMENTED IMPORT OBJECT
 // handle export to txt file
 function exportToTxtFile(jsonData) {
     let data = 'Room Name: ' + jsonData.roomName + ' \r\n' + 'Objects: ' + ' \r\n ';
-    let objects =  jsonData.objects.map(x => `\t-- ${x.name}: ${x.location[0]}, ${x.location[1]}, ${x.location[2]} \r\n`);
+    let objects = jsonData.objects.map(x => `\t-- ${x.name}: ${x.location[0]}, ${x.location[1]}, ${x.location[2]} \r\n`);
     let dataStr = data + objects.join("");
 
-    let dataUri = 'data:text/plain;charset=utf-8,'+ encodeURIComponent(dataStr);
+    let dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(dataStr);
 
     let exportFileDefaultName = `${jsonData.roomName}.txt`;
 
@@ -134,40 +136,6 @@ function exportToTxtFile(jsonData) {
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
-}
-
-function fakeRoomData() {
-    let room = getRoom()
-    let tester = {
-        "roomName": "myExportedRoom",
-        "width": room.Width,
-        "depth": room.Depth,
-        "height": room.Height,
-        "objects": [
-          {
-            "name": "object1",
-            "path": "../path/jsons/object1.json",
-            "model": "../path/models/object1.stl",
-            "location": [
-              1,
-              0.5,
-              1
-            ]
-          },
-          {
-            "name": "object2",
-            "path": "../path/jsons/object2.json",
-            "model": "../path/models/object2.stl",
-            "location": [
-              2,
-              0.5,
-              2
-            ]
-          }
-        ]
-      }
-
-    return tester;
 }
 
 
@@ -184,21 +152,22 @@ export function handleNewObjectSubmit(event) {
 
         // convert form values to json
         let newObject = JSON.parse(`{"width":${event.target.objectWidth.value}, "depth":${event.target.objectDepth.value}, "height":${event.target.objectHeight.value}}`);
-        console.log(newObject)
+
+        // create object
         createNewObject(newObject);
-    
+
         // close menus
         document.getElementById("newObject").style.width = "0";
-    } catch (e) {    
-        if(isNaN(event.target.objectWidth.value) || event.target.objectWidth.value == "") {
+    } catch (e) {
+        if (isNaN(event.target.objectWidth.value) || event.target.objectWidth.value == "") {
             document.getElementById('objWidthInvalid').innerHTML = "width is a required field";
         }
-    
-        if(isNaN(event.target.objectDepth.value) || event.target.objectDepth.value == "") {
+
+        if (isNaN(event.target.objectDepth.value) || event.target.objectDepth.value == "") {
             document.getElementById('objDepthInvalid').innerHTML = "depth is a required field";
         }
-    
-        if(isNaN(event.target.objectHeight.value) || event.target.objectHeight.value == "") {
+
+        if (isNaN(event.target.objectHeight.value) || event.target.objectHeight.value == "") {
             document.getElementById('objHeightInvalid').innerHTML = "height is a required field";
         }
 
@@ -212,32 +181,64 @@ export function handleNewObjectSubmit(event) {
 export function handleImportObjectSubmit(event) {
     event.preventDefault();
 
-    console.log(event)
+    // get form values
+    let fileInput = document.getElementById('loadObject');
+    let width = document.getElementById("objectImportWidth").value;
+    let depth = document.getElementById("objectImportDepth").value;
+    let height = document.getElementById("objectImportHeight").value;
+
+    // reset validation messages
+    document.getElementById('objImportWidthInvalid').innerHTML = "";
+    document.getElementById('objImportDepthInvalid').innerHTML = "";
+    document.getElementById('objImportHeightInvalid').innerHTML = "";
+    document.getElementById('objectErrorMessage').innerHTML = "";
+
+    let errors = false;
 
     // handle no file being uploaded
-    if (!objectFile.value.length) { 
-        document.getElementById('objectErrorMessage').innerHTML = "you must select a file to upload"; 
-        return
+    if (!fileInput.value.length) {
+        document.getElementById('objectErrorMessage').innerHTML = "you must select a file to upload";
+        errors = true;
     };
 
+    // ensure width field is not empty
+    if (isNaN(width) || width == "") {
+        document.getElementById('objImportWidthInvalid').innerHTML = "width is a required field";
+        errors = true;
+    }
+
+    // ensure depth field is not empty
+    if (isNaN(depth) || depth == "") {
+        document.getElementById('objImportDepthInvalid').innerHTML = "depth is a required field";
+        errors = true;
+    }
+
+    // ensure height field is not empty
+    if (isNaN(height) || height == "") {
+        document.getElementById('objImportHeightInvalid').innerHTML = "height is a required field";
+        errors = true;
+    }
+
+    // if any of the validation has failed, return
+    if(errors) {
+        return;
+    }
+
     let reader = new FileReader();
-    reader.onload = handleObjectFile;
-    reader.readAsText(objectFile.files[0]);
+    reader.onload = handleObjectFile(fileInput, width, height, depth);
+    reader.readAsText(fileInput.files[0]);
 }
 
 // parse data from object file and navigate back to right menu
-function handleObjectFile(event) {
+function handleObjectFile(fileInput, width, height, depth) {
     try {
-        let importedObject = JSON.parse(event.target.result);
-        document.getElementById('objectErrorMessage').innerHTML = ""; 
-
-        // Values from the JSON can be accessed as follows
-        console.log(importedObject);
+        // import object
+        importObject(fileInput, width, height, depth)
 
         // close menus
         document.getElementById("importObject").style.width = "0";
     } catch (e) {
-        document.getElementById('objectErrorMessage').innerHTML = "the format of the uploaded file is invalid"; 
+        document.getElementById('objectErrorMessage').innerHTML = "the format of the uploaded file is invalid";
         return
     }
 }

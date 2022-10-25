@@ -146,7 +146,7 @@ document.getElementById("moveUp").addEventListener("click", function () { moveCa
 document.getElementById("moveDown").addEventListener("click", function () { moveCamera('down') });
 document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
-document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
+// document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
 
 const gltfLoader = new GLTFLoader();
 function loadGLTF() {
@@ -155,58 +155,91 @@ function loadGLTF() {
 }
 
 //load objects from file
-// export function importObject() {
-	const fileInput = document.getElementById("loadObject");
-	fileInput.addEventListener('change', function () {
-		console.log('object changed');
-		const reader = new FileReader();
+// // export function importObject() {
+// 	const fileInput = document.getElementById("loadObject");
+// 	fileInput.addEventListener('change', function () {
+// 		console.log('object changed');
+// 		const reader = new FileReader();
 
-		var url = URL.createObjectURL(fileInput.files[0])
-		var fileName = fileInput.files[0].name
+// 		var url = URL.createObjectURL(fileInput.files[0])
+// 		var fileName = fileInput.files[0].name
 
-		reader.addEventListener('load', async function (event) {
-			const contents = event.target.result;
-			const object = new OBJLoader().parse(contents);
-			object.name = fileName;
-			let width = document.getElementById("objectImportWidth").value;
-			let depth = document.getElementById("objectImportDepth").value;
-			let height = document.getElementById("objectImportHeight").value;
-			let boxSize = new THREE.Vector3();
-			let boundingBox = new THREE.Box3().setFromObject(object);
-			boundingBox.getSize(boxSize);
-			let xFactor = width / boxSize.x;
-			let yFactor = height / boxSize.y;
-			let zFactor = depth / boxSize.z;
-			object.scale.x = xFactor;
-			object.scale.y = yFactor;
-			object.scale.z = zFactor;
-			object.position.x = room.Width/2;
-			object.position.z = room.Depth/2;
+// 		reader.addEventListener('load', async function (event) {
+// 			const contents = event.target.result;
+// 			const object = new OBJLoader().parse(contents);
+// 			object.name = fileName;
+// 			let width = document.getElementById("objectImportWidth").value;
+// 			let depth = document.getElementById("objectImportDepth").value;
+// 			let height = document.getElementById("objectImportHeight").value;
+// 			let boxSize = new THREE.Vector3();
+// 			let boundingBox = new THREE.Box3().setFromObject(object);
+// 			boundingBox.getSize(boxSize);
+// 			let xFactor = width / boxSize.x;
+// 			let yFactor = height / boxSize.y;
+// 			let zFactor = depth / boxSize.z;
+// 			object.scale.x = xFactor;
+// 			object.scale.y = yFactor;
+// 			object.scale.z = zFactor;
+// 			object.position.x = room.Width/2;
+// 			object.position.z = room.Depth/2;
 
-			items.add(object);
+// 			items.add(object);
 
-			scene.add(items)
+// 			scene.add(items)
 
-		}, false);
-		reader.readAsText(fileInput.files[0]);
+// 		}, false);
+// 		reader.readAsText(fileInput.files[0]);
 
-		url = url.replace(/^(\.?\/)/, '');
-		console.log(url);
+// 		url = url.replace(/^(\.?\/)/, '');
+// 		console.log(url);
 
-		// const[file] = evt.target.files
-		// if(file) {
-		// 	objloader.load(URL.createObjectURL(file), function(obkect) {
-		// 		scene.add(object);
-		// 	},
-		// 	function (xhr) {
-		// 		console.log((xhr.loaded/xhr.total*100) + '% loaded');
-		// 	},
-		// 	function(error) {
-		// 		console.log('Error loading the object');
-		// 	})
-		// }
-	})
-// }
+// 		// const[file] = evt.target.files
+// 		// if(file) {
+// 		// 	objloader.load(URL.createObjectURL(file), function(obkect) {
+// 		// 		scene.add(object);
+// 		// 	},
+// 		// 	function (xhr) {
+// 		// 		console.log((xhr.loaded/xhr.total*100) + '% loaded');
+// 		// 	},
+// 		// 	function(error) {
+// 		// 		console.log('Error loading the object');
+// 		// 	})
+// 		// }
+// 	})
+// // }
+
+export function importObject(fileInput, width, height, depth) {
+	const reader = new FileReader();
+
+	var url = URL.createObjectURL(fileInput.files[0])
+	var fileName = fileInput.files[0].name
+
+	reader.addEventListener('load', async function (event) {
+		const contents = event.target.result;
+		const object = new OBJLoader().parse(contents);
+		object.name = fileName;
+		let boxSize = new THREE.Vector3();
+		let boundingBox = new THREE.Box3().setFromObject(object);
+		boundingBox.getSize(boxSize);
+		let xFactor = width / boxSize.x;
+		let yFactor = height / boxSize.y;
+		let zFactor = depth / boxSize.z;
+		object.scale.x = xFactor;
+		object.scale.y = yFactor;
+		object.scale.z = zFactor;
+		object.position.x = room.Width/2;
+		object.position.z = room.Depth/2;
+
+		items.add(object);
+
+		scene.add(items)
+
+	}, false);
+	reader.readAsText(fileInput.files[0]);
+
+	url = url.replace(/^(\.?\/)/, '');
+}
+
 
 //////FUNCTIONS//////
 
