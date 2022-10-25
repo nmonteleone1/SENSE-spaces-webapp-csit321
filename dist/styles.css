@@ -21,6 +21,7 @@ body {
     padding: 8px;
     background-color: #575757;
     align-items: center;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 #headerImage {
@@ -39,7 +40,7 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #D9D9D9;
+    background-color: #575757;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -53,7 +54,7 @@ body {
     font-size: 40px;
     padding: 8px 8px 8px 12px;
     text-decoration: none;
-    color: #555;
+    color: #d7d7d7;
     transition: 0.3s;
 }
 
@@ -67,7 +68,7 @@ body {
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: #D9D9D9;
+    background-color: #575757;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -81,7 +82,7 @@ body {
     font-size: 40px;
     padding: 8px 8px 8px 12px;
     text-decoration: none;
-    color: #555;
+    color: #d7d7d7;
     transition: 0.3s;
 }
 
@@ -89,6 +90,13 @@ body {
     width: 0;
 }
 
+/* cancel button that appears under menus */
+.cancel {
+    color: white;
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 /* menu controls -- index.html */
 .openMenuBtn {
@@ -107,7 +115,7 @@ body {
 }
 
 .closeMenuBtn:hover {
-    color: #777;
+    color: white;
 }
 
 
@@ -138,8 +146,20 @@ body {
     transition: 0.3s;
 }
 
+.contentContainer table {
+    color: white;
+}
+
+.contentTable {
+    border: 1px solid
+}
+
 .contentTable tr:nth-child(odd) {
     font-size: 1.4em;
+}
+
+.contentTable tr:nth-child(even) {
+    background-color: #9C9C9C;
 }
 
 .objectPicture {
@@ -191,7 +211,7 @@ body {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-    background-color: #f1f1f1;
+    background-color: #d7d7d7;
 }
 
 #dropdownTaste {
@@ -426,3 +446,8 @@ input:checked+.slider:before {
     color: white;
     background-color: #777;
 }
+
+
+/* LEFT MENU TOP HEADER SAME COLOUR */
+/* TOP MENU DROP SHADOW */
+/* X CLICK GREY WITH WHITE HOVER */
