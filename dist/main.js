@@ -59,12 +59,13 @@ controls.keyPanSpeed = 28;
 //////GLOBALS//////
 var mouse, raycaster, moveRaycaster;
 const zoomFactor = 0.95; // factor must be <1
-const rotateFactor = Math.PI * 0.1; // factor of 1 is a full rotation
+const rotateFactor = Math.PI * 0.05; // factor of 1 is a full rotation
 const moveFactor = 0.25;
 var heldObject, heldObjectBB;
 const items = new THREE.Group();
 const loader = new THREE.ObjectLoader();
 const objloader = new OBJLoader();
+var measurementScale = 1000;
 
 // mouse tracking within canvas - Nick
 mouse = new THREE.Vector2();
@@ -146,7 +147,6 @@ document.getElementById("moveUp").addEventListener("click", function () { moveCa
 document.getElementById("moveDown").addEventListener("click", function () { moveCamera('down') });
 document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
-// document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
 
 const gltfLoader = new GLTFLoader();
 function loadGLTF() {
@@ -155,59 +155,6 @@ function loadGLTF() {
 }
 
 //load objects from file
-// // export function importObject() {
-// 	const fileInput = document.getElementById("loadObject");
-// 	fileInput.addEventListener('change', function () {
-// 		console.log('object changed');
-// 		const reader = new FileReader();
-
-// 		var url = URL.createObjectURL(fileInput.files[0])
-// 		var fileName = fileInput.files[0].name
-
-// 		reader.addEventListener('load', async function (event) {
-// 			const contents = event.target.result;
-// 			const object = new OBJLoader().parse(contents);
-// 			object.name = fileName;
-// 			let width = document.getElementById("objectImportWidth").value;
-// 			let depth = document.getElementById("objectImportDepth").value;
-// 			let height = document.getElementById("objectImportHeight").value;
-// 			let boxSize = new THREE.Vector3();
-// 			let boundingBox = new THREE.Box3().setFromObject(object);
-// 			boundingBox.getSize(boxSize);
-// 			let xFactor = width / boxSize.x;
-// 			let yFactor = height / boxSize.y;
-// 			let zFactor = depth / boxSize.z;
-// 			object.scale.x = xFactor;
-// 			object.scale.y = yFactor;
-// 			object.scale.z = zFactor;
-// 			object.position.x = room.Width/2;
-// 			object.position.z = room.Depth/2;
-
-// 			items.add(object);
-
-// 			scene.add(items)
-
-// 		}, false);
-// 		reader.readAsText(fileInput.files[0]);
-
-// 		url = url.replace(/^(\.?\/)/, '');
-// 		console.log(url);
-
-// 		// const[file] = evt.target.files
-// 		// if(file) {
-// 		// 	objloader.load(URL.createObjectURL(file), function(obkect) {
-// 		// 		scene.add(object);
-// 		// 	},
-// 		// 	function (xhr) {
-// 		// 		console.log((xhr.loaded/xhr.total*100) + '% loaded');
-// 		// 	},
-// 		// 	function(error) {
-// 		// 		console.log('Error loading the object');
-// 		// 	})
-// 		// }
-// 	})
-// // }
-
 export function importObject(fileInput, width, height, depth) {
 	const reader = new FileReader();
 
@@ -221,9 +168,9 @@ export function importObject(fileInput, width, height, depth) {
 		let boxSize = new THREE.Vector3();
 		let boundingBox = new THREE.Box3().setFromObject(object);
 		boundingBox.getSize(boxSize);
-		let xFactor = width / boxSize.x;
-		let yFactor = height / boxSize.y;
-		let zFactor = depth / boxSize.z;
+		let xFactor = (width / measurementScale) / boxSize.x;
+		let yFactor = (height / measurementScale) / boxSize.y;
+		let zFactor = (depth / measurementScale) / boxSize.z;
 		object.scale.x = xFactor;
 		object.scale.y = yFactor;
 		object.scale.z = zFactor;
@@ -240,21 +187,27 @@ export function importObject(fileInput, width, height, depth) {
 	url = url.replace(/^(\.?\/)/, '');
 }
 
-
 //////FUNCTIONS//////
 
 
 export function createNewObject(dimensions) {
-	var geometry = new THREE.BoxGeometry(dimensions.width, dimensions.height, dimensions.depth);
-	var wireframe = new THREE.WireframeGeometry(geometry);
-	var line = new THREE.LineSegments(wireframe);
-	line.material.depthTest = true;
-	line.material.opacity = 0.75;
-	line.material.transparent = true;
-	line.material.color.setHex(0x00ff00);
-	line.position.set(0,dimensions.height/2,0);
+	var geometry = new THREE.BoxGeometry(dimensions.width / measurementScale, dimensions.height / measurementScale, dimensions.depth / measurementScale);
+	var material = new THREE.MeshPhongMaterial( {color: 0xA020F0} );
+	var cube = new THREE.Mesh(geometry, material);
+	cube.material.opacity = 0.75;
+	cube.castShadow = true;
+	cube.receiveShadow = true;
+	// cube.material.transparent = true;
+	// var wireframe = new THREE.WireframeGeometry(geometry);
+	// var line = new THREE.LineSegments(wireframe);
+	// line.material.depthTest = true;
+	// line.material.opacity = 0.75;
+	// line.material.transparent = true;
+	// line.material.color.setHex(0x00ff00);
+	// line.position.set(0,dimensions.height/2,0);
 
-	items.add(line);
+	cube.position.set(room.Width/2, dimensions.height/2, room.Depth/2);
+	items.add(cube);
 	scene.add(items);
 }
 
@@ -345,27 +298,6 @@ function zoomCamera(zoom) {
 	controls.update();
 }
 
-// function rotateCamera(direction) {
-// 	if(direction == 'cw') {
-// 		camera.position.applyQuaternion( new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), rotateFactor*Math.PI*2));
-// 	}
-// 	else if(direction == 'ccw') {
-// 		camera.position.applyQuaternion( new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), rotateFactor*-Math.PI*2));
-// 	}
-// 	else if(direction == 'up') {
-
-// 	}
-// 	else if(direction == 'down') {
-
-// 	}
-// 	else {
-// 		console.log('error rotating camera');
-// 	}
-// 	camera.lookAt(scene.position);
-// 	camera.updateProjectionMatrix();
-// 	controls.update();
-// }
-
 // room initializer, called on first run, on new room submit, on import room submit - Nick
 export function regenerateRoom(name = room.name, width = room.Width, depth = room.Depth, height = room.Height, objects = []) {
 	room.name = name;
@@ -423,7 +355,6 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 	}
 	
 	scene.add(items);
-	// console.log(scene);
 
 	camera.lookAt(xCenter, 0, yCenter);
 	controls.target.set(xCenter, 0, yCenter);
@@ -472,10 +403,10 @@ function selectObject() {
 		// if the object is already selected, break - Nick
 		// var parent = getObjectGroup(intersects[0].object);
 		let parent = getObjectGroup(intersects[0].object);
-		if (heldObject == intersects[0].object) {return;}
+		if (heldObject == parent) {return;}
 		else {
 			deselectObject();
-			heldObject = intersects[0].object;
+			heldObject = parent;
 			heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
 			scene.add(heldObjectBB);
 			objectProperties();
@@ -489,54 +420,49 @@ function selectObject() {
 // get grouped object - Nick
 function getObjectGroup(object) {
 	var parent = object.parent;
-	console.log(parent);
 	if(parent == scene || parent == items) {
-		console.log('parent scene')
 		return object;
 	}
 	while (parent != items) {
-		parent = object.parent;
-		console.log(object);
-		if(parent == scene) {
-			return object;
-		}
 		object = parent;
+		parent = object.parent;
 	}
 	
 	return object;
 }
 
 // show object properties - Nick
+const propWidth = document.getElementById("propWidth");
+const propHeight = document.getElementById("propHeight");
+const propDepth = document.getElementById("propDepth");
 document.getElementById("objectProperties").style.visibility = "hidden";
 function objectProperties() {
 	document.getElementById("objectProperties").style.visibility = "visible";
-	// let xFactor = heldObject.scale.x;
-	// let yFactor = heldObject.scale.y;
-	// let zFactor = heldObject.scale.z;
-	// let boxSize = new THREE.Vector3();
-	// let boundingBox = new THREE.Box3().setFromObject(heldObject);
-	// boundingBox.getSize(boxSize);
-	// console.log(boxSize);
-	// let width = xFactor * boxSize.x;
-	// let height = yFactor * boxSize.y;
-	// let depth = zFactor * boxSize.z;
-	document.getElementById("propWidth").value = heldObject.scale.x;
-	document.getElementById("propHeight").value = heldObject.scale.y;
-	document.getElementById("propDepth").value = heldObject.scale.z;
+	let measure = new THREE.Vector3();
+	heldObject.getWorldScale(measure)
+	propWidth.min = measure.x / 2;
+	propWidth.max = measure.x * 2;
+	propWidth.value = measure.x;
+	propWidth.step = 0.01*propWidth.max;
+	propHeight.min = measure.y / 2;
+	propHeight.max = measure.y * 2;
+	propHeight.value = measure.y;
+	propHeight.step = 0.01*propHeight.max;
+	propDepth.min = measure.z / 2;
+	propDepth.max = measure.z * 2;
+	propDepth.value = measure.z;
+	propDepth.step = 0.01*propDepth.max;
 }
 
 // change object properties - Nick
-const propWidth = document.getElementById("propWidth");
 propWidth.addEventListener('change', updateProperties, false)
-const propHeight = document.getElementById("propHeight");
 propHeight.addEventListener('change', updateProperties, false)
-const propDepth = document.getElementById("propDepth");
 propDepth.addEventListener('change', updateProperties, false)
 
 function updateProperties() {
-	let width = document.getElementById("propWidth").value;
-	let height = document.getElementById("propHeight").value;
-	let depth = document.getElementById("propDepth").value;
+	let width = propWidth.value;
+	let height = propHeight.value;
+	let depth = propDepth.value;
 	heldObject.scale.x = width;
 	heldObject.scale.y = height;
 	heldObject.scale.z = depth;
@@ -587,7 +513,7 @@ function checkLocation() {
 		heldObject.position.x = width/2 + 0.05;
 	}
 	if(bb.min.y < 0) {
-		heldObject.position.y = height/2;
+		heldObject.position.y += 0-bb.min.y;
 	}
 	if(bb.min.z < 0+0.05) {
 		heldObject.position.z = depth/2 + 0.05;
@@ -606,15 +532,16 @@ function checkLocation() {
 
 // rotate selected object - Nick
 function rotateObject(object, factor) {
-	object.rotation.y += factor * 0.05;
+	// object.rotation.y += factor;	
+	object.rotateY(factor);
 }
 function rotateUp(object, factor) {
-	object.rotation.x += factor * 0.05;
+	object.rotateX(factor);
 }
-document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, Math.PI) });
-document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -Math.PI) });
-document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, Math.PI) });
-document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -Math.PI) });
+document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, rotateFactor) });
+document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -rotateFactor) });
+document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, rotateFactor) });
+document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -rotateFactor) });
 
 // unhighlight selected object - Nick
 function deselectObject() {
@@ -788,7 +715,6 @@ addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
 	var keyPressed = event.key
-	// console.log(keyPressed)
 	switch (keyPressed) {
 		case "w":
 			moveCamera('up')
