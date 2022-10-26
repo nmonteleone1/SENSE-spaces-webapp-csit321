@@ -30,7 +30,7 @@ function onWindowResize() {
 }
 
 // light the 3d space - Nick
-scene.background = new THREE.Color("rgb(119, 119, 119)");
+scene.background = new THREE.Color("rgb(119, 119, 119)"); // grey background
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
 const light = new THREE.PointLight(0xffffff, 1, 6, 2);
 light.position.set(1, 3, 1);
@@ -598,7 +598,7 @@ function deselectObject() {
 
 // remove object and object highlight from scene - Nick
 function removeObject() {
-	if (!heldObject) return;
+	if (!heldObject) return; // return early if we're not holding an object
 	heldObject.parent.remove(heldObject);
 	heldObjectBB.parent.remove(heldObjectBB);
 	heldObject = undefined;
@@ -757,8 +757,6 @@ var saveFile = function (strData, filename) {
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
-	// console.log(event.key)
-	// console.log(event.target.tagName)
 	if (event.target.tagName == "INPUT") { return; } // return early if we're currently typing into an input field
 	var keyPressed = event.key
 	// if an object is selected, adjust object position instead of camera position
@@ -788,9 +786,10 @@ onkeydown = (event) => {
 			default:
 				break;
 		}
-		return; // return so we don't touch the camera
+		return; // return so we don't touch the camera position
 	}
 
+	// adjust camera position
 	switch (keyPressed) {
 		case "w":
 			moveCamera('up')
