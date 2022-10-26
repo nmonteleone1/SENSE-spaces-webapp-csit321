@@ -30,7 +30,7 @@ function onWindowResize() {
 }
 
 // light the 3d space - Nick
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color("rgb(119, 119, 119)");
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
 const light = new THREE.PointLight(0xffffff, 1, 6, 2);
 light.position.set(1, 3, 1);
@@ -45,8 +45,7 @@ scene.add(light);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.minPolarAngle = Math.PI / 12;
 controls.maxPolarAngle = 5 * Math.PI / 12;
-controls.listenToKeyEvents(window);
-controls.keyPanSpeed = 28;
+
 
 //////GLOBALS//////
 var mouse, raycaster, moveRaycaster;
@@ -471,7 +470,7 @@ function moveObject(direction) {
 			heldObject.position.y += moveFactor;
 			break;
 		case 'down':
-			heldObject.position.y -= 0.1;
+			heldObject.position.y -= moveFactor;
 			break;
 		case 'left':
 			heldObject.position.x += moveFactor;
@@ -697,7 +696,40 @@ var saveFile = function (strData, filename) {
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
+	// console.log(event.key)
+	// console.log(event.target.tagName)
+	if (event.target.tagName == "INPUT") { return; } // return early if we're currently typing into an input field
 	var keyPressed = event.key
+	// if an object is selected, adjust object position instead of camera position
+	if (heldObject) {
+		switch (keyPressed) {
+			case "w":
+				moveObject('forward')
+				break;
+			case "s":
+				moveObject('backward')
+				break;
+			case "a":
+				moveObject('left')
+				break;
+			case "d":
+				moveObject('right')
+				break;
+			case "q":
+				moveObject('down')
+				break;
+			case "e":
+				moveObject('up')
+				break;
+			case "Backspace":
+				removeObject()
+				break;
+			default:
+				break;
+		}
+		return; // return so we don't touch the camera
+	}
+
 	switch (keyPressed) {
 		case "w":
 			moveCamera('up')
@@ -728,9 +760,6 @@ onkeydown = (event) => {
 			break;
 		case "ArrowRight":
 			rotateCamera('right')
-			break;
-		case "Backspace":
-			removeObject();
 			break;
 		default:
 			break;
