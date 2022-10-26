@@ -246,10 +246,10 @@ function moveCamera(direction) {
 // rotate camera functionality for on-screen buttons - Nick
 function rotateCamera(direction) {
 	if (direction == 'up') {
-		camera.translateY(1);
+		camera.translateY(1 * rotateFactor);
 	}
 	else if (direction == 'down') {
-		camera.translateY(-1);
+		camera.translateY(-1 * rotateFactor);
 	}
 	else if (direction == 'left') {
 		camera.translateX(-1 * rotateFactor);
@@ -553,7 +553,7 @@ function onMouseWheel(event) {
 		raycaster.setFromCamera(mouse, camera);
 		const intersects = raycaster.intersectObject(heldObject);
 		if(intersects.length) {
-			rotateObject(heldObject, event.deltaY);
+			rotateObject(heldObject, rotateFactor);
 		}
 		else {
 			controls.enableZoom = true;
