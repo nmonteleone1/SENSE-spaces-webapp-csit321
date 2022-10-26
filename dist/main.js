@@ -13,7 +13,7 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	100
 );
-camera.position.set(5, 5, 5);
+camera.position.set(2, 5, -2);
 const renderer = new THREE.WebGLRenderer({
 	preserveDrawingBuffer: true
 });
@@ -343,6 +343,7 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 	scene.add(items);
 
 	// update camera position - Nick
+	camera.position.set(xCenter, 5, -yCenter);
 	camera.lookAt(xCenter, 0, yCenter);
 	controls.target.set(xCenter, 0, yCenter);
 	controls.update();
@@ -489,10 +490,10 @@ function setEventListeners() {
 	document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
 	document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
 
-	document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, Math.PI) });
-	document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -Math.PI) });
-	document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, Math.PI) });
-	document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -Math.PI) });
+	document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, rotateFactor) });
+	document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -rotateFactor) });
+	document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, rotateFactor) });
+	document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -rotateFactor) });
 
 	document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
 
@@ -612,7 +613,7 @@ function onMouseWheel(event) {
 		raycaster.setFromCamera(mouse, camera);
 		const intersects = raycaster.intersectObject(heldObject);
 		if(intersects.length) {
-			rotateObject(heldObject, rotateFactor);
+			rotateObject(heldObject, rotateFactor * Math.sign(event.deltaY));
 		}
 		else {
 			controls.enableZoom = true;
