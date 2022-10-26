@@ -119,32 +119,32 @@
 			if (highlightButtons != "") {
 				const panelButtons = document.querySelectorAll(".panelButton");
 				panelButtons.forEach((x) => {
-					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+					x.style.border = (highlightButtons === 'true') ? '5px solid lime' : 'none';
 				});
 
 				const smallPanelButtons = document.querySelectorAll(".smallPanelButton");
 				smallPanelButtons.forEach((x) => {
-					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+					x.style.border = (highlightButtons === 'true') ? '5px solid lime' : 'none';
 				});
 
 				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
-					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+					y.style.border = (highlightButtons === 'true') ? '5px solid lime' : 'none';
 				});
 
 				const openButtons = document.querySelectorAll(".openMenuBtn");
 				openButtons.forEach((y) => {
-					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+					y.style.border = (highlightButtons === 'true') ? '5px solid lime' : 'none';
 				});
 
 				const closeButtons = document.querySelectorAll(".closeMenuBtn");
 				closeButtons.forEach((y) => {
-					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+					y.style.border = (highlightButtons === 'true') ? '5px solid lime' : 'none';
 				});
 
 				const cancelButtons = document.querySelectorAll(".cancel");
 				cancelButtons.forEach((y) => {
-					y.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+					y.style.border = (highlightButtons === 'true') ? '5px solid lime' : 'none';
 				});
 			}
 
@@ -152,7 +152,7 @@
 			if (highlightLinks != "") {
 				const links = document.querySelectorAll("#link")
 				links.forEach((y) => {
-					y.style.border = (highlightLinks === 'true') ? '5px solid grey' : 'none';
+					y.style.border = (highlightLinks === 'true') ? '5px solid magenta' : 'none';
 				});
 			}
 		}
@@ -200,12 +200,12 @@
 			<div class="contentContainer">
 				<button class="panelButton" onclick="openExportMenu()">Export</button>
 			</div>
-			<br>
-			<hr>
-			<br>
 			<div class="contentContainer">
 				<button class="panelButton" onclick="openUserSettingsMenu()">User Settings</button>
 			</div>
+			<br>
+			<hr>
+			<br>
 			<div class="contentContainer">
 				<button id="link" class="panelButton" onclick="window.open('./onboarding.html')">User Onboarding</button>
 			</div>
