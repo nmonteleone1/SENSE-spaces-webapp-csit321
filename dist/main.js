@@ -47,14 +47,6 @@ scene.add(light);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.minPolarAngle = Math.PI / 12;
 controls.maxPolarAngle = 5 * Math.PI / 12;
-controls.listenToKeyEvents(window);
-controls.keyPanSpeed = 28;
-// controls.keys = {
-// 	LEFT: 'KeyA',
-// 	UP: 'KeyW',
-// 	RIGHT: 'KeyD',
-// 	BOTTOM: 'KeyS'
-// };
 
 //////GLOBALS//////
 var mouse, raycaster, moveRaycaster;
