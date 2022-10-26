@@ -9,6 +9,7 @@ body {
     overflow: hidden;
     margin: 0px;
     font-family: 'Filson Pro', sans-serif;
+    background-color: #d7d7d7;
 }
 
 
@@ -18,8 +19,9 @@ body {
     flex-direction: row;
     justify-content: space-between;
     padding: 8px;
-    background-color: #D9D9D9;
+    background-color: #575757;
     align-items: center;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 #headerImage {
@@ -38,10 +40,11 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #D9D9D9;
+    background-color: #575757;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+    box-shadow: 4px 0px 20px rgba(0, 0, 0, 0.25);
 }
 
 .leftMenu .closeMenuBtn {
@@ -51,7 +54,7 @@ body {
     font-size: 40px;
     padding: 8px 8px 8px 12px;
     text-decoration: none;
-    color: #555;
+    color: #d7d7d7;
     transition: 0.3s;
 }
 
@@ -65,10 +68,11 @@ body {
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: #D9D9D9;
+    background-color: #575757;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+    box-shadow: 4px 0px 20px rgba(0, 0, 0, 0.25);
 }
 
 .rightMenu .closeMenuBtn {
@@ -78,7 +82,7 @@ body {
     font-size: 40px;
     padding: 8px 8px 8px 12px;
     text-decoration: none;
-    color: #555;
+    color: #d7d7d7;
     transition: 0.3s;
 }
 
@@ -86,6 +90,13 @@ body {
     width: 0;
 }
 
+/* cancel button that appears under menus */
+.cancel {
+    color: white;
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 /* menu controls -- index.html */
 .openMenuBtn {
@@ -104,7 +115,7 @@ body {
 }
 
 .closeMenuBtn:hover {
-    color: #777;
+    color: white;
 }
 
 
@@ -135,11 +146,23 @@ body {
     transition: 0.3s;
 }
 
+.contentContainer table {
+    color: white;
+}
+
+.contentTable {
+    border: 1px solid
+}
+
 .contentTable tr:nth-child(odd) {
     font-size: 1.4em;
 }
 
-.objectPicture{
+.contentTable tr:nth-child(even) {
+    background-color: #9C9C9C;
+}
+
+.objectPicture {
     width: 100%;
     height: 100%;
 }
@@ -188,26 +211,26 @@ body {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-    background-color: #f1f1f1;
+    background-color: #d7d7d7;
 }
 
-#dropdownTaste{
+#dropdownTaste {
     background-color: #d93e4f;
 }
 
-#dropdownTouch{
+#dropdownTouch {
     background-color: #fcb122;
 }
 
-#dropdownSight{
+#dropdownSight {
     background-color: #0091ab;
 }
 
-#dropdownSound{
+#dropdownSound {
     background-color: #85ccae;
 }
 
-#dropdownSmell{
+#dropdownSmell {
     background-color: #6f66a5;
 }
 
@@ -386,14 +409,14 @@ input:checked+.slider:before {
     border: 1px solid
 }
 
-.shortcutTable td{
+.shortcutTable td {
     /* padding: 1% 2% 1% 4%; */
     padding-left: 1%;
     padding-right: 1%;
 }
 
 .shortcutTable tr:nth-child(odd) {
-    background-color: #D9D9D9;
+    background-color: #9C9C9C;
 }
 
 .shortcutH2 {
@@ -403,7 +426,7 @@ input:checked+.slider:before {
 /* selected object thing */
 /* copied from panelbutton*/
 
-#objectProperties td button{
+#objectProperties td button {
     width: var(--panel-width);
     color: rgb(0, 0, 0);
     /* TODO: change this to percentage of view height / width */

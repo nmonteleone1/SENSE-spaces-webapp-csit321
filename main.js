@@ -2,8 +2,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "OrbitControls";
 import { OBJLoader } from "OBJLoader";
-import { GLTFLoader } from "GLTFLoader";
-import { Box3, Group, RedIntegerFormat, Spherical, Vector3 } from "three";
 
 var strDownloadMime = "image/octet-stream";
 
@@ -32,7 +30,7 @@ function onWindowResize() {
 }
 
 // light the 3d space - Nick
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color("rgb(119, 119, 119)");
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
 const light = new THREE.PointLight(0xffffff, 1, 6, 2);
 light.position.set(1, 3, 1);
@@ -47,14 +45,7 @@ scene.add(light);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.minPolarAngle = Math.PI / 12;
 controls.maxPolarAngle = 5 * Math.PI / 12;
-controls.listenToKeyEvents(window);
-controls.keyPanSpeed = 28;
-// controls.keys = {
-// 	LEFT: 'KeyA',
-// 	UP: 'KeyW',
-// 	RIGHT: 'KeyD',
-// 	BOTTOM: 'KeyS'
-// };
+
 
 //////GLOBALS//////
 var mouse, raycaster, moveRaycaster;
@@ -64,7 +55,6 @@ const moveFactor = 0.25;
 var heldObject, heldObjectBB;
 var items = new THREE.Group();
 const loader = new THREE.ObjectLoader();
-const objloader = new OBJLoader();
 var measurementScale = 1000;
 
 // mouse tracking within canvas - Nick
@@ -137,6 +127,7 @@ animate();
 
 
 //////UI INTEGRATION//////
+// adding functions to user input elements - Nick
 document.getElementById("rotateUp").addEventListener("click", function () { rotateCamera('up') });
 document.getElementById("rotateDown").addEventListener("click", function () { rotateCamera('down') });
 document.getElementById("rotateLeft").addEventListener("click", function () { rotateCamera('left') });
@@ -147,14 +138,33 @@ document.getElementById("moveUp").addEventListener("click", function () { moveCa
 document.getElementById("moveDown").addEventListener("click", function () { moveCamera('down') });
 document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
+document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
+document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
+document.getElementById("moveObjectLeft").addEventListener("click", function () { moveObject('left') });
+document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
+document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
+document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
+renderer.domElement.addEventListener('mousemove', onMouseMove, false);
+renderer.domElement.addEventListener('mousedown', onMouseDown, false);
+renderer.domElement.addEventListener('mouseup', onMouseUp, false);
+const propWidth = document.getElementById("propWidth");
+const propHeight = document.getElementById("propHeight");
+const propDepth = document.getElementById("propDepth");
+document.getElementById("objectProperties").style.visibility = "hidden";
+propWidth.addEventListener('change', updateProperties, false)
+propHeight.addEventListener('change', updateProperties, false)
+propDepth.addEventListener('change', updateProperties, false)
+document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, rotateFactor) });
+document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -rotateFactor) });
+document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, rotateFactor) });
+document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -rotateFactor) });
+document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
+addEventListener('wheel', onMouseWheel, false);
 
-const gltfLoader = new GLTFLoader();
-function loadGLTF() {
-	var file = document.getElementById("loadObject");
 
-}
+//////FUNCTIONS//////
 
-//load objects from file
+// load objects from file - Nick
 export function importObject(fileInput, width, height, depth) {
 	const reader = new FileReader();
 
@@ -187,45 +197,24 @@ export function importObject(fileInput, width, height, depth) {
 	url = url.replace(/^(\.?\/)/, '');
 }
 
-//////FUNCTIONS//////
-
-
+// create 'placeholder' objects, plain cube for visualising the space - Nick
 export function createNewObject(dimensions) {
 	let width = dimensions.width / measurementScale;
 	let depth = dimensions.depth / measurementScale;
 	let height = dimensions.height / measurementScale;
-	console.log(width, height, depth);
 	
 	var geometry = new THREE.BoxGeometry(width, height, depth);
-	console.log(geometry);
 	var material = new THREE.MeshPhongMaterial( {color: 0xA020F0} );
 	var cube = new THREE.Mesh(geometry, material);
 	cube.material.opacity = 0.75;
 	cube.castShadow = true;
 	cube.receiveShadow = true;
-	// cube.material.transparent = true;
-	// var wireframe = new THREE.WireframeGeometry(geometry);
-	// var line = new THREE.LineSegments(wireframe);
-	// line.material.depthTest = true;
-	// line.material.opacity = 0.75;
-	// line.material.transparent = true;
-	// line.material.color.setHex(0x00ff00);
-	// line.position.set(0,dimensions.height/2,0);
 
 	cube.position.set(room.Width/2, height/2, room.Depth/2);
 	items.add(cube);
 	scene.add(items);
 }
 
-function loadJSON(sense) {
-	var data;
-	let path = 'models/json/' + sense + '.json';
-	fetch(path).then((response) => response.json()).then((json) => data = json);
-	// fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
-	fetch(path).then(response => { return response.json() })
-
-	return data;
-}
 
 export function loadObject(path) {
 	loader.load(path, function (obj) {
@@ -235,6 +224,7 @@ export function loadObject(path) {
 	});
 }
 
+// move camera functionality for on-screen buttons - Nick
 function moveCamera(direction) {
 	switch (direction) {
 		case 'up':
@@ -252,36 +242,29 @@ function moveCamera(direction) {
 	}
 }
 
-// var cameraMatrix = new THREE.Matrix4();
+// rotate camera functionality for on-screen buttons - Nick
 function rotateCamera(direction) {
-	// cameraMatrix = camera.projectionMatrix;
 	if (direction == 'up') {
-		// cameraMatrix.makeRotationZ(rotateFactor)
-		// cameraMatrix.makeRotationX(-rotateFactor)
-		camera.translateY(1);
+		camera.translateY(1 * rotateFactor);
 	}
 	else if (direction == 'down') {
-		// cameraMatrix.makeRotationZ(-rotateFactor)
-		// cameraMatrix.makeRotationX(rotateFactor)
-		camera.translateY(-1);
+		camera.translateY(-1 * rotateFactor);
 	}
 	else if (direction == 'left') {
-		// cameraMatrix.makeRotationY(-rotateFactor)
 		camera.translateX(-1 * rotateFactor);
 	}
 	else if (direction == 'right') {
-		// cameraMatrix.makeRotationY(+rotateFactor)
 		camera.translateX(1 * rotateFactor);
 	}
 	else {
 		console.log('error rotating camera');
 	}
-	// camera.projectionMatrix = cameraMatrix;
 	camera.lookAt(scene.position);
 	camera.updateProjectionMatrix();
 	controls.update();
 }
 
+// zoom camera functionality for on-screen buttons
 function zoomCamera(zoom) {
 	if (zoom == 1) {
 		if (camera.zoom >= 2) {
@@ -308,6 +291,7 @@ function zoomCamera(zoom) {
 export function regenerateRoom(name = room.name, width = room.Width, depth = room.Depth, height = room.Height, objects = []) {
 	room.name = name;
 
+	// check for undefined values, and set them as current, otherwise update current values - Nick
 	if (isNaN(width)) {
 		width = room.Width;
 	}
@@ -331,6 +315,7 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 	const yCenter = depth / 2;
 	const wallThickness = 0.1;
 
+	// create and position the 4 walls using basic geometries
 	let newSideWallGeometry = new THREE.BoxGeometry(depth + wallThickness, height, wallThickness);
 	let newBackWallGeometry = new THREE.BoxGeometry(width + wallThickness, height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
@@ -348,24 +333,34 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 
 	room.frontWall.position.set(xCenter, height / 2, depth);
 
+	// update the floor plane - Nick
 	plane.geometry = new THREE.PlaneGeometry(width, room.Depth, 10, 10);
 	plane.position.set(xCenter, 0, yCenter);
 	plane.material.map.repeat.set(width / 2, depth / 2);
 
+	// update the lighting - Nick
 	light.position.set(xCenter, height, yCenter);
 	light.distance = Math.max(width, depth) * 1.5;
 
-	items.traverse(function (obj) {
-		items.remove(obj);
-	})
+	// remove all items currently loaded in - Nick
+	while(items.children.length > 0) {
+		items.remove(items.children[0]);
+	}
 
+	// if an object array was provided, load in each one (only imports the parent-groups if applicable) - Nick
 	for(let i = 1; i < objects.length; i++) {
 		const object = loader.parse(objects[i]);
+		if (object.type == 'Group') {
+			items.add(object);
+			i += object.children.length;
+			continue;
+		}
 		items.add(object);
 	}
 	
 	scene.add(items);
 
+	// update camera position - Nick
 	camera.lookAt(xCenter, 0, yCenter);
 	controls.target.set(xCenter, 0, yCenter);
 	controls.update();
@@ -377,7 +372,6 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 var draggable = false;
 
 // track mouse position - Nick
-renderer.domElement.addEventListener('mousemove', onMouseMove, false);
 function onMouseMove(event) {
 	mouse.x = (event.offsetX / renderer.domElement.width) * 2 - 1;
 	mouse.y = -(event.offsetY / renderer.domElement.height) * 2 + 1;
@@ -389,7 +383,6 @@ function onMouseMove(event) {
 }
 
 // turn off camera controls if an object is under mouse for manipulation - Nick
-renderer.domElement.addEventListener('mousedown', onMouseDown, false);
 function onMouseDown() {
 	selectObject();
 	if (heldObject) {
@@ -399,7 +392,6 @@ function onMouseDown() {
 }
 
 // turn on camera controls after dragging is complete - Nick
-renderer.domElement.addEventListener('mouseup', onMouseUp, false);
 function onMouseUp() {
 	controls.enabled = true;
 	draggable = false;
@@ -442,10 +434,6 @@ function getObjectGroup(object) {
 }
 
 // show object properties - Nick
-const propWidth = document.getElementById("propWidth");
-const propHeight = document.getElementById("propHeight");
-const propDepth = document.getElementById("propDepth");
-document.getElementById("objectProperties").style.visibility = "hidden";
 function objectProperties() {
 	document.getElementById("objectProperties").style.visibility = "visible";
 	let measure = new THREE.Vector3();
@@ -465,10 +453,6 @@ function objectProperties() {
 }
 
 // change object properties - Nick
-propWidth.addEventListener('change', updateProperties, false)
-propHeight.addEventListener('change', updateProperties, false)
-propDepth.addEventListener('change', updateProperties, false)
-
 function updateProperties() {
 	let width = propWidth.value;
 	let height = propHeight.value;
@@ -486,7 +470,7 @@ function moveObject(direction) {
 			heldObject.position.y += moveFactor;
 			break;
 		case 'down':
-			heldObject.position.y -= 0.1;
+			heldObject.position.y -= moveFactor;
 			break;
 		case 'left':
 			heldObject.position.x += moveFactor;
@@ -503,12 +487,6 @@ function moveObject(direction) {
 	}
 	items.attach(heldObject);
 }
-document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
-document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
-document.getElementById("moveObjectLeft").addEventListener("click", function () { moveObject('left') });
-document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
-document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
-document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
 
 // check object is in bounds - Nick
 function checkLocation() {
@@ -548,10 +526,6 @@ function rotateObject(object, factor) {
 function rotateUp(object, factor) {
 	object.rotateX(factor);
 }
-document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, rotateFactor) });
-document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -rotateFactor) });
-document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, rotateFactor) });
-document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -rotateFactor) });
 
 // unhighlight selected object - Nick
 function deselectObject() {
@@ -570,17 +544,15 @@ function removeObject() {
 	heldObjectBB = undefined;
 	document.getElementById("objectProperties").style.visibility = "hidden";
 }
-document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
 
 // adds object rotation when the object is selected, hovered, and the wheel is scrolled. - Nick
-addEventListener('wheel', onMouseWheel, false);
 function onMouseWheel(event) {
 	controls.enableZoom = false;
 	if (heldObject) {
 		raycaster.setFromCamera(mouse, camera);
 		const intersects = raycaster.intersectObject(heldObject);
 		if(intersects.length) {
-			rotateObject(heldObject, event.deltaY);
+			rotateObject(heldObject, rotateFactor);
 		}
 		else {
 			controls.enableZoom = true;
@@ -618,10 +590,10 @@ function wallHiderToggle() {
 	// get direction to each corner of the room, subtract some arbitrary distance to prevent collisions - Nick
 	let buffer = 0.1;
 	let dirs = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
-	dirs[0].subVectors(new Vector3(buffer, 0, buffer), camera.position).normalize();
-	dirs[1].subVectors(new Vector3(buffer, 0, room.Depth - buffer), camera.position).normalize();
-	dirs[2].subVectors(new Vector3(room.Width - buffer, 0, buffer), camera.position).normalize();
-	dirs[3].subVectors(new Vector3(room.Width - buffer, 0, room.Depth - buffer), camera.position).normalize();
+	dirs[0].subVectors(new THREE.Vector3(buffer, 0, buffer), camera.position).normalize();
+	dirs[1].subVectors(new THREE.Vector3(buffer, 0, room.Depth - buffer), camera.position).normalize();
+	dirs[2].subVectors(new THREE.Vector3(room.Width - buffer, 0, buffer), camera.position).normalize();
+	dirs[3].subVectors(new THREE.Vector3(room.Width - buffer, 0, room.Depth - buffer), camera.position).normalize();
 
 	// create array for storing which walls are blocking view - Nick
 	var intersectingWalls = [];
@@ -724,7 +696,40 @@ var saveFile = function (strData, filename) {
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
+	// console.log(event.key)
+	// console.log(event.target.tagName)
+	if (event.target.tagName == "INPUT") { return; } // return early if we're currently typing into an input field
 	var keyPressed = event.key
+	// if an object is selected, adjust object position instead of camera position
+	if (heldObject) {
+		switch (keyPressed) {
+			case "w":
+				moveObject('forward')
+				break;
+			case "s":
+				moveObject('backward')
+				break;
+			case "a":
+				moveObject('left')
+				break;
+			case "d":
+				moveObject('right')
+				break;
+			case "q":
+				moveObject('down')
+				break;
+			case "e":
+				moveObject('up')
+				break;
+			case "Backspace":
+				removeObject()
+				break;
+			default:
+				break;
+		}
+		return; // return so we don't touch the camera
+	}
+
 	switch (keyPressed) {
 		case "w":
 			moveCamera('up')
@@ -755,9 +760,6 @@ onkeydown = (event) => {
 			break;
 		case "ArrowRight":
 			rotateCamera('right')
-			break;
-		case "Backspace":
-			removeObject();
 			break;
 		default:
 			break;

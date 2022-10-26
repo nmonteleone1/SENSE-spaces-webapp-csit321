@@ -11,9 +11,7 @@
 				"imports": {
 					"three": "https://unpkg.com/three@0.140.2/build/three.module.js",
 					"OrbitControls": "https://unpkg.com/three@0.140.2/examples/jsm/controls/OrbitControls.js",
-					"OBJLoader": "https://unpkg.com/three@0.140.2/examples/jsm/loaders/OBJLoader.js",
-					"GLTFLoader": "https://unpkg.com/three@0.140.2/examples/jsm/loaders/GLTFLoader.js",
-					"dat-gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
+					"OBJLoader": "https://unpkg.com/three@0.140.2/examples/jsm/loaders/OBJLoader.js"
 				}
 			}
 	</script>
@@ -248,7 +246,7 @@
 					</table>
 				</div>
 				<div class="contentContainer"><button class="panelButton" type="submit">Create Room</button></div>
-				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<div class="cancel">
 					<span onclick="closeNewRoomMenu()">Cancel</span>
 				</div>
 			</form>
@@ -277,7 +275,7 @@
 					</table>
 				</div>
 				<div class="contentContainer"><button class="panelButton" type="submit">Import Room</button></div>
-				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<div class="cancel">
 					<span onclick="closeImportRoomMenu()">Cancel</span>
 				</div>
 			</form>
@@ -313,7 +311,7 @@
 					</table>
 				</div>
 				<div class="contentContainer"><button class="panelButton" type="submit">Export</button></div>
-				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<div class="cancel">
 					<span onclick="closeExportMenu()">Cancel</span>
 				</div>
 			</form>
@@ -385,7 +383,7 @@
 					</table>
 				</div>
 				<div class="contentContainer"><button class="panelButton" type="submit">Save Changes</button></div>
-				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<div class="cancel">
 					<span onclick="closeUserSettingsMenu()">Cancel</span>
 				</div>
 			</form>
@@ -396,7 +394,7 @@
 		<div id="rightMenu" class="rightMenu">
 			<div><a href="javascript:void(0)" class="closeMenuBtn" onclick="closeRightMenu()">×</a></div>
 
-			<div style="padding-left:20px;">
+			<div style="padding-left:20px; color: white;">
 				<h2>I want to...</h2>
 			</div>
 			<div class="contentContainer">
@@ -504,7 +502,7 @@
 					</table>
 				</div>
 				<div class="contentContainer"><button class="panelButton" type="submit">Create Object</button></div>
-				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<div class="cancel">
 					<span onclick="closeNewObjectMenu()">Cancel</span>
 				</div>
 			</form>
@@ -562,7 +560,7 @@
 					</table>
 				</div>
 				<div class="contentContainer"><button class="panelButton" type="submit">Import Object</button></div>
-				<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+				<div class="cancel">
 					<span onclick="closeImportObjectMenu()">Cancel</span>
 				</div>
 			</form>
@@ -572,7 +570,7 @@
 		<div id="predefinedObject" class="rightMenu rightSubMenu">
 			<div id="objects"></div>
 			<br/>
-			<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+			<div class="cancel">
 				<span onclick="closePredefinedObjectMenu()">Cancel</span>
 			</div>
 		</div>
@@ -583,7 +581,7 @@
 				<div id="view"></div>
 			</div>
 			<br/>
-			<div class="cancel" style="text-align:center; text-decoration: underline; cursor: pointer;">
+			<div class="cancel">
 				<span onclick="closeViewObjectMenu()">Cancel</span>
 			</div>
 		</div>
