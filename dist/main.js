@@ -2,8 +2,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "OrbitControls";
 import { OBJLoader } from "OBJLoader";
-import { GLTFLoader } from "GLTFLoader";
-import { Box3, Group, RedIntegerFormat, Spherical, Vector3 } from "three";
 
 var strDownloadMime = "image/octet-stream";
 
@@ -32,7 +30,7 @@ function onWindowResize() {
 }
 
 // light the 3d space - Nick
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color("rgb(119, 119, 119)");
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
 const light = new THREE.PointLight(0xffffff, 1, 6, 2);
 light.position.set(1, 3, 1);
@@ -47,24 +45,17 @@ scene.add(light);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.minPolarAngle = Math.PI / 12;
 controls.maxPolarAngle = 5 * Math.PI / 12;
-controls.listenToKeyEvents(window);
-controls.keyPanSpeed = 28;
-// controls.keys = {
-// 	LEFT: 'KeyA',
-// 	UP: 'KeyW',
-// 	RIGHT: 'KeyD',
-// 	BOTTOM: 'KeyS'
-// };
+
 
 //////GLOBALS//////
 var mouse, raycaster, moveRaycaster;
 const zoomFactor = 0.95; // factor must be <1
-const rotateFactor = Math.PI * 0.1; // factor of 1 is a full rotation
+const rotateFactor = Math.PI * 0.05; // factor of 1 is a full rotation
 const moveFactor = 0.25;
 var heldObject, heldObjectBB;
-const items = new THREE.Group();
+var items = new THREE.Group();
 const loader = new THREE.ObjectLoader();
-const objloader = new OBJLoader();
+var measurementScale = 1000;
 
 // mouse tracking within canvas - Nick
 mouse = new THREE.Vector2();
@@ -136,6 +127,7 @@ animate();
 
 
 //////UI INTEGRATION//////
+// adding functions to user input elements - Nick
 document.getElementById("rotateUp").addEventListener("click", function () { rotateCamera('up') });
 document.getElementById("rotateDown").addEventListener("click", function () { rotateCamera('down') });
 document.getElementById("rotateLeft").addEventListener("click", function () { rotateCamera('left') });
@@ -146,14 +138,15 @@ document.getElementById("moveUp").addEventListener("click", function () { moveCa
 document.getElementById("moveDown").addEventListener("click", function () { moveCamera('down') });
 document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
-// document.getElementById("loadObject").addEventListener("change", function () { loadObj(event) });
+renderer.domElement.addEventListener('mousemove', onMouseMove, false);
+renderer.domElement.addEventListener('mousedown', onMouseDown, false);
+renderer.domElement.addEventListener('mouseup', onMouseUp, false);
+addEventListener('wheel', onMouseWheel, false);
 
-const gltfLoader = new GLTFLoader();
-function loadGLTF() {
-	var file = document.getElementById("loadObject");
 
-}
+//////FUNCTIONS//////
 
+// load objects from file - Nick
 export function importObject(fileInput, width, height, depth) {
 	const reader = new FileReader();
 
@@ -167,9 +160,9 @@ export function importObject(fileInput, width, height, depth) {
 		let boxSize = new THREE.Vector3();
 		let boundingBox = new THREE.Box3().setFromObject(object);
 		boundingBox.getSize(boxSize);
-		let xFactor = width / boxSize.x;
-		let yFactor = height / boxSize.y;
-		let zFactor = depth / boxSize.z;
+		let xFactor = (width / measurementScale) / boxSize.x;
+		let yFactor = (height / measurementScale) / boxSize.y;
+		let zFactor = (depth / measurementScale) / boxSize.z;
 		object.scale.x = xFactor;
 		object.scale.y = yFactor;
 		object.scale.z = zFactor;
@@ -186,33 +179,24 @@ export function importObject(fileInput, width, height, depth) {
 	url = url.replace(/^(\.?\/)/, '');
 }
 
-
-//////FUNCTIONS//////
-
-
+// create 'placeholder' objects, plain cube for visualising the space - Nick
 export function createNewObject(dimensions) {
-	var geometry = new THREE.BoxGeometry(dimensions.width, dimensions.height, dimensions.depth);
-	var wireframe = new THREE.WireframeGeometry(geometry);
-	var line = new THREE.LineSegments(wireframe);
-	line.material.depthTest = true;
-	line.material.opacity = 0.75;
-	line.material.transparent = true;
-	line.material.color.setHex(0x00ff00);
-	line.position.set(0,dimensions.height/2,0);
+	let width = dimensions.width / measurementScale;
+	let depth = dimensions.depth / measurementScale;
+	let height = dimensions.height / measurementScale;
+	
+	var geometry = new THREE.BoxGeometry(width, height, depth);
+	var material = new THREE.MeshPhongMaterial( {color: 0xA020F0} );
+	var cube = new THREE.Mesh(geometry, material);
+	cube.material.opacity = 0.75;
+	cube.castShadow = true;
+	cube.receiveShadow = true;
 
-	items.add(line);
+	cube.position.set(room.Width/2, height/2, room.Depth/2);
+	items.add(cube);
 	scene.add(items);
 }
 
-function loadJSON(sense) {
-	var data;
-	let path = 'models/json/' + sense + '.json';
-	fetch(path).then((response) => response.json()).then((json) => data = json);
-	// fetch(path).then(response => {return response.json();}).then(jsondata => console.log(jsondata));
-	fetch(path).then(response => { return response.json() })
-
-	return data;
-}
 
 export function loadObject(path) {
 	loader.load(path, function (obj) {
@@ -222,6 +206,7 @@ export function loadObject(path) {
 	});
 }
 
+// move camera functionality for on-screen buttons - Nick
 function moveCamera(direction) {
 	switch (direction) {
 		case 'up':
@@ -239,36 +224,29 @@ function moveCamera(direction) {
 	}
 }
 
-// var cameraMatrix = new THREE.Matrix4();
+// rotate camera functionality for on-screen buttons - Nick
 function rotateCamera(direction) {
-	// cameraMatrix = camera.projectionMatrix;
 	if (direction == 'up') {
-		// cameraMatrix.makeRotationZ(rotateFactor)
-		// cameraMatrix.makeRotationX(-rotateFactor)
-		camera.translateY(1);
+		camera.translateY(1 * rotateFactor);
 	}
 	else if (direction == 'down') {
-		// cameraMatrix.makeRotationZ(-rotateFactor)
-		// cameraMatrix.makeRotationX(rotateFactor)
-		camera.translateY(-1);
+		camera.translateY(-1 * rotateFactor);
 	}
 	else if (direction == 'left') {
-		// cameraMatrix.makeRotationY(-rotateFactor)
 		camera.translateX(-1 * rotateFactor);
 	}
 	else if (direction == 'right') {
-		// cameraMatrix.makeRotationY(+rotateFactor)
 		camera.translateX(1 * rotateFactor);
 	}
 	else {
 		console.log('error rotating camera');
 	}
-	// camera.projectionMatrix = cameraMatrix;
 	camera.lookAt(scene.position);
 	camera.updateProjectionMatrix();
 	controls.update();
 }
 
+// zoom camera functionality for on-screen buttons
 function zoomCamera(zoom) {
 	if (zoom == 1) {
 		if (camera.zoom >= 2) {
@@ -291,31 +269,11 @@ function zoomCamera(zoom) {
 	controls.update();
 }
 
-// function rotateCamera(direction) {
-// 	if(direction == 'cw') {
-// 		camera.position.applyQuaternion( new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), rotateFactor*Math.PI*2));
-// 	}
-// 	else if(direction == 'ccw') {
-// 		camera.position.applyQuaternion( new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3(0,1,0), rotateFactor*-Math.PI*2));
-// 	}
-// 	else if(direction == 'up') {
-
-// 	}
-// 	else if(direction == 'down') {
-
-// 	}
-// 	else {
-// 		console.log('error rotating camera');
-// 	}
-// 	camera.lookAt(scene.position);
-// 	camera.updateProjectionMatrix();
-// 	controls.update();
-// }
-
 // room initializer, called on first run, on new room submit, on import room submit - Nick
 export function regenerateRoom(name = room.name, width = room.Width, depth = room.Depth, height = room.Height, objects = []) {
 	room.name = name;
 
+	// check for undefined values, and set them as current, otherwise update current values - Nick
 	if (isNaN(width)) {
 		width = room.Width;
 	}
@@ -339,6 +297,7 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 	const yCenter = depth / 2;
 	const wallThickness = 0.1;
 
+	// create and position the 4 walls using basic geometries
 	let newSideWallGeometry = new THREE.BoxGeometry(depth + wallThickness, height, wallThickness);
 	let newBackWallGeometry = new THREE.BoxGeometry(width + wallThickness, height, wallThickness);
 	room.leftWall.geometry = newSideWallGeometry;
@@ -356,21 +315,34 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 
 	room.frontWall.position.set(xCenter, height / 2, depth);
 
+	// update the floor plane - Nick
 	plane.geometry = new THREE.PlaneGeometry(width, room.Depth, 10, 10);
 	plane.position.set(xCenter, 0, yCenter);
 	plane.material.map.repeat.set(width / 2, depth / 2);
 
+	// update the lighting - Nick
 	light.position.set(xCenter, height, yCenter);
 	light.distance = Math.max(width, depth) * 1.5;
 
+	// remove all items currently loaded in - Nick
+	while(items.children.length > 0) {
+		items.remove(items.children[0]);
+	}
+
+	// if an object array was provided, load in each one (only imports the parent-groups if applicable) - Nick
 	for(let i = 1; i < objects.length; i++) {
 		const object = loader.parse(objects[i]);
+		if (object.type == 'Group') {
+			items.add(object);
+			i += object.children.length;
+			continue;
+		}
 		items.add(object);
 	}
 	
 	scene.add(items);
-	// console.log(scene);
 
+	// update camera position - Nick
 	camera.lookAt(xCenter, 0, yCenter);
 	controls.target.set(xCenter, 0, yCenter);
 	controls.update();
@@ -382,7 +354,6 @@ export function regenerateRoom(name = room.name, width = room.Width, depth = roo
 var draggable = false;
 
 // track mouse position - Nick
-renderer.domElement.addEventListener('mousemove', onMouseMove, false);
 function onMouseMove(event) {
 	mouse.x = (event.offsetX / renderer.domElement.width) * 2 - 1;
 	mouse.y = -(event.offsetY / renderer.domElement.height) * 2 + 1;
@@ -394,7 +365,6 @@ function onMouseMove(event) {
 }
 
 // turn off camera controls if an object is under mouse for manipulation - Nick
-renderer.domElement.addEventListener('mousedown', onMouseDown, false);
 function onMouseDown() {
 	selectObject();
 	if (heldObject) {
@@ -404,7 +374,6 @@ function onMouseDown() {
 }
 
 // turn on camera controls after dragging is complete - Nick
-renderer.domElement.addEventListener('mouseup', onMouseUp, false);
 function onMouseUp() {
 	controls.enabled = true;
 	draggable = false;
@@ -418,10 +387,10 @@ function selectObject() {
 		// if the object is already selected, break - Nick
 		// var parent = getObjectGroup(intersects[0].object);
 		let parent = getObjectGroup(intersects[0].object);
-		if (heldObject == intersects[0].object) {return;}
+		if (heldObject == parent) {return;}
 		else {
 			deselectObject();
-			heldObject = intersects[0].object;
+			heldObject = parent;
 			heldObjectBB = new THREE.BoxHelper(heldObject, 0xff0000);
 			scene.add(heldObjectBB);
 			objectProperties();
@@ -435,18 +404,12 @@ function selectObject() {
 // get grouped object - Nick
 function getObjectGroup(object) {
 	var parent = object.parent;
-	console.log(parent);
 	if(parent == scene || parent == items) {
-		console.log('parent scene')
 		return object;
 	}
 	while (parent != items) {
-		parent = object.parent;
-		console.log(object);
-		if(parent == scene) {
-			return object;
-		}
 		object = parent;
+		parent = object.parent;
 	}
 	
 	return object;
@@ -507,10 +470,6 @@ function objectProperties() {
 		</div>
 	`;
 
-	document.getElementById("propWidth").value = heldObject.scale.x;
-	document.getElementById("propHeight").value = heldObject.scale.y;
-	document.getElementById("propDepth").value = heldObject.scale.z;
-
 	setEventListeners();
 }
 
@@ -536,12 +495,28 @@ function setEventListeners() {
 	document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -Math.PI) });
 
 	document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
+
+	let measure = new THREE.Vector3();
+	heldObject.getWorldScale(measure)
+	propWidth.min = measure.x / 2;
+	propWidth.max = measure.x * 2;
+	propWidth.value = measure.x;
+	propWidth.step = 0.01*propWidth.max;
+	propHeight.min = measure.y / 2;
+	propHeight.max = measure.y * 2;
+	propHeight.value = measure.y;
+	propHeight.step = 0.01*propHeight.max;
+	propDepth.min = measure.z / 2;
+	propDepth.max = measure.z * 2;
+	propDepth.value = measure.z;
+	propDepth.step = 0.01*propDepth.max;
 }
 
+// change object properties - Nick
 function updateProperties() {
-	let width = document.getElementById("propWidth").value;
-	let height = document.getElementById("propHeight").value;
-	let depth = document.getElementById("propDepth").value;
+	let width = propWidth.value;
+	let height = propHeight.value;
+	let depth = propDepth.value;
 	heldObject.scale.x = width;
 	heldObject.scale.y = height;
 	heldObject.scale.z = depth;
@@ -555,7 +530,7 @@ function moveObject(direction) {
 			heldObject.position.y += moveFactor;
 			break;
 		case 'down':
-			heldObject.position.y -= 0.1;
+			heldObject.position.y -= moveFactor;
 			break;
 		case 'left':
 			heldObject.position.x += moveFactor;
@@ -573,7 +548,6 @@ function moveObject(direction) {
 	items.attach(heldObject);
 }
 
-
 // check object is in bounds - Nick
 function checkLocation() {
 	scene.attach(heldObject);
@@ -587,7 +561,7 @@ function checkLocation() {
 		heldObject.position.x = width/2 + 0.05;
 	}
 	if(bb.min.y < 0) {
-		heldObject.position.y = height/2;
+		heldObject.position.y += 0-bb.min.y;
 	}
 	if(bb.min.z < 0+0.05) {
 		heldObject.position.z = depth/2 + 0.05;
@@ -606,12 +580,12 @@ function checkLocation() {
 
 // rotate selected object - Nick
 function rotateObject(object, factor) {
-	object.rotation.y += factor * 0.05;
+	// object.rotation.y += factor;	
+	object.rotateY(factor);
 }
 function rotateUp(object, factor) {
-	object.rotation.x += factor * 0.05;
+	object.rotateX(factor);
 }
-
 
 // unhighlight selected object - Nick
 function deselectObject() {
@@ -631,16 +605,14 @@ function removeObject() {
 	document.getElementById("objectProperties").innerHTML = "";
 }
 
-
 // adds object rotation when the object is selected, hovered, and the wheel is scrolled. - Nick
-addEventListener('wheel', onMouseWheel, false);
 function onMouseWheel(event) {
 	controls.enableZoom = false;
 	if (heldObject) {
 		raycaster.setFromCamera(mouse, camera);
 		const intersects = raycaster.intersectObject(heldObject);
 		if(intersects.length) {
-			rotateObject(heldObject, event.deltaY);
+			rotateObject(heldObject, rotateFactor);
 		}
 		else {
 			controls.enableZoom = true;
@@ -678,10 +650,10 @@ function wallHiderToggle() {
 	// get direction to each corner of the room, subtract some arbitrary distance to prevent collisions - Nick
 	let buffer = 0.1;
 	let dirs = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
-	dirs[0].subVectors(new Vector3(buffer, 0, buffer), camera.position).normalize();
-	dirs[1].subVectors(new Vector3(buffer, 0, room.Depth - buffer), camera.position).normalize();
-	dirs[2].subVectors(new Vector3(room.Width - buffer, 0, buffer), camera.position).normalize();
-	dirs[3].subVectors(new Vector3(room.Width - buffer, 0, room.Depth - buffer), camera.position).normalize();
+	dirs[0].subVectors(new THREE.Vector3(buffer, 0, buffer), camera.position).normalize();
+	dirs[1].subVectors(new THREE.Vector3(buffer, 0, room.Depth - buffer), camera.position).normalize();
+	dirs[2].subVectors(new THREE.Vector3(room.Width - buffer, 0, buffer), camera.position).normalize();
+	dirs[3].subVectors(new THREE.Vector3(room.Width - buffer, 0, room.Depth - buffer), camera.position).normalize();
 
 	// create array for storing which walls are blocking view - Nick
 	var intersectingWalls = [];
@@ -784,8 +756,40 @@ var saveFile = function (strData, filename) {
 addEventListener('keydown', (event) => { });
 
 onkeydown = (event) => {
+	// console.log(event.key)
+	// console.log(event.target.tagName)
+	if (event.target.tagName == "INPUT") { return; } // return early if we're currently typing into an input field
 	var keyPressed = event.key
-	// console.log(keyPressed)
+	// if an object is selected, adjust object position instead of camera position
+	if (heldObject) {
+		switch (keyPressed) {
+			case "w":
+				moveObject('forward')
+				break;
+			case "s":
+				moveObject('backward')
+				break;
+			case "a":
+				moveObject('left')
+				break;
+			case "d":
+				moveObject('right')
+				break;
+			case "q":
+				moveObject('down')
+				break;
+			case "e":
+				moveObject('up')
+				break;
+			case "Backspace":
+				removeObject()
+				break;
+			default:
+				break;
+		}
+		return; // return so we don't touch the camera
+	}
+
 	switch (keyPressed) {
 		case "w":
 			moveCamera('up')
@@ -816,9 +820,6 @@ onkeydown = (event) => {
 			break;
 		case "ArrowRight":
 			rotateCamera('right')
-			break;
-		case "Backspace":
-			removeObject();
 			break;
 		default:
 			break;
