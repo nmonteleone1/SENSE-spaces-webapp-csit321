@@ -17,6 +17,10 @@ https://nmonteleone1.github.io/SENSE-spaces-webapp-csit321/
   - Dropdown options for Font Size and Text Spacing that affect all text on the application.
   - Highlight toggles for Buttons and Links to provide viewing highlights for all interactable objects on the application.
   - Automatically saves between sessions.
+- Additional links for:
+  - User Onboarding
+  - Keyboard Shortcuts
+  - About Us
 
 ### Right Panel
 - Create a new object
@@ -47,3 +51,12 @@ https://nmonteleone1.github.io/SENSE-spaces-webapp-csit321/
   - Click and drag to move the object in the 3D space
   - Scroll while hovering on a selected object to rotate the object
   - Left click off the object to 'deselect' it
+
+---
+
+## Installation Instructions:
+Clone the repository by running `git clone git@github.com:nmonteleone1/SENSE-spaces-webapp-csit321.git`
+
+Open the `index.html` file in your IDE / editor of choice.
+
+Start a local webserver and navigate to it in your browser.
