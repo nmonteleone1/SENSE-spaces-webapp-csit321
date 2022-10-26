@@ -421,7 +421,7 @@ document.getElementById("objectProperties").innerHTML = "";
 function objectProperties() {
 	document.getElementById("objectProperties").innerHTML = `
 		<hr/>
-		<div style="padding-left:20px;">
+		<div style="padding-left:20px; color: white;">
 			<h2>Object Properties</h2>
 		</div>
 		<div class="smallContentContainer">
