@@ -719,6 +719,12 @@
 				// reset the alert 
 				document.getElementById('alertObject').style.display = "block";
 
+				// reset validation messages
+				document.getElementById('objImportWidthInvalid').innerHTML = "";
+				document.getElementById('objImportDepthInvalid').innerHTML = "";
+				document.getElementById('objImportHeightInvalid').innerHTML = "";
+				document.getElementById('objectErrorMessage').innerHTML = "";
+
 				// reset form
 				let form = document.getElementById('importobject');
 				form.reset();
