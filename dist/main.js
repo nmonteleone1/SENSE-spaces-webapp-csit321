@@ -138,27 +138,9 @@ document.getElementById("moveUp").addEventListener("click", function () { moveCa
 document.getElementById("moveDown").addEventListener("click", function () { moveCamera('down') });
 document.getElementById("moveLeft").addEventListener("click", function () { moveCamera('left') });
 document.getElementById("moveRight").addEventListener("click", function () { moveCamera('right') });
-document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
-document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
-document.getElementById("moveObjectLeft").addEventListener("click", function () { moveObject('left') });
-document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
-document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
-document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
 renderer.domElement.addEventListener('mousemove', onMouseMove, false);
 renderer.domElement.addEventListener('mousedown', onMouseDown, false);
 renderer.domElement.addEventListener('mouseup', onMouseUp, false);
-const propWidth = document.getElementById("propWidth");
-const propHeight = document.getElementById("propHeight");
-const propDepth = document.getElementById("propDepth");
-document.getElementById("objectProperties").style.visibility = "hidden";
-propWidth.addEventListener('change', updateProperties, false)
-propHeight.addEventListener('change', updateProperties, false)
-propDepth.addEventListener('change', updateProperties, false)
-document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, rotateFactor) });
-document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -rotateFactor) });
-document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, rotateFactor) });
-document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -rotateFactor) });
-document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
 addEventListener('wheel', onMouseWheel, false);
 
 
@@ -434,8 +416,86 @@ function getObjectGroup(object) {
 }
 
 // show object properties - Nick
+document.getElementById("objectProperties").innerHTML = "";
 function objectProperties() {
-	document.getElementById("objectProperties").style.visibility = "visible";
+	document.getElementById("objectProperties").innerHTML = `
+		<hr/>
+		<div style="padding-left:20px;">
+			<h2>Object Properties</h2>
+		</div>
+		<div class="smallContentContainer">
+			<table>
+				<tr>
+					<td><label>Object Width:</label></td>
+				</tr>
+				<tr>
+					<td><input style="width:200px" type="range" id="propWidth" min="0.1" max="5" step="0.1" oninput="this.nextElementSibling.value = this.value" />&nbsp;<output>${heldObject.scale.x}</output></td>
+				</tr>
+				<tr>
+					<td><label>Object Depth:</label></td>
+				</tr>
+				<tr>
+					<td><input style="width:200px" type="range" id="propDepth" min="0.1" max="5" step="0.1" oninput="this.nextElementSibling.value = this.value" />&nbsp;<output>${heldObject.scale.z}</output></td>
+				</tr>
+				<tr>
+					<td><label>Object Height:</label></td>
+				</tr>
+				<tr>
+					<td><input style="width:200px" type="range" id="propHeight" min="0.1" max="5" step="0.1" oninput="this.nextElementSibling.value = this.value" />&nbsp;<output>${heldObject.scale.y}</output></td>
+				</tr>
+			</table>
+		</div>
+		<div class="smallContentContainer">
+			<button id="moveObjectUp" class="smallPanelButton">Move Up</button>
+			<button id="moveObjectDown" class="smallPanelButton">Move Down</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="moveObjectLeft" class="smallPanelButton">Move Left</button>
+			<button id="moveObjectRight" class="smallPanelButton">Move Right</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="moveObjectForward" class="smallPanelButton">Move Forward</button>
+			<button id="moveObjectBackward" class="smallPanelButton">Move Backward</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="rotateObjectUp" class="smallPanelButton">Rotate Up</button>
+			<button id="rotateObjectDown" class="smallPanelButton">Rotate Down</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="rotateObjectLeft" class="smallPanelButton">Rotate Left</button>
+			<button id="rotateObjectRight" class="smallPanelButton">Rotate Right</button>
+		</div>
+		<div class="smallContentContainer">
+			<button id="removeObject" class="panelButton">Remove Object</button>
+		</div>
+	`;
+
+	setEventListeners();
+}
+
+// set the event listeners for the object properties - Nick
+function setEventListeners() {
+	const propWidth = document.getElementById("propWidth");
+	propWidth.addEventListener('change', updateProperties, false)
+	const propHeight = document.getElementById("propHeight");
+	propHeight.addEventListener('change', updateProperties, false)
+	const propDepth = document.getElementById("propDepth");
+	propDepth.addEventListener('change', updateProperties, false)
+
+	document.getElementById("moveObjectUp").addEventListener("click", function () { moveObject('up') });
+	document.getElementById("moveObjectDown").addEventListener("click", function () { moveObject('down') });
+	document.getElementById("moveObjectLeft").addEventListener("click", function () { moveObject('left') });
+	document.getElementById("moveObjectRight").addEventListener("click", function () { moveObject('right') });
+	document.getElementById("moveObjectForward").addEventListener("click", function () { moveObject('forward') });
+	document.getElementById("moveObjectBackward").addEventListener("click", function () { moveObject('backward') });
+
+	document.getElementById("rotateObjectUp").addEventListener("click", function () { rotateUp(heldObject, Math.PI) });
+	document.getElementById("rotateObjectDown").addEventListener("click", function () { rotateUp(heldObject, -Math.PI) });
+	document.getElementById("rotateObjectLeft").addEventListener("click", function () { rotateObject(heldObject, Math.PI) });
+	document.getElementById("rotateObjectRight").addEventListener("click", function () { rotateObject(heldObject, -Math.PI) });
+
+	document.getElementById("removeObject").addEventListener("click", function () { removeObject() });
+
 	let measure = new THREE.Vector3();
 	heldObject.getWorldScale(measure)
 	propWidth.min = measure.x / 2;
@@ -532,7 +592,7 @@ function deselectObject() {
 	scene.remove(heldObjectBB);
 	heldObject = undefined;
 	heldObjectBB = undefined;
-	document.getElementById("objectProperties").style.visibility = "hidden";
+	document.getElementById("objectProperties").innerHTML = "";
 }
 
 // remove object and object highlight from scene - Nick
@@ -542,7 +602,7 @@ function removeObject() {
 	heldObjectBB.parent.remove(heldObjectBB);
 	heldObject = undefined;
 	heldObjectBB = undefined;
-	document.getElementById("objectProperties").style.visibility = "hidden";
+	document.getElementById("objectProperties").innerHTML = "";
 }
 
 // adds object rotation when the object is selected, hovered, and the wheel is scrolled. - Nick

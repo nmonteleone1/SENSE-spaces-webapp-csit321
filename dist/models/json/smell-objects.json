@@ -1,16 +1,17 @@
 [
     {
         "id": "object6",
-        "name": "Smell Object 1",
-        "price": "1000",
-        "linkToSite": "https://www.desmos.com/scientific",
-        "linkToModel": "models/json/smell/smell.json"
+        "name": "Aromatherapy Panel",
+        "price": "N/A",
+        "linkToSite": "",
+        "linkToModel": "models/json/smell/smell.json",
+        "linkToImage" : "textures/smell.png"
     },
     {
         "id": "object7",
-        "name": "Smell Object 2",
-        "price": "100",
-        "linkToSite": "https://www.google.com",
+        "name": "Fog Smell Machine",
+        "price": "N/A",
+        "linkToSite": "",
         "linkToModel": "models/json/smell/smell-two.json"
     }
 ]

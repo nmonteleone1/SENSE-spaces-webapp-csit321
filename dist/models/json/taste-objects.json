@@ -1,7 +1,7 @@
 [
     {
         "id": "object1",
-        "name": "Taste Object 1",
+        "name": "Object Example",
         "price": "100",
         "dimensions": {
             "width": "1 metres",
@@ -11,26 +11,5 @@
         "linkToSite": "https://www.google.com",
         "linkToModel": "models/json/taste/taste.json",
         "linkToImage" : "textures/taste.png"
-    },
-    {
-        "id": "object11",
-        "name": "Taste Object 2",
-        "price": "100",
-        "linkToSite": "https://www.google.com",
-        "linkToModel": "models/json/taste/taste.json"
-    },
-    {
-        "id": "object12",
-        "name": "Taste Object 3",
-        "price": "100",
-        "linkToSite": "https://www.google.com",
-        "linkToModel": "models/json/taste/taste.json"
-    },
-    {
-        "id": "object31",
-        "name": "Taste Object 4",
-        "price": "100",
-        "linkToSite": "https://www.google.com",
-        "linkToModel": "models/json/taste/taste.json"
     }
 ]

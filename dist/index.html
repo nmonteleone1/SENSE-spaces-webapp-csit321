@@ -59,6 +59,11 @@
 					x.style.fontSize = fontSize;
 				});
 
+				const smallPanelButtons = document.querySelectorAll(".smallPanelButton");
+				smallPanelButtons.forEach((x) => {
+					x.style.fontSize = fontSize;
+				});
+
 				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
 					y.style.fontSize = fontSize;
@@ -89,6 +94,11 @@
 					x.style.letterSpacing = textSpacing;
 				});
 
+				const smallPanelButtons = document.querySelectorAll(".smallPanelButton");
+				smallPanelButtons.forEach((x) => {
+					x.style.letterSpacing = textSpacing;
+				});
+
 				const panelDropdown = document.querySelectorAll(".collapsible");
 				panelDropdown.forEach((y) => {
 					y.style.letterSpacing = textSpacing;
@@ -109,6 +119,11 @@
 			if (highlightButtons != "") {
 				const panelButtons = document.querySelectorAll(".panelButton");
 				panelButtons.forEach((x) => {
+					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
+				});
+
+				const smallPanelButtons = document.querySelectorAll(".smallPanelButton");
+				smallPanelButtons.forEach((x) => {
 					x.style.border = (highlightButtons === 'true') ? '5px solid rgb(217, 62, 79)' : 'none';
 				});
 
@@ -217,7 +232,7 @@
 							<td>&nbsp;<small id="nameInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Width (mm)</label></td>
+							<td><label>Width (m)</label></td>
 						</tr>
 						<tr>
 							<td><input type="number" id="width" min="0" step="any" /></td>
@@ -226,7 +241,7 @@
 							<td>&nbsp;<small id="widthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Depth (mm)</label></td>
+							<td><label>Depth (m)</label></td>
 						</tr>
 						<tr>
 							<td><input type="number" id="depth" min="0" step="any" /></td>
@@ -235,7 +250,7 @@
 							<td>&nbsp;<small id="depthInvalid" class="errorMessage"></small></td>
 						</tr>
 						<tr>
-							<td><label>Height (mm)</label></td>
+							<td><label>Height (m)</label></td>
 						</tr>
 						<tr>
 							<td><input type="number" id="height" min="0" step="any" /></td>
@@ -298,7 +313,7 @@
 						<tr>
 							<td>
 								<select id="type">
-									<option value="none"></option>
+									<option value="none">Please select an export type</option>
 									<option value="json">Room (.json)</option>
 									<option value="jpeg">Room (.jpeg)</option>
 									<!-- <option value="txt">Object List (.txt)</option> -->
@@ -410,60 +425,9 @@
 			<!-- <div id="searchBox"><input type="text"><button>🔎︎</button></div> -->
 			
 			<!-- object properties menu, change size position rotation -->
+			<br/>
 			<div class="contentContainer">
-				<table id="objectProperties">
-					<tr>
-						<td><label>Object Width:</label></td>
-					</tr>
-					<tr>
-						<td><input type="range" id="propWidth" min="0.1" max="5" step="0.1" /></td>
-					</tr>
-					<tr>
-						<td><label>Object Depth:</label></td>
-					</tr>
-					<tr>
-						<td><input type="range" id="propDepth" min="0.1" max="5" step="0.1" /></td>
-					</tr>
-					<tr>
-						<td><label>Object Height:</label></td>
-					</tr>
-					<tr>
-						<td><input type="range" id="propHeight" min="0.1" max="5" step="0.1" /></td>
-					</tr>
-					<tr>
-						<td><button id="removeObject" class="panelButton">Remove Object</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectUp" class="panelButton">Move Up</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectDown" class="panelButton">Move Down</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectLeft" class="panelButton">Move Left</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectRight" class="panelButton">Move Right</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectForward" class="panelButton">Move Forward</button></td>
-					</tr>
-					<tr>
-						<td><button id="moveObjectBackward" class="panelButton">Move Backward</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectUp" class="panelButton">Rotate Up</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectDown" class="panelButton">Rotate Down</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectLeft" class="panelButton">Rotate Left</button></td>
-					</tr>
-					<tr>
-						<td><button id="rotateObjectRight" class="panelButton">Rotate Right</button></td>
-					</tr>
-				</table>
+				<div id="objectProperties"></div>
 			</div>
 		</div>
 
@@ -512,8 +476,6 @@
 		<div id="importObject" class="rightMenu rightSubMenu">
 			<form id="importobject">
 				<div class="contentContainer">
-					<!-- <input type="file" id="loadObject"> -->
-
 					<table>
 						<tr>
 							<td><label>Object Width (mm)</label></td>
@@ -620,6 +582,11 @@
 				} else {
 					document.getElementById('exportAlert').style.display = "none";
 				}
+			});
+
+			// recheck cookies to ensure styles are set on dynamically rendered content
+			document.getElementById('objectProperties').addEventListener('DOMSubtreeModified', () => {
+				checkCookie(); 
 			});
 
 			function openLeftMenu() {
@@ -965,7 +932,7 @@
 			// <!-- Jackson -->
 			// creates the display for the view object information submenu
 			function loadObjectInformation(info) {
-				console.log(info)
+				let link = info?.linkToSite !== "" ? `<a href='${info?.linkToSite}' target='_blank'>View</a>` : `<span>N/A</span>`;
 				let render = `
 				<table style="padding:8px;" class="contentTable">
 					<tr>
@@ -984,13 +951,13 @@
 						<td>Dimensions:</td>
 					</tr>
 					<tr>
-						<td>&emsp;${info?.dimensions?.width} x ${info?.dimensions?.width} x ${info?.dimensions?.width}</td>
+						<td>&emsp;${info?.dimensions?.width} W x ${info?.dimensions?.height} H x ${info?.dimensions?.depth} D</td>
 					</tr>
 					<tr>
 						<td>Link to Resource</td>
 					</tr>
 					<tr>
-						<td id="link">&emsp;<a href='${info?.linkToSite}' target='_blank'>${info?.linkToSite}</a></td>
+						<td id="link">&emsp;${link}</td>
 					</tr>
 					<tr>
 						<td>Image preview:</td>
