@@ -1,9 +1,10 @@
 [
     {
         "id": "object5",
-        "name": "Sound Object 1",
-        "price": "1000",
-        "linkToSite": "https://www.desmos.com/scientific",
-        "linkToModel": "models/json/sound/sound.json"
+        "name": "Hearing Protector 27db",
+        "price": "$23.54",
+        "linkToSite": "https://www.elizabethrichards.com.au/products/hearing-protector-27db",
+        "linkToModel": "models/json/sound/sound.json",
+        "linkToImage" : "textures/sound.png"
     }
 ]

@@ -934,7 +934,7 @@
 			// <!-- Jackson -->
 			// creates the display for the view object information submenu
 			function loadObjectInformation(info) {
-				console.log(info)
+				let link = info?.linkToSite !== "" ? `<a href='${info?.linkToSite}' target='_blank'>View</a>` : `<span>N/A</span>`;
 				let render = `
 				<table style="padding:8px;" class="contentTable">
 					<tr>
@@ -953,13 +953,13 @@
 						<td>Dimensions:</td>
 					</tr>
 					<tr>
-						<td>&emsp;${info?.dimensions?.width} x ${info?.dimensions?.width} x ${info?.dimensions?.width}</td>
+						<td>&emsp;${info?.dimensions?.width} W x ${info?.dimensions?.height} H x ${info?.dimensions?.depth} D</td>
 					</tr>
 					<tr>
 						<td>Link to Resource</td>
 					</tr>
 					<tr>
-						<td id="link">&emsp;<a href='${info?.linkToSite}' target='_blank'>${info?.linkToSite}</a></td>
+						<td id="link">&emsp;${link}</td>
 					</tr>
 					<tr>
 						<td>Image preview:</td>

@@ -1,16 +1,34 @@
 [
     {
         "id": "object2",
-        "name": "Touch Object 1",
-        "price": "1000",
-        "linkToSite": "https://www.desmos.com/scientific",
-        "linkToModel": "models/json/touch/touch.json"
+        "name": "Tactile Dna Ball",
+        "price": "$8.58",
+        "dimensions": {
+            "width": "8cm",
+            "depth": "8cm",
+            "height": "8cm"
+        },
+        "linkToSite": "https://www.elizabethrichards.com.au/products/tactile-dna-ball?pr_prod_strat=copurchase&pr_rec_id=40a149992&pr_rec_pid=6552523178074&pr_ref_pid=6728271757402&pr_seq=uniform",
+        "linkToModel": "models/json/touch/touch.json",
+        "linkToImage" : "textures/touch.png"
     },
     {
         "id": "object3",
-        "name": "Touch Object 2",
-        "price": "100",
-        "linkToSite": "https://www.google.com",
+        "name": "Bubble Pop Fidget",
+        "price": "$15.29",
+        "linkToSite": "https://www.elizabethrichards.com.au/products/bubble-pop-fidget?pr_prod_strat=use_description&pr_rec_id=60daa4f41&pr_rec_pid=6540682887258&pr_ref_pid=6552523178074&pr_seq=uniform",
         "linkToModel": "models/json/touch/touch-two.json"
+    },
+    {
+        "id": "object11",
+        "name": "Sensory Compression Sheet",
+        "price": "$79.97",
+        "dimensions": {
+            "width": "88cm",
+            "depth": "150cm",
+            "height": "undefined"
+        },
+        "linkToSite": "https://www.elizabethrichards.com.au/products/sensory-compression-sheet?pr_prod_strat=use_description&pr_rec_id=2ab37e67f&pr_rec_pid=6552575377498&pr_ref_pid=6540682887258&pr_seq=uniform",
+        "linkToModel": "models/json/touch/touch.json"
     }
 ]
